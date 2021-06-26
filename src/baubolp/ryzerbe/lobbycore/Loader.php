@@ -11,6 +11,8 @@ use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
+use baubolp\ryzerbe\lobbycore\task\AnimationTask;
+use baubolp\ryzerbe\lobbycore\task\LobbyTask;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
@@ -26,6 +28,9 @@ class Loader extends PluginBase
        self::$instance = $this;
        $this->registerCommands();
        $this->registerListeners();
+       $this->startTasks();
+       self::createMySQLTables();
+
     }
 
     /**
@@ -55,6 +60,12 @@ class Loader extends PluginBase
 
         foreach ($listeners as $listener)
             $this->getServer()->getPluginManager()->registerEvents($listener, $this);
+    }
+
+    public function startTasks(): void
+    {
+        $this->getScheduler()->scheduleRepeatingTask(new AnimationTask(), 1);
+        $this->getScheduler()->scheduleRepeatingTask(new LobbyTask(), 10);
     }
 
     public static function createMySQLTables(): void

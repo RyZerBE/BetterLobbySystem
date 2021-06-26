@@ -48,9 +48,14 @@ class PlayerJoinAnimation extends Animation
     {
         if (($player = Loader::getInstance()->getServer()->getPlayerExact($this->playerName)) != null) {
             $title = $this->joinAnimation[$this->getCurrentTick()] ?? null;
-            if ($title === null) $this->stop();
+            if ($title === null) {
+                $this->stop();
+                $player->playSound("mob.wither.death", 5.0, 1.0, [$player]);
+                return;
+            }
 
             $player->sendTitle($this->joinAnimation[$this->getCurrentTick()], TextFormat::YELLOW . "Welcome");
+            $player->playSound("note.bass", 5.0, 2.0, [$player]);
         }else
             $this->stop();
         parent::tick();
