@@ -1,0 +1,9 @@
+name: LobbyCore
+api: 3.3.0
+version: 1.0
+main: baubolp\ryzerbe\lobbycore\Loader
+description: LobbySystem recode for RyZerBE
+authors:
+  - Matze997
+  - BauboLP
+load: POSTWORLD
