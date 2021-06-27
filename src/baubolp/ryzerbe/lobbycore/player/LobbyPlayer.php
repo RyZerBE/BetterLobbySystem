@@ -5,7 +5,14 @@ namespace baubolp\ryzerbe\lobbycore\player;
 
 
 use baubolp\core\provider\AsyncExecutor;
+use baubolp\core\provider\CoinProvider;
+use baubolp\core\provider\LanguageProvider;
+use baubolp\core\util\LocationUtils;
+use baubolp\ryzerbe\lobbycore\Loader;
+use mysqli;
+use pocketmine\level\Location;
 use pocketmine\Player;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 class LobbyPlayer
@@ -20,6 +27,13 @@ class LobbyPlayer
     private $tickets = 0;
     /** @var array  */
     private $lottoWin = [];
+    private $loginStreak;
+    private $nextLoginStreak;
+    private $lastLoginStreak;
+    private $dailyCoinTime;
+    private $dailyCoinBombTime;
+    private $dailyLottoTicketTime;
+    private $dailyHypeTrainTime;
 
     public function __construct(Player $player)
     {
@@ -29,8 +43,85 @@ class LobbyPlayer
     public function load(): void
     {
         $this->getPlayer()->setAllowFlight(true);
-        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (\mysqli $mysqli){
-            //TODO: LOAD STUFF FROM MYSQL -> e.g LottoTickets ...
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($playerName){
+            $now = time();
+            $nextDay = strtotime("next day");
+            $playerData = [];
+
+            ////// ACCOUNT CHECK \\\\\\
+            $res = $mysqli->query("SELECT * FROM LottoTickets WHERE playername='$playerName'");
+            if($res->num_rows <= 0) {
+                $mysqli->query("INSERT INTO `LottoTickets`(`playername`, `tickets`) VALUES ('$playerName', '0')");
+                $playerData["lottotickets"] = 0;
+            }else {
+                while($data = $res->fetch_assoc()) {
+                    $playerData["lottotickets"] = $data["tickets"];
+                }
+            }
+
+            $res = $mysqli->query("SELECT * FROM Position WHERE playername='$playerName'");
+            if($res->num_rows <= 0) {
+                $mysqli->query("INSERT INTO `Position`(`playername`, `position`) VALUES ('$playerName', '0')");
+                $playerData["spawn"] = 0;
+            }else {
+                while($data = $res->fetch_assoc())
+                    $playerData["spawn"] = $data["position"];
+            }
+
+            $res = $mysqli->query("SELECT * FROM DailyReward WHERE playername='$playerName'");
+            if($res->num_rows <= 0) {
+                $mysqli->query("INSERT INTO DailyReward(`playername`, `coins`, `lottoticket`, `coinbomb`, `hypetrain`) VALUES ('$playerName', '$now', '$now', '$now', '$now')");
+                $playerData["coinTime"] = $now;
+                $playerData["lottoTicketTime"] = $now;
+                $playerData["coinBombTime"] = $now;
+                $playerData["hypeTrainTime"] = $now;
+            }else {
+                while($data = $res->fetch_assoc()) {
+                    $playerData["coinTime"] = $data["coins"];
+                    $playerData["lottoTicketTime"] = $data["lottoticket"];
+                    $playerData["coinBombTime"] = $data["coinbomb"];
+                    $playerData["hypeTrainTime"] = $data["hypetrain"];
+                }
+            }
+
+            $res = $mysqli->query("SELECT * FROM LoginStreak WHERE playername='$playerName'");
+            if($res->num_rows <= 0) {
+                $mysqli->query("INSERT INTO `LoginStreak`(`playername`, `loginstreak`, `nextstreakday`, `laststreakday`) VALUES ('$playerName', '1', '$nextDay', '$now')");
+                $playerData["loginstreak"] = 1;
+                $playerData["nextstreakday"] = $nextDay;
+                $playerData["laststreakday"] = $now;
+            }else {
+                while($data = $res->fetch_assoc()) {
+                    $playerData["loginstreak"] = $data["loginstreak"];
+                    $playerData["nextstreakday"] = $data["nextstreakday"];
+                    $playerData["laststreakday"] = $data["laststreakday"];
+                }
+            }
+
+            $res = $mysqli->query("SELECT * FROM Status WHERE playername='$playerName'");
+            if($res->num_rows <= 0) $mysqli->query("INSERT INTO `Status`(`playername`, `status`) VALUES ('$playerName', 'false')");
+
+            return $playerData;
+        }, function(Server $server, array $loadedData) use ($playerName){
+            // LOAD DATA \\
+            if(($lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($playerName)) != null) {
+                $lobbyPlayer->setTickets($loadedData["lottotickets"]);
+                $lobbyPlayer->setDailyCoinBombTime($loadedData["coinBombTime"]);
+                $lobbyPlayer->setDailyCoinTime($loadedData["coinTime"]);
+                $lobbyPlayer->setDailyHypeTrainTime($loadedData["hypeTrainTime"]);
+                $lobbyPlayer->setDailyLottoTicketTime($loadedData["lottoTicketTime"]);
+                $lobbyPlayer->setLoginStreak($loadedData["loginstreak"]);
+                $lobbyPlayer->setLastLoginStreak($loadedData["laststreakday"]);
+                $lobbyPlayer->setNextLoginStreak($loadedData["nextstreakday"]);
+
+                if($loadedData["spawn"] == 0)
+                    $lobbyPlayer->getPlayer()->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
+                else
+                    $lobbyPlayer->getPlayer()->teleport(LocationUtils::fromString($loadedData["spawn"]));
+
+                $lobbyPlayer->checkLoginStreak();
+            }
         });
     }
 
@@ -89,6 +180,11 @@ class LobbyPlayer
 
     public function unregister(): void
     {
+        $playerName = $this->getPlayer()->getName();
+        $position = LocationUtils::toString($this->getPlayer()->asLocation());
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($playerName, $position) {
+            $mysqli->query("UPDATE `Position` SET position='$position' WHERE playername='$playerName'");
+        });
         LobbyPlayerCache::unregisterLobbyPlayer($this->getPlayer()->getName());
     }
 
@@ -145,5 +241,182 @@ class LobbyPlayer
     public function setLottoWin(array $lottoWin): void
     {
         $this->lottoWin = $lottoWin;
+    }
+
+    /**
+     * @param mixed $dailyCoinBombTime
+     */
+    public function setDailyCoinBombTime($dailyCoinBombTime): void
+    {
+        $this->dailyCoinBombTime = $dailyCoinBombTime;
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($dailyCoinBombTime, $playerName){
+            $mysqli->query("UPDATE `DailyReward` SET coinbomb='$dailyCoinBombTime' WHERE playername='$playerName'");
+        });
+    }
+
+    /**
+     * @param mixed $dailyCoinTime
+     */
+    public function setDailyCoinTime($dailyCoinTime): void
+    {
+        $this->dailyCoinTime = $dailyCoinTime;
+
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($dailyCoinTime, $playerName){
+            $mysqli->query("UPDATE `DailyReward` SET coins='$dailyCoinTime' WHERE playername='$playerName'");
+        });
+    }
+
+    /**
+     * @param mixed $dailyHypeTrainTime
+     */
+    public function setDailyHypeTrainTime($dailyHypeTrainTime): void
+    {
+        $this->dailyHypeTrainTime = $dailyHypeTrainTime;
+
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($dailyHypeTrainTime, $playerName){
+            $mysqli->query("UPDATE `DailyReward` SET hypetrain='$dailyHypeTrainTime' WHERE playername='$playerName'");
+        });
+    }
+
+    /**
+     * @param mixed $dailyLottoTicketTime
+     */
+    public function setDailyLottoTicketTime($dailyLottoTicketTime): void
+    {
+        $this->dailyLottoTicketTime = $dailyLottoTicketTime;
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($dailyLottoTicketTime, $playerName){
+            $mysqli->query("UPDATE `DailyReward` SET lottoticket='$dailyLottoTicketTime' WHERE playername='$playerName'");
+        });
+    }
+
+    /**
+     * @param mixed $lastLoginStreak
+     */
+    public function setLastLoginStreak($lastLoginStreak): void
+    {
+        $this->lastLoginStreak = $lastLoginStreak;
+    }
+
+    /**
+     * @param mixed $nextLoginStreak
+     */
+    public function setNextLoginStreak($nextLoginStreak): void
+    {
+        $this->nextLoginStreak = $nextLoginStreak;
+    }
+
+    /**
+     * @param mixed $loginStreak
+     */
+    public function setLoginStreak($loginStreak): void
+    {
+        $this->loginStreak = $loginStreak;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLoginStreak()
+    {
+        return $this->loginStreak;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastLoginStreak()
+    {
+        return $this->lastLoginStreak;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNextLoginStreak()
+    {
+        return $this->nextLoginStreak;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDailyCoinBombTime()
+    {
+        return $this->dailyCoinBombTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDailyCoinTime()
+    {
+        return $this->dailyCoinTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDailyHypeTrainTime()
+    {
+        return $this->dailyHypeTrainTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDailyLottoTicketTime()
+    {
+        return $this->dailyLottoTicketTime;
+    }
+
+    public function checkLoginStreak(): void
+    {
+        $now = time();
+        if (date("Y-m-d", $now) != date("Y-m-d", $this->getLastLoginStreak())) {
+            if (date("Y-m-d", $this->getNextLoginStreak()) == date("Y-m-d", $now)) {
+                $this->setLoginStreak($this->getLoginStreak() + 1);
+                $this->setNextLoginStreak(strtotime("next day"));
+                $this->setLastLoginStreak($now);
+
+                if (in_array($this->getLoginStreak(), [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180, 185, 190, 195, 200])) {
+                    if ($this->getPlayer() != null) {
+                        CoinProvider::addCoins($this->getPlayer()->getName(), 1000);
+                        $this->getPlayer()->sendMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-loginstreak-get-coins', $this->getPlayer()->getName(), ['#coins' => 1000]));
+                    }
+                }
+
+                $ls = $this->getLoginStreak();
+                $next = $this->getNextLoginStreak();
+                $last = $this->getLastLoginStreak();
+                $playerName = $this->getPlayer()->getName();
+                AsyncExecutor::submitMySQLAsyncTask("Lobby",function (mysqli $mysqli) use ($ls, $next, $last, $playerName) {
+                    $mysqli->query("UPDATE LoginStreak SET loginstreak='$ls',nextstreakday='$next',laststreakday='$last' WHERE playername='$playerName'");
+                });
+            }else {
+                $this->resetLoginStreak();
+            }
+        }
+    }
+
+    public function resetLoginStreak(): void
+    {
+        $this->setLastLoginStreak(time());
+        $this->setNextLoginStreak(strtotime("next day"));
+        $this->setLoginStreak(0);
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($playerName){
+            $now = strtotime("next day");
+            $now2 = time();
+
+            $mysqli->query("UPDATE LoginStreak SET loginstreak='0',nextstreakday='$now',laststreakday='$now2' WHERE playername='$playerName'");
+        }, function (Server $server, $result) use ($playerName){
+            if(($player = $server->getPlayerExact($playerName)) != null) {
+                $player->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer('lobby-loginstreak-reset', $player->getName()));
+            }
+        });
     }
 }

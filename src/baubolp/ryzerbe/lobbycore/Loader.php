@@ -6,13 +6,27 @@ namespace baubolp\ryzerbe\lobbycore;
 
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\command\BuildCommand;
+use baubolp\ryzerbe\lobbycore\command\DailyRewardCommand;
 use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
+use baubolp\ryzerbe\lobbycore\command\StatusCommand;
+use baubolp\ryzerbe\lobbycore\listener\BlockBreakListener;
+use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
+use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
+use baubolp\ryzerbe\lobbycore\listener\BlockPlaceListener;
+use baubolp\ryzerbe\lobbycore\listener\BlockUpdateListener;
+use baubolp\ryzerbe\lobbycore\listener\EntityDamageListener;
+use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
+use baubolp\ryzerbe\lobbycore\listener\LeavesDecayListener;
+use baubolp\ryzerbe\lobbycore\listener\PlayerDropItemListener;
+use baubolp\ryzerbe\lobbycore\listener\PlayerExhaustListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
+use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
+use muqsit\invmenu\InvMenuHandler;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
@@ -31,6 +45,8 @@ class Loader extends PluginBase
        $this->startTasks();
        self::createMySQLTables();
 
+        if(!InvMenuHandler::isRegistered())
+            InvMenuHandler::register($this);
     }
 
     /**
@@ -47,7 +63,9 @@ class Loader extends PluginBase
             new BuildCommand(),
             new PrivateServerCommand(),
             new FlyCommand(),
-            new LottoCommand()
+            new LottoCommand(),
+            new DailyRewardCommand(),
+            new StatusCommand()
         ]);
     }
 
@@ -55,7 +73,18 @@ class Loader extends PluginBase
     {
         $listeners = [
             new PlayerJoinNetworkListener(),
-            new PlayerJoinListener()
+            new PlayerJoinListener(),
+            new PlayerQuitListener(),
+            new InventoryTransactionListener(),
+            new BlockPlaceListener(),
+            new BlockBreakListener(),
+            new PlayerDropItemListener(),
+            new PlayerExhaustListener(),
+            new EntityDamageListener(),
+            new BlockGrowListener(),
+            new BlockUpdateListener(),
+            new BlockFormListener(),
+            new LeavesDecayListener()
         ];
 
         foreach ($listeners as $listener)
@@ -72,6 +101,10 @@ class Loader extends PluginBase
     {
         AsyncExecutor::submitMySQLAsyncTask("Lobby", function (\mysqli $mysqli){
             $mysqli->query("CREATE TABLE IF NOT EXISTS LottoTickets(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(16) NOT NULL, tickets integer NOT NULL)");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS Position(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(16) NOT NULL, position varchar(32) NOT NULL)");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS LoginStreak(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, loginstreak integer NOT NULL, nextstreakday integer NOT NULL, laststreakday integer NOT NULL)");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS DailyReward(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(16) NOT NULL, coins integer NOT NULL, lottoticket integer NOT NULL, coinbomb integer NOT NULL, hypetrain integer NOT NULL)");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS Status(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, status varchar(25) NOT NULL)");
         });
     }
 }

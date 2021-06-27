@@ -7,7 +7,6 @@ namespace baubolp\ryzerbe\lobbycore\provider;
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use pocketmine\item\Item;
-use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 class LottoProvider
@@ -22,7 +21,6 @@ class LottoProvider
         $playerName = $player->getPlayer()->getName();
         AsyncExecutor::submitMySQLAsyncTask("Lobby", function (\mysqli $mysqli) use ($count, $playerName){
             $mysqli->query("UPDATE LottoTickets SET tickets=tickets+'$count' WHERE playername='$playerName'");
-            $mysqli->close();
         });
     }
 
@@ -36,7 +34,6 @@ class LottoProvider
         $player->removeTicket($count);
         AsyncExecutor::submitMySQLAsyncTask("Lobby", function (\mysqli $mysqli) use ($count, $playerName){
             $mysqli->query("UPDATE LottoTickets SET tickets=tickets-'$count' WHERE playername='$playerName'");
-            $mysqli->close();
         });
     }
 

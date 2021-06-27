@@ -4,6 +4,8 @@
 namespace baubolp\ryzerbe\lobbycore\listener;
 
 
+use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
+use baubolp\ryzerbe\lobbycore\animation\type\PlayerJoinAnimation;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\event\Listener;
@@ -18,5 +20,8 @@ class PlayerJoinListener implements Listener
         $lobbyPlayer = new LobbyPlayer($player);
         LobbyPlayerCache::registerLobbyPlayer($lobbyPlayer);
         $lobbyPlayer->load();
+
+        if(in_array($player->getName(), PlayerJoinNetworkListener::$willPlay))
+            AnimationProvider::addActiveAnimation(new PlayerJoinAnimation($player));
     }
 }
