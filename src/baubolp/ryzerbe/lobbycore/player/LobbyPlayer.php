@@ -10,7 +10,6 @@ use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\Loader;
 use mysqli;
-use pocketmine\level\Location;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
@@ -25,6 +24,8 @@ class LobbyPlayer
     private $fly = false;
     /** @var int */
     private $tickets = 0;
+    /** @var int */
+    private $coinBombs = 0;
     /** @var array  */
     private $lottoWin = [];
     private $loginStreak;
@@ -57,6 +58,16 @@ class LobbyPlayer
             }else {
                 while($data = $res->fetch_assoc()) {
                     $playerData["lottotickets"] = $data["tickets"];
+                }
+            }
+
+            $res = $mysqli->query("SELECT * FROM Coinbombs WHERE playername='$playerName'");
+            if($res->num_rows <= 0) {
+                $mysqli->query("INSERT INTO `LottoTickets`(`playername`, `tickets`) VALUES ('$playerName', '0')");
+                $playerData["bombs"] = 0;
+            }else {
+                while($data = $res->fetch_assoc()) {
+                    $playerData["bombs"] = $data["bombs"];
                 }
             }
 
@@ -114,6 +125,7 @@ class LobbyPlayer
                 $lobbyPlayer->setLoginStreak($loadedData["loginstreak"]);
                 $lobbyPlayer->setLastLoginStreak($loadedData["laststreakday"]);
                 $lobbyPlayer->setNextLoginStreak($loadedData["nextstreakday"]);
+                $lobbyPlayer->setCoinBombs($loadedData["bombs"]);
 
                 if($loadedData["spawn"] == 0)
                     $lobbyPlayer->getPlayer()->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
@@ -418,5 +430,37 @@ class LobbyPlayer
                 $player->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer('lobby-loginstreak-reset', $player->getName()));
             }
         });
+    }
+
+    /**
+     * @return int
+     */
+    public function getCoinBombs(): int
+    {
+        return $this->coinBombs;
+    }
+
+    /**
+     * @param int $coinBombs
+     */
+    public function setCoinBombs(int $coinBombs): void
+    {
+        $this->coinBombs = $coinBombs;
+    }
+
+    /**
+     * @param int $count
+     */
+    public function addCoinbomb(int $count = 1)
+    {
+        $this->coinBombs += $count;
+    }
+
+    /**
+     * @param int $count
+     */
+    public function removeCoinbomb(int $count = 1)
+    {
+        $this->coinBombs -= $count;
     }
 }
