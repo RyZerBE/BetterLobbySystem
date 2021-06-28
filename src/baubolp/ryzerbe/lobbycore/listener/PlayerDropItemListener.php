@@ -26,7 +26,7 @@ class PlayerDropItemListener implements Listener
                 if ($player === null) return;
 
                 $player->removeCoinbomb();
-                AnimationProvider::addActiveAnimation(new CoinbombAnimation());
+                AnimationProvider::addActiveAnimation(new CoinbombAnimation($player->getPlayer()));
             }
         }
     }

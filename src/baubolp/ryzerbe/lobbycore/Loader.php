@@ -6,11 +6,13 @@ namespace baubolp\ryzerbe\lobbycore;
 
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\command\BuildCommand;
+use baubolp\ryzerbe\lobbycore\command\CoinbombCommand;
 use baubolp\ryzerbe\lobbycore\command\DailyRewardCommand;
 use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
+use baubolp\ryzerbe\lobbycore\entity\CoinBombMinecartEntity;
 use baubolp\ryzerbe\lobbycore\listener\BlockBreakListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
@@ -27,6 +29,7 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
 use muqsit\invmenu\InvMenuHandler;
+use pocketmine\entity\Entity;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
@@ -42,6 +45,7 @@ class Loader extends PluginBase
        self::$instance = $this;
        $this->registerCommands();
        $this->registerListeners();
+       $this->registerEntities();
        $this->startTasks();
        self::createMySQLTables();
 
@@ -65,7 +69,8 @@ class Loader extends PluginBase
             new FlyCommand(),
             new LottoCommand(),
             new DailyRewardCommand(),
-            new StatusCommand()
+            new StatusCommand(),
+            new CoinbombCommand()
         ]);
     }
 
@@ -89,6 +94,15 @@ class Loader extends PluginBase
 
         foreach ($listeners as $listener)
             $this->getServer()->getPluginManager()->registerEvents($listener, $this);
+    }
+
+    public function registerEntities(): void {
+        $entities = [
+            CoinBombMinecartEntity::class
+        ];
+        foreach($entities as $entity) {
+            Entity::registerEntity($entity, true);
+        }
     }
 
     public function startTasks(): void

@@ -44,7 +44,7 @@ class PlayerJoinAnimation extends Animation
         parent::__construct();
     }
 
-    public function tick()
+    public function tick(): void
     {
         if (($player = Loader::getInstance()->getServer()->getPlayerExact($this->playerName)) != null) {
             $title = $this->joinAnimation[$this->getCurrentTick()] ?? null;

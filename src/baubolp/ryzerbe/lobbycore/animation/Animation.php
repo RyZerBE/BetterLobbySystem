@@ -4,20 +4,22 @@
 namespace baubolp\ryzerbe\lobbycore\animation;
 
 
+use function uniqid;
+
 abstract class Animation
 {
     /** @var int  */
     private $ticks = 0;
 
-    /** @var int */
+    /** @var string */
     private $id;
 
     public function __construct()
     {
-        $this->id = rand(1, 20000);
+        $this->id = uniqid();
     }
 
-    public function tick() {
+    public function tick(): void {
         $this->ticks++;
     }
 
@@ -30,9 +32,9 @@ abstract class Animation
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getAnimationId(): int
+    public function getAnimationId(): string
     {
         return $this->id;
     }
