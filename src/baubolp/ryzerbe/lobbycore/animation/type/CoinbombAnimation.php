@@ -26,7 +26,7 @@ class CoinbombAnimation extends Animation
     private $center;
 
     /** @var int  */
-    private $totalMinecarts = 30;
+    private $totalMinecarts = 20;
     /** @var int  */
     private $nextMinecartTick = 0;
 
@@ -52,8 +52,8 @@ class CoinbombAnimation extends Animation
                 $yDown = $player->getFloorY() - 1;
                 $p_x = $player->getFloorX();
                 $p_z = $player->getFloorZ();
-                for($x = -3; $x <= 3; $x++) {
-                    for($z = -3; $z <= 3; $z++) {
+                for($x = -4; $x <= 4; $x++) {
+                    for($z = -4; $z <= 4; $z++) {
                         if(mt_rand(0, 100) > 50) continue;
                         $block = $level->getBlockAt($p_x + $x, $yDown, $p_z + $z);
                         if(!$block->isSolid() || $block->getId() === Block::GOLD_BLOCK) continue;
@@ -65,13 +65,15 @@ class CoinbombAnimation extends Animation
         }
 
         if($this->getCurrentTick() > 40) {
-            if(--$this->totalMinecarts > 0 && -$this->nextMinecartTick <= 0) {
+            if($this->totalMinecarts > 0 && -$this->nextMinecartTick <= 0) {
                 $this->nextMinecartTick = mt_rand(15, 60);
 
-                $position = $this->center->asVector3()->add(mt_rand(-3, 3), mt_rand(3, 8), mt_rand(-3, 3));
+                $position = $this->center->asVector3()->add(mt_rand(-4, 4), mt_rand(3, 8), mt_rand(-4, 4));
                 $nbt = Entity::createBaseNBT($position);
                 $minecart = new CoinBombMinecartEntity($level, $nbt);
                 $minecart->spawnToAll();
+
+                $this->totalMinecarts--;
             }
         }
 

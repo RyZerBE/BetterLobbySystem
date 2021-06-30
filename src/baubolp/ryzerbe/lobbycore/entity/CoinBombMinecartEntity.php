@@ -22,6 +22,7 @@ class CoinBombMinecartEntity extends Vehicle {
      * @return bool
      */
     public function onUpdate(int $currentTick): bool{
+        if($this->isClosed() || $this->isFlaggedForDespawn()) return false;
         if($this->isOnGround() || $this->ticksLived > (20 * 10)) {
             $this->flagForDespawn();
             $this->getLevel()->addSound(new FizzSound($this));
