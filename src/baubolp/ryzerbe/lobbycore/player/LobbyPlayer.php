@@ -63,7 +63,7 @@ class LobbyPlayer
 
             $res = $mysqli->query("SELECT * FROM Coinbombs WHERE playername='$playerName'");
             if($res->num_rows <= 0) {
-                $mysqli->query("INSERT INTO `LottoTickets`(`playername`, `tickets`) VALUES ('$playerName', '0')");
+                $mysqli->query("INSERT INTO `Coinbombs`(`playername`, `bombs`) VALUES ('$playerName', '0')");
                 $playerData["bombs"] = 0;
             }else {
                 while($data = $res->fetch_assoc()) {
