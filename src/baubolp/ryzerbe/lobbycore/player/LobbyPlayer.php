@@ -8,6 +8,7 @@ use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\provider\CoinProvider;
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\LocationUtils;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 use baubolp\ryzerbe\lobbycore\Loader;
 use mysqli;
 use pocketmine\Player;
@@ -35,6 +36,7 @@ class LobbyPlayer
     private $dailyCoinBombTime;
     private $dailyLottoTicketTime;
     private $dailyHypeTrainTime;
+    private $activeCosmetics = [];
 
     public function __construct(Player $player)
     {
@@ -462,5 +464,37 @@ class LobbyPlayer
     public function removeCoinbomb(int $count = 1)
     {
         $this->coinBombs -= $count;
+    }
+
+    /**
+     * @return Cosmetic[]
+     */
+    public function getActiveCosmetics(): array{
+        return $this->activeCosmetics;
+    }
+
+    /**
+     * @param Cosmetic $cosmetic
+     * @return bool
+     */
+    public function isCosmeticActivated(Cosmetic $cosmetic): bool {
+        return isset($this->activeCosmetics[$cosmetic->getIdentifier()]);
+    }
+
+    /**
+     * @param Cosmetic $cosmetic
+     */
+    public function activateCosmetic(Cosmetic $cosmetic): void {
+        $this->activeCosmetics[$cosmetic->getIdentifier()] = $cosmetic;
+        $cosmetic->onActivate($this->getPlayer());
+    }
+
+    /**
+     * @param Cosmetic $cosmetic
+     */
+    public function deactivateCosmetic(Cosmetic $cosmetic): void {
+        if(!$this->isCosmeticActivated($cosmetic)) return;
+        unset($this->activeCosmetics[$cosmetic->getIdentifier()]);
+        $cosmetic->onDeactivate($this->getPlayer());
     }
 }

@@ -12,7 +12,9 @@ use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
+use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\entity\CoinBombMinecartEntity;
+use baubolp\ryzerbe\lobbycore\entity\ItemRainItemEntity;
 use baubolp\ryzerbe\lobbycore\listener\BlockBreakListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
@@ -48,6 +50,8 @@ class Loader extends PluginBase
        $this->registerEntities();
        $this->startTasks();
        self::createMySQLTables();
+
+       CosmeticManager::getInstance();
 
         if(!InvMenuHandler::isRegistered())
             InvMenuHandler::register($this);
@@ -98,7 +102,8 @@ class Loader extends PluginBase
 
     public function registerEntities(): void {
         $entities = [
-            CoinBombMinecartEntity::class
+            CoinBombMinecartEntity::class,
+            ItemRainItemEntity::class
         ];
         foreach($entities as $entity) {
             Entity::registerEntity($entity, true);

@@ -6,6 +6,7 @@ namespace baubolp\ryzerbe\lobbycore\animation\type;
 
 use baubolp\ryzerbe\lobbycore\animation\Animation;
 use baubolp\ryzerbe\lobbycore\entity\CoinBombMinecartEntity;
+use baubolp\ryzerbe\lobbycore\util\BlockQueue;
 use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\level\sound\PopSound;
@@ -79,7 +80,7 @@ class CoinbombAnimation extends Animation
 
         if(isset($this->blockPlaceQueue[$this->getCurrentTick()])) {
             foreach($this->blockPlaceQueue[$this->getCurrentTick()] as $block) {
-                $this->blocks[$this->getCurrentTick() + (mt_rand(5, 10) * 20)][] = $block;
+                BlockQueue::addBlock($block, mt_rand(5, 10) * 20);
 
                 $level->setBlockIdAt($block->x, $block->y, $block->z, Block::GOLD_BLOCK);
                 $level->setBlockDataAt($block->x, $block->y, $block->z, 0);
@@ -88,14 +89,7 @@ class CoinbombAnimation extends Animation
             }
         }
 
-        if(isset($this->blocks[$this->getCurrentTick()])) {
-            foreach($this->blocks[$this->getCurrentTick()] as $block) {
-                $level->setBlockIdAt($block->x, $block->y, $block->z, $block->getId());
-                $level->setBlockDataAt($block->x, $block->y, $block->z, $block->getDamage());
-            }
-            unset($this->blocks[$this->getCurrentTick()]);
-        }
-        if($this->totalMinecarts <= 0 && empty($this->blocks)) $this->stop();
+        if($this->totalMinecarts <= 0) $this->stop();
         parent::tick();
     }
 }
