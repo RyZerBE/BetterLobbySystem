@@ -4,6 +4,8 @@
 namespace baubolp\ryzerbe\lobbycore\player;
 
 
+use baubolp\core\player\RyzerPlayer;
+use baubolp\core\player\RyzerPlayerProvider;
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\provider\CoinProvider;
 use baubolp\core\provider\LanguageProvider;
@@ -11,6 +13,7 @@ use baubolp\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 use baubolp\ryzerbe\lobbycore\Loader;
+use baubolp\ryzerbe\lobbycore\provider\ItemProvider;
 use mysqli;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -31,6 +34,7 @@ class LobbyPlayer
     private $coinBombs = 0;
     /** @var array  */
     private $lottoWin = [];
+
     private $activeCosmetics = [];
     private $loginStreak;
     private $nextLoginStreak;
@@ -40,6 +44,8 @@ class LobbyPlayer
     private $dailyLottoTicketTime;
     private $dailyHypeTrainTime;
     private $cosmetics;
+    /** @var bool */
+    private $shield = false;
 
     public function __construct(Player $player)
     {
@@ -140,6 +146,7 @@ class LobbyPlayer
                 $lobbyPlayer->setLastLoginStreak($loadedData["laststreakday"]);
                 $lobbyPlayer->setNextLoginStreak($loadedData["nextstreakday"]);
                 $lobbyPlayer->setCoinBombs($loadedData["bombs"]);
+                ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
 
                 $cosmetics = [];
                 $activeCosmetics = [];
@@ -572,5 +579,39 @@ class LobbyPlayer
         AsyncExecutor::submitMySQLAsyncTask("Lobby", function(mysqli $mysqli) use ($playerName, $cosmetic): void {
             $mysqli->query("UPDATE Cosmetics SET active='0' WHERE playername='$playerName' AND cosmetic='$cosmetic'");
         });
+    }
+
+    /**
+     * @param bool $shield
+     */
+    public function setShield(bool $shield): void
+    {
+        $this->shield = $shield;
+    }
+
+    public function enableShield(): void
+    {
+        $this->setShield(true);
+    }
+
+    public function disableShield(): void
+    {
+        $this->setShield(false);
+    }
+
+    /**
+     * @return bool
+     */
+    public function enabledShield(): bool
+    {
+        return $this->shield;
+    }
+
+    /**
+     * @return \baubolp\core\player\RyzerPlayer|null
+     */
+    public function asRyZerPlayer(): ?RyzerPlayer
+    {
+        return RyzerPlayerProvider::getRyzerPlayer($this->getPlayer()->getName());
     }
 }

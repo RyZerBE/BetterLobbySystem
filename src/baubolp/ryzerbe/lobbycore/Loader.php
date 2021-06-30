@@ -26,6 +26,7 @@ use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
 use baubolp\ryzerbe\lobbycore\listener\LeavesDecayListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerDropItemListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerExhaustListener;
+use baubolp\ryzerbe\lobbycore\listener\PlayerInteractListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
@@ -94,7 +95,8 @@ class Loader extends PluginBase
             new BlockGrowListener(),
             new BlockUpdateListener(),
             new BlockFormListener(),
-            new LeavesDecayListener()
+            new LeavesDecayListener(),
+            new PlayerInteractListener()
         ];
 
         foreach ($listeners as $listener)
@@ -114,7 +116,7 @@ class Loader extends PluginBase
     public function startTasks(): void
     {
         $this->getScheduler()->scheduleRepeatingTask(new AnimationTask(), 1);
-        $this->getScheduler()->scheduleRepeatingTask(new LobbyTask(), 10);
+        $this->getScheduler()->scheduleRepeatingTask(new LobbyTask(), 5);
     }
 
     public static function createMySQLTables(): void
