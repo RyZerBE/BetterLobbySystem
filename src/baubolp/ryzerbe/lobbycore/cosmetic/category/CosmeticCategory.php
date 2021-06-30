@@ -34,4 +34,18 @@ abstract class CosmeticCategory {
     public function getCosmetics(): array{
         return $this->cosmetics;
     }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string {
+        return "";
+    }
+
+    /**
+     * @return int
+     */
+    public function getIconType(): int {
+        return -1;
+    }
 }

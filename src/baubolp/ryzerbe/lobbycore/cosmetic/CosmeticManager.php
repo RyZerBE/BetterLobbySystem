@@ -7,7 +7,9 @@ use baubolp\ryzerbe\lobbycore\cosmetic\category\type\ItemRainCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\category\type\ParticleCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\category\type\SpecialsCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\category\type\WalkingBlocksCategory;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 use pocketmine\utils\SingletonTrait;
+use function is_null;
 use function var_dump;
 
 class CosmeticManager {
@@ -57,5 +59,17 @@ class CosmeticManager {
      */
     public function getCategories(): array{
         return $this->categories;
+    }
+
+    /**
+     * @param string $identifier
+     * @return Cosmetic|null
+     */
+    public function getCosmetic(string $identifier): ?Cosmetic {
+        foreach($this->getCategories() as $category) {
+            $cosmetic = $category->getCosmetic($identifier);
+            if(!is_null($cosmetic)) return $cosmetic;
+        }
+        return null;
     }
 }

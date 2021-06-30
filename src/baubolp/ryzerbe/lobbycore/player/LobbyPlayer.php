@@ -8,16 +8,18 @@ use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\provider\CoinProvider;
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\LocationUtils;
+use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 use baubolp\ryzerbe\lobbycore\Loader;
 use mysqli;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use function is_null;
 
 class LobbyPlayer
 {
-    /** @var \pocketmine\Player */
+    /** @var Player */
     private $player;
     /** @var bool */
     private $build = false;
@@ -29,6 +31,7 @@ class LobbyPlayer
     private $coinBombs = 0;
     /** @var array  */
     private $lottoWin = [];
+    private $activeCosmetics = [];
     private $loginStreak;
     private $nextLoginStreak;
     private $lastLoginStreak;
@@ -36,7 +39,7 @@ class LobbyPlayer
     private $dailyCoinBombTime;
     private $dailyLottoTicketTime;
     private $dailyHypeTrainTime;
-    private $activeCosmetics = [];
+    private $cosmetics;
 
     public function __construct(Player $player)
     {
@@ -112,6 +115,15 @@ class LobbyPlayer
                 }
             }
 
+            $res = $mysqli->query("SELECT * FROM Cosmetics WHERE playername='$playerName'");
+            $playerData["cosmetics"] = [];//Prevent empty value. Could be replaced with '$loadedData["cosmetics"] ?? []' - Buuuuuttt no
+            while($data = $res->fetch_assoc()) {
+                $playerData["cosmetics"][] = [
+                    "Active" => (bool)$data["active"],
+                    "Cosmetic" => $data["cosmetic"]
+                ];
+            }
+
             $res = $mysqli->query("SELECT * FROM Status WHERE playername='$playerName'");
             if($res->num_rows <= 0) $mysqli->query("INSERT INTO `Status`(`playername`, `status`) VALUES ('$playerName', 'false')");
 
@@ -129,6 +141,17 @@ class LobbyPlayer
                 $lobbyPlayer->setNextLoginStreak($loadedData["nextstreakday"]);
                 $lobbyPlayer->setCoinBombs($loadedData["bombs"]);
 
+                $cosmetics = [];
+                $activeCosmetics = [];
+                foreach($loadedData["cosmetics"] as $cosmeticData) {
+                    $cosmetic = CosmeticManager::getInstance()->getCosmetic($cosmeticData["Cosmetic"]);
+                    if(is_null($cosmetic)) continue;
+                    $cosmetics[] = $cosmetic;
+                    if($cosmeticData["Active"]) $activeCosmetics[] = $activeCosmetics;
+                }
+                $lobbyPlayer->setActiveCosmetics($activeCosmetics);
+                $lobbyPlayer->setCosmetics($cosmetics);
+
                 if($loadedData["spawn"] == 0)
                     $lobbyPlayer->getPlayer()->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
                 else
@@ -140,7 +163,7 @@ class LobbyPlayer
     }
 
     /**
-     * @return \pocketmine\Player
+     * @return Player
      */
     public function getPlayer(): Player
     {
@@ -467,6 +490,42 @@ class LobbyPlayer
     }
 
     /**
+     * @param array $cosmetics
+     */
+    public function setCosmetics(array $cosmetics): void{
+        $this->cosmetics = $cosmetics;
+    }
+
+    /**
+     * @param array $activeCosmetics
+     */
+    public function setActiveCosmetics(array $activeCosmetics): void{
+        $this->activeCosmetics = $activeCosmetics;
+    }
+
+    /**
+     * @param Cosmetic $cosmetic
+     */
+    public function unlockCosmetic(Cosmetic $cosmetic): void {
+        $this->cosmetics[$cosmetic->getIdentifier()] = $cosmetic;
+
+        $playerName = $this->getPlayer()->getName();
+        $cosmetic = $cosmetic->getIdentifier();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function(mysqli $mysqli) use ($playerName, $cosmetic): void {
+            $mysqli->query("INSERT INTO Cosmetics (playername, cosmetic) VALUES ('$playerName', '$cosmetic')");
+        });
+    }
+
+    /**
+     * @param Cosmetic $cosmetic
+     * @return bool
+     */
+    public function isCosmeticUnlocked(Cosmetic $cosmetic): bool {
+        return isset($this->cosmetics[$cosmetic->getIdentifier()]);
+    }
+
+
+    /**
      * @return Cosmetic[]
      */
     public function getActiveCosmetics(): array{
@@ -485,8 +544,19 @@ class LobbyPlayer
      * @param Cosmetic $cosmetic
      */
     public function activateCosmetic(Cosmetic $cosmetic): void {
+        foreach($this->getActiveCosmetics() as $activeCosmetic) {
+            if($activeCosmetic->getCategory() !== $cosmetic->getCategory()) continue;
+            $this->deactivateCosmetic($activeCosmetic);
+        }
+
         $this->activeCosmetics[$cosmetic->getIdentifier()] = $cosmetic;
         $cosmetic->onActivate($this->getPlayer());
+
+        $playerName = $this->getPlayer()->getName();
+        $cosmetic = $cosmetic->getIdentifier();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function(mysqli $mysqli) use ($playerName, $cosmetic): void {
+            $mysqli->query("UPDATE Cosmetics SET active='1' WHERE playername='$playerName' AND cosmetic='$cosmetic'");
+        });
     }
 
     /**
@@ -496,5 +566,11 @@ class LobbyPlayer
         if(!$this->isCosmeticActivated($cosmetic)) return;
         unset($this->activeCosmetics[$cosmetic->getIdentifier()]);
         $cosmetic->onDeactivate($this->getPlayer());
+
+        $playerName = $this->getPlayer()->getName();
+        $cosmetic = $cosmetic->getIdentifier();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function(mysqli $mysqli) use ($playerName, $cosmetic): void {
+            $mysqli->query("UPDATE Cosmetics SET active='0' WHERE playername='$playerName' AND cosmetic='$cosmetic'");
+        });
     }
 }

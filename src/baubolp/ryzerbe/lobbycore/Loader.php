@@ -7,6 +7,7 @@ namespace baubolp\ryzerbe\lobbycore;
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\command\BuildCommand;
 use baubolp\ryzerbe\lobbycore\command\CoinbombCommand;
+use baubolp\ryzerbe\lobbycore\command\CosmeticCommand;
 use baubolp\ryzerbe\lobbycore\command\DailyRewardCommand;
 use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
@@ -58,10 +59,9 @@ class Loader extends PluginBase
     }
 
     /**
-     * @return \baubolp\ryzerbe\lobbycore\Loader
+     * @return Loader
      */
-    public static function getInstance()
-    {
+    public static function getInstance(): ?Loader{
         return self::$instance;
     }
 
@@ -74,7 +74,8 @@ class Loader extends PluginBase
             new LottoCommand(),
             new DailyRewardCommand(),
             new StatusCommand(),
-            new CoinbombCommand()
+            new CoinbombCommand(),
+            new CosmeticCommand()
         ]);
     }
 
@@ -125,6 +126,7 @@ class Loader extends PluginBase
             $mysqli->query("CREATE TABLE IF NOT EXISTS DailyReward(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(16) NOT NULL, coins integer NOT NULL, lottoticket integer NOT NULL, coinbomb integer NOT NULL, hypetrain integer NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Status(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, status varchar(25) NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Coinbombs(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, bombs integer NOT NULL)");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS Cosmetics (id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL, cosmetic VARCHAR(128) NOT NULL, active INT NOT NULL DEFAULT '0')");
         });
     }
 }
