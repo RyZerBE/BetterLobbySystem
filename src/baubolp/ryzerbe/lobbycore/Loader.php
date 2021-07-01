@@ -10,12 +10,16 @@ use baubolp\ryzerbe\lobbycore\command\CoinbombCommand;
 use baubolp\ryzerbe\lobbycore\command\CosmeticCommand;
 use baubolp\ryzerbe\lobbycore\command\DailyRewardCommand;
 use baubolp\ryzerbe\lobbycore\command\FlyCommand;
+use baubolp\ryzerbe\lobbycore\command\HypeTrainCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
 use baubolp\ryzerbe\lobbycore\command\WarpCommand;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\entity\CoinBombMinecartEntity;
+use baubolp\ryzerbe\lobbycore\entity\hypetrain\HypeTrainEntity;
+use baubolp\ryzerbe\lobbycore\entity\hypetrain\HypeTrainWagonEntity;
+use baubolp\ryzerbe\lobbycore\entity\hypetrain\projectile\HeadProjectileEntity;
 use baubolp\ryzerbe\lobbycore\entity\ItemRainItemEntity;
 use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\listener\BlockBreakListener;
@@ -84,7 +88,8 @@ class Loader extends PluginBase
             new StatusCommand(),
             new CoinbombCommand(),
             new CosmeticCommand(),
-            new WarpCommand()
+            new WarpCommand(),
+            new HypeTrainCommand()
         ]);
     }
 
@@ -115,7 +120,10 @@ class Loader extends PluginBase
     public function registerEntities(): void {
         $entities = [
             CoinBombMinecartEntity::class,
-            ItemRainItemEntity::class
+            ItemRainItemEntity::class,
+            HypeTrainEntity::class,
+            HypeTrainWagonEntity::class,
+            HeadProjectileEntity::class
         ];
         foreach($entities as $entity) {
             Entity::registerEntity($entity, true);

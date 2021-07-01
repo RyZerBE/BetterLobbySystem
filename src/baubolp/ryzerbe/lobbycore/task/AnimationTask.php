@@ -28,12 +28,12 @@ class AnimationTask extends Task
         }
 
         foreach(Server::getInstance()->getOnlinePlayers() as $player) {
+            if($player->isRiding()) continue;
             $rbePlayer = LobbyPlayerCache::getLobbyPlayer($player);
             if(is_null($rbePlayer)) continue;
-            foreach($rbePlayer->getActiveCosmetics() as $cosmetic)
+            foreach($rbePlayer->getActiveCosmetics() as $cosmetic){
                 $cosmetic->onUpdate($player, $currentTick);
-
-            #$player->sendTip("§a" . count($rbePlayer->getActiveCosmetics()));
+            }
         }
 
         BlockQueue::onUpdate($currentTick);

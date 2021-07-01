@@ -14,7 +14,8 @@ class PlayerInteractListener implements Listener
     public function interact(PlayerInteractEvent $event)
     {
         $player = $event->getPlayer();
-        if (ItemProvider::execItem($player))
+        if (ItemProvider::execItem($player)) {
             $event->setCancelled();
+        }
     }
 }

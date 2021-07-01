@@ -6,12 +6,14 @@ namespace baubolp\ryzerbe\lobbycore\provider;
 
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\ItemUtils;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;
 use baubolp\ryzerbe\lobbycore\form\LobbySwitcherForm;
 use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\form\profile\ProfileOverviewForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\item\Item;
+use pocketmine\level\sound\BlazeShootSound;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -42,36 +44,46 @@ class ItemProvider
     public static function execItem(Player $player): bool
     {
         $item = $player->getInventory()->getItemInHand();
-        if(!ItemUtils::hasItemTag($item, "lobby_item") || $player->hasItemCooldown($item)) return false;
+        if($player->hasItemCooldown($item)) return false;
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
-
         if(is_null($lobbyPlayer)) return false;
         $player->resetItemCooldown($item, 10);
 
-        switch (ItemUtils::getItemTag($item, "lobby_item")) {
-            case "shield":
-                if (!$lobbyPlayer->enabledShield()) {
-                    $lobbyPlayer->enableShield();
-                    $player->sendActionBarMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-shield-activated', $player->getName()));
-                } else {
-                    $lobbyPlayer->disableShield();
-                    $player->sendActionBarMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-shield-deactivated', $player->getName()));
-                }
-                break;
-            case "profile":
-                ProfileOverviewForm::open($player);
-                break;
-            case "gadgets":
-                $player->getServer()->getCommandMap()->dispatch($player, "cosmetic");
-                break;
-            case "navigator":
-                NavigatorForm::open($player);
-                break;
-            case "lobbyswitcher":
-                LobbySwitcherForm::open($player);
-                break;
+        if(ItemUtils::hasItemTag($item, "lobby_item")) {
+            switch (ItemUtils::getItemTag($item, "lobby_item")) {
+                case "shield":
+                    if (!$lobbyPlayer->enabledShield()) {
+                        $lobbyPlayer->enableShield();
+                        $player->sendActionBarMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-shield-activated', $player->getName()));
+                    } else {
+                        $lobbyPlayer->disableShield();
+                        $player->sendActionBarMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-shield-deactivated', $player->getName()));
+                    }
+                    break;
+                case "profile":
+                    ProfileOverviewForm::open($player);
+                    break;
+                case "gadgets":
+                    $player->getServer()->getCommandMap()->dispatch($player, "cosmetic");
+                    break;
+                case "navigator":
+                    NavigatorForm::open($player);
+                    break;
+                case "lobbyswitcher":
+                    LobbySwitcherForm::open($player);
+                    break;
+            }
         }
-
+        if(ItemUtils::hasItemTag($item, "hypetrain_item")) {
+            switch(ItemUtils::getItemTag($item, "hypetrain_item")) {
+                case "head_canon": {
+                    HypeTrain::shootHead($player);
+                    $player->getLevel()->addSound(new BlazeShootSound($player));
+                    $player->resetItemCooldown($item, 60);
+                    break;
+                }
+            }
+        }
         return true;
     }
 
