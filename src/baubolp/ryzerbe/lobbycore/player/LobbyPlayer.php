@@ -32,6 +32,8 @@ class LobbyPlayer
     private $tickets = 0;
     /** @var int */
     private $coinBombs = 0;
+    /** @var int */
+    private $hypeTrains = 0;
     /** @var array  */
     private $lottoWin = [];
 
@@ -79,6 +81,16 @@ class LobbyPlayer
             }else {
                 while($data = $res->fetch_assoc()) {
                     $playerData["bombs"] = $data["bombs"];
+                }
+            }
+
+            $res = $mysqli->query("SELECT * FROM Hypetrains WHERE playername='$playerName'");
+            if($res->num_rows <= 0) {
+                $mysqli->query("INSERT INTO `Hypetrains`(`playername`) VALUES ('$playerName')");
+                $playerData["hypetrains"] = 0;
+            }else {
+                while($data = $res->fetch_assoc()) {
+                    $playerData["hypetrains"] = $data["hypetrains"];
                 }
             }
 
@@ -146,6 +158,7 @@ class LobbyPlayer
                 $lobbyPlayer->setLastLoginStreak($loadedData["laststreakday"]);
                 $lobbyPlayer->setNextLoginStreak($loadedData["nextstreakday"]);
                 $lobbyPlayer->setCoinBombs($loadedData["bombs"]);
+                $lobbyPlayer->setHypeTrains($loadedData["hypetrains"]);
                 ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
 
                 $cosmetics = [];
@@ -478,6 +491,11 @@ class LobbyPlayer
     public function setCoinBombs(int $coinBombs): void
     {
         $this->coinBombs = $coinBombs;
+
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function(mysqli $mysqli) use ($coinBombs, $playerName): void {
+            $mysqli->query("UPDATE Coinbombs SET bombs='$coinBombs' WHERE playername='$playerName'");
+        });
     }
 
     /**
@@ -485,7 +503,7 @@ class LobbyPlayer
      */
     public function addCoinbomb(int $count = 1)
     {
-        $this->coinBombs += $count;
+        $this->setCoinBombs($this->coinBombs + $count);
     }
 
     /**
@@ -493,7 +511,44 @@ class LobbyPlayer
      */
     public function removeCoinbomb(int $count = 1)
     {
-        $this->coinBombs -= $count;
+        $this->setCoinBombs($this->coinBombs - $count);
+    }
+
+    /**
+     * @return int
+     */
+    public function getHypeTrains(): int
+    {
+        return $this->hypeTrains;
+    }
+
+    /**
+     * @param int $hypeTrains
+     */
+    public function setHypeTrains(int $hypeTrains): void
+    {
+        $this->hypeTrains = $hypeTrains;
+
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function(mysqli $mysqli) use ($hypeTrains, $playerName): void {
+            $mysqli->query("UPDATE Hypetrains SET hypetrains='$hypeTrains' WHERE playername='$playerName'");
+        });
+    }
+
+    /**
+     * @param int $count
+     */
+    public function addHypeTrains(int $count = 1)
+    {
+        $this->setHypeTrains($this->hypeTrains + $count);
+    }
+
+    /**
+     * @param int $count
+     */
+    public function removeHypeTrains(int $count = 1)
+    {
+        $this->setHypeTrains($this->hypeTrains - $count);
     }
 
     /**
