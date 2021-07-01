@@ -153,8 +153,8 @@ class LobbyPlayer
                 foreach($loadedData["cosmetics"] as $cosmeticData) {
                     $cosmetic = CosmeticManager::getInstance()->getCosmetic($cosmeticData["Cosmetic"]);
                     if(is_null($cosmetic)) continue;
-                    $cosmetics[] = $cosmetic;
-                    if($cosmeticData["Active"]) $activeCosmetics[] = $activeCosmetics;
+                    $cosmetics[$cosmetic->getIdentifier()] = $cosmetic;
+                    if($cosmeticData["Active"]) $activeCosmetics[$cosmetic->getIdentifier()] = $cosmetic;
                 }
                 $lobbyPlayer->setActiveCosmetics($activeCosmetics);
                 $lobbyPlayer->setCosmetics($cosmetics);

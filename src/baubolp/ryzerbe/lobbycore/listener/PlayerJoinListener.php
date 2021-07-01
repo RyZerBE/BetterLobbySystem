@@ -26,11 +26,5 @@ class PlayerJoinListener implements Listener
         if(in_array($player->getName(), PlayerJoinNetworkListener::$willPlay))
             AnimationProvider::addActiveAnimation(new PlayerJoinAnimation($player));
 
-        //todo: remove this
-        foreach(CosmeticManager::getInstance()->getCategories() as $category) {
-            foreach($category->getCosmetics() as $cosmetic) {
-                $lobbyPlayer->activateCosmetic($cosmetic);
-            }
-        }
     }
 }

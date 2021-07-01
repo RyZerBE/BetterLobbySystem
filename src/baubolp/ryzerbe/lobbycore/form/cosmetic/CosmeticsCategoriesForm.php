@@ -19,8 +19,10 @@ class CosmeticsCategoriesForm {
             if($data === null) return;
             $category = CosmeticManager::getInstance()->getCategory($data);
             if(is_null($category)) return;
+
+            CosmeticsOverviewForm::open($player, $category);
         });
-        $form->setTitle("§lCosmetics");
+        $form->setTitle("§5§lCosmetics");
         foreach(CosmeticManager::getInstance()->getCategories() as $category) {
             $unlocked = count(array_filter($rbePlayer->getActiveCosmetics(), function(Cosmetic $cosmetic) use ($category): bool {
                 return $cosmetic->getCategory() === $category->getId();
