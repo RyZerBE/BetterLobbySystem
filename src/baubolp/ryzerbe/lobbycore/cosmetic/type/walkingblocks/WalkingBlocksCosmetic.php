@@ -37,7 +37,7 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
      * @return int
      */
     public function getCategory(): int{
-        return CosmeticManager::CATEGORY_ITEM_RAIN;
+        return CosmeticManager::CATEGORY_WALKING_BLOCKS;
     }
 
     /**
