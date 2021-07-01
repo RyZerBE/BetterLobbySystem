@@ -29,6 +29,13 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
     /**
      * @return int
      */
+    public function getMaxSecondLayerBlocks(): int {
+        return 1;
+    }
+
+    /**
+     * @return int
+     */
     public function getCategory(): int{
         return CosmeticManager::CATEGORY_ITEM_RAIN;
     }
@@ -40,8 +47,8 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
     public function onUpdate(Player $player, int $currentTick): void{
         if($currentTick % 5 !== 0 || $this->getBlocks() === []) return;
         $this->placeBlocks($player, $this->getBlocks(), ($player->getFloorY() - 1));
-        if($this->getSecondBlockLayer() !== [] && mt_rand(0, 100) > 85) {
-            $this->placeBlocks($player, $this->getSecondBlockLayer(), $player->getFloorY(), false);
+        if($this->getSecondBlockLayer() !== []) {
+            $this->placeBlocks($player, $this->getSecondBlockLayer(), $player->getFloorY(), false, 10, $this->getMaxSecondLayerBlocks());
         }
     }
 
@@ -50,8 +57,10 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
      * @param array $blocks
      * @param int $y
      * @param bool $solid
+     * @param int $rarity
+     * @param int $max
      */
-    protected function placeBlocks(Player $player, array $blocks, int $y, bool $solid = true): void {
+    protected function placeBlocks(Player $player, array $blocks, int $y, bool $solid = true, int $rarity = 60, int $max = 9999): void {
         $level = $player->getLevel();
         $vector3 = $player->asVector3()->floor();
 
@@ -61,7 +70,8 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
 
         for($x = -1; $x <= 1; $x++) {
             for($z = -1; $z <= 1; $z++) {
-                if(mt_rand(1, 100) > 60) continue;
+                if($max <= 0) return;
+                if(mt_rand(1, 100) > $rarity) continue;
                 $block = $blocks[array_rand($blocks)];
 
                 $tempX = $vector3->x + $x;
@@ -77,6 +87,7 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
 
                 $level->setBlockIdAt($tempX, $y, $tempZ, $block->getId());
                 $level->setBlockDataAt($tempX, $y, $tempZ, $block->getDamage());
+                $max--;
             }
         }
     }
