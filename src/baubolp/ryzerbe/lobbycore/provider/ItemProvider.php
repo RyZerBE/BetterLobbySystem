@@ -6,6 +6,7 @@ namespace baubolp\ryzerbe\lobbycore\provider;
 
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\ItemUtils;
+use baubolp\ryzerbe\lobbycore\form\LobbySwitcherForm;
 use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\form\profile\ProfileOverviewForm;
 use baubolp\ryzerbe\lobbycore\Loader;
@@ -64,6 +65,9 @@ class ItemProvider
                 break;
             case "navigator":
                 NavigatorForm::open($player);
+                break;
+            case "lobbyswitcher":
+                LobbySwitcherForm::open($player);
                 break;
         }
 
