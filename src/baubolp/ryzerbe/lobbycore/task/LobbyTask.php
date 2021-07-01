@@ -3,11 +3,9 @@
 
 namespace baubolp\ryzerbe\lobbycore\task;
 
-
 use baubolp\core\player\RyzerPlayerProvider;
 use baubolp\core\provider\RankProvider;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
-use pocketmine\block\Block;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
 
@@ -22,8 +20,9 @@ class LobbyTask extends Task
         foreach (LobbyPlayerCache::getPlayers() as $lobbyPlayer) {
             $player = $lobbyPlayer->getPlayer();
             if (!$lobbyPlayer->enabledFlyMode() && !$player->getAllowFlight()) {
-                if ($lobbyPlayer->getPlayer()->getServer()->getDefaultLevel()->getBlock($lobbyPlayer->getPlayer()->getSide(0))->getId() != Block::AIR)
+                if ($lobbyPlayer->getPlayer()->isOnGround()){
                     $lobbyPlayer->getPlayer()->setAllowFlight(true);
+                }
             } else {
                 if ($player->isFlying() && !$lobbyPlayer->enabledFlyMode() && !$player->isCreative()) {
                     $player->playSound('mob.enderdragon.growl', 5, 1.0, [$player]);
