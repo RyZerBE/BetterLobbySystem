@@ -23,8 +23,8 @@ class ItemProvider
         self::clearAllInventories($player);
 
         $navigator = ItemUtils::addItemTag(Item::get(Item::FIREWORKS)->setCustomName(TextFormat::GREEN."Navigator"."\n".TextFormat::GRAY."[".TextFormat::AQUA."Click".TextFormat::GRAY."]"), "navigator", "lobby_item");
-        $lobbySwitcher = ItemUtils::addItemTag(Item::get(Item::SPAWN_EGG)->setCustomName(TextFormat::GREEN."Lobbyswitcher"."\n".TextFormat::GRAY."[".TextFormat::AQUA."Click".TextFormat::GRAY."]"), "lobbyswitcher", "lobby_item");
-        $profile = ItemUtils::addItemTag(Item::get(Item::MOB_HEAD)->setCustomName(TextFormat::GREEN."Profile"."\n".TextFormat::GRAY."[".TextFormat::AQUA."Click".TextFormat::GRAY."]"), "profile", "lobby_item");
+        $lobbySwitcher = ItemUtils::addItemTag(Item::get(-219)->setCustomName(TextFormat::GREEN."Lobbyswitcher"."\n".TextFormat::GRAY."[".TextFormat::AQUA."Click".TextFormat::GRAY."]"), "lobbyswitcher", "lobby_item");
+        $profile = ItemUtils::addItemTag(Item::get(Item::MOB_HEAD, 3)->setCustomName(TextFormat::GREEN."Profile"."\n".TextFormat::GRAY."[".TextFormat::AQUA."Click".TextFormat::GRAY."]"), "profile", "lobby_item");
         $gadgets = ItemUtils::addItemTag(Item::get(Item::FLINT_AND_STEEL)->setCustomName(TextFormat::GREEN."Gadgets"."\n".TextFormat::GRAY."[".TextFormat::AQUA."Click".TextFormat::GRAY."]"), "gadgets", "lobby_item");
         $shield = ItemUtils::addItemTag(Item::get(Item::SHIELD)->setCustomName(TextFormat::GREEN."Shield"."\n".TextFormat::GRAY."[".TextFormat::AQUA."Click".TextFormat::GRAY."]"), "shield", "lobby_item");
 
