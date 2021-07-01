@@ -13,6 +13,7 @@ use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
+use baubolp\ryzerbe\lobbycore\command\WarpCommand;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\entity\CoinBombMinecartEntity;
 use baubolp\ryzerbe\lobbycore\entity\ItemRainItemEntity;
@@ -31,11 +32,13 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerInteractListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
+use baubolp\ryzerbe\lobbycore\provider\WarpProvider;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
 class Loader extends PluginBase
@@ -47,16 +50,18 @@ class Loader extends PluginBase
 
     public function onEnable()
     {
-       self::$instance = $this;
-       $this->registerCommands();
-       $this->registerListeners();
-       $this->registerEntities();
-       $this->startTasks();
-       self::createMySQLTables();
+        self::$instance = $this;
+        $this->registerCommands();
+        $this->registerListeners();
+        $this->registerEntities();
+        $this->startTasks();
+        self::createMySQLTables();
+        $this->createConfig();
 
-       CosmeticManager::getInstance();
+        CosmeticManager::getInstance();
+        WarpProvider::loadWarps();
 
-        if(!InvMenuHandler::isRegistered())
+        if (!InvMenuHandler::isRegistered())
             InvMenuHandler::register($this);
     }
 
@@ -77,7 +82,8 @@ class Loader extends PluginBase
             new DailyRewardCommand(),
             new StatusCommand(),
             new CoinbombCommand(),
-            new CosmeticCommand()
+            new CosmeticCommand(),
+            new WarpCommand()
         ]);
     }
 
@@ -132,5 +138,17 @@ class Loader extends PluginBase
             $mysqli->query("CREATE TABLE IF NOT EXISTS Coinbombs(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, bombs integer NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Cosmetics (id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL, cosmetic VARCHAR(128) NOT NULL, active INT NOT NULL DEFAULT '0')");
         });
+    }
+
+    public function createConfig(): void
+    {
+        if(!is_file("/root/RyzerCloud/data/Lobby/config.json")) {
+            $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
+            $config->set("warps", []);
+            $config->set("npcs", []);
+            $config->set("bossbarMessages", []);
+            $config->set("news", []);
+            $config->save();
+        }
     }
 }
