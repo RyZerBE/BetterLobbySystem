@@ -2,11 +2,13 @@
 
 namespace baubolp\ryzerbe\lobbycore\entity;
 
+use baubolp\core\util\ItemUtils;
 use pocketmine\entity\Vehicle;
 use pocketmine\item\Item;
 use pocketmine\level\particle\ExplodeParticle;
 use pocketmine\level\sound\FizzSound;
 use pocketmine\math\Vector3;
+use pocketmine\Player;
 use function lcg_value;
 
 class CoinBombMinecartEntity extends Vehicle {
@@ -16,6 +18,8 @@ class CoinBombMinecartEntity extends Vehicle {
     public $height = 0.7;
     /** @var float  */
     public $width = 0.98;
+    /** @var string */
+    public $dropperName = "";
 
     /**
      * @param int $currentTick
@@ -28,7 +32,7 @@ class CoinBombMinecartEntity extends Vehicle {
             $this->getLevel()->addSound(new FizzSound($this));
             $this->getLevel()->addParticle(new ExplodeParticle($this));
 
-            $this->getLevel()->dropItem($this, Item::get(Item::GOLD_NUGGET), new Vector3(lcg_value() * 0.2 - 0.1, 0.4, lcg_value() * 0.2 - 0.1));
+            $this->getLevel()->dropItem($this, ItemUtils::addItemTag(Item::get(Item::GOLD_NUGGET), $this->dropperName, "coinbomb_item"), new Vector3(lcg_value() * 0.2 - 0.1, 0.4, lcg_value() * 0.2 - 0.1));
         }
         $this->motion->y -= 0.025;
         $this->updateMovement();

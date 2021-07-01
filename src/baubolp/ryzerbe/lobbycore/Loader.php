@@ -22,6 +22,7 @@ use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockPlaceListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockUpdateListener;
 use baubolp\ryzerbe\lobbycore\listener\EntityDamageListener;
+use baubolp\ryzerbe\lobbycore\listener\InventoryPickupItemListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
 use baubolp\ryzerbe\lobbycore\listener\LeavesDecayListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerDropItemListener;
@@ -96,7 +97,8 @@ class Loader extends PluginBase
             new BlockUpdateListener(),
             new BlockFormListener(),
             new LeavesDecayListener(),
-            new PlayerInteractListener()
+            new PlayerInteractListener(),
+            new InventoryPickupItemListener()
         ];
 
         foreach ($listeners as $listener)

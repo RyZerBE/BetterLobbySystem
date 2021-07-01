@@ -72,6 +72,7 @@ class CoinbombAnimation extends Animation
                 $position = $this->center->asVector3()->add(mt_rand(-4, 4), mt_rand(3, 8), mt_rand(-4, 4));
                 $nbt = Entity::createBaseNBT($position);
                 $minecart = new CoinBombMinecartEntity($level, $nbt);
+                $minecart->dropperName = $player->getName();
                 $minecart->spawnToAll();
 
                 $this->totalMinecarts--;
