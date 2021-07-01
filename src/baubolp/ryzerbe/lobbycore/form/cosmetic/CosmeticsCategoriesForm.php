@@ -24,8 +24,8 @@ class CosmeticsCategoriesForm {
         });
         $form->setTitle("§5§lCosmetics");
         foreach(CosmeticManager::getInstance()->getCategories() as $category) {
-            $unlocked = count(array_filter($rbePlayer->getActiveCosmetics(), function(Cosmetic $cosmetic) use ($category): bool {
-                return $cosmetic->getCategory() === $category->getId();
+            $unlocked = count(array_filter($category->getCosmetics(), function(Cosmetic $cosmetic) use ($rbePlayer): bool {
+                return $rbePlayer->isCosmeticUnlocked($cosmetic);
             }));
             $form->addButton("§a" . $category->getName() . "\n§7" . $unlocked . "§8/§7" . count($category->getCosmetics()), $category->getIconType(), $category->getIcon(), $category->getId());
         }
