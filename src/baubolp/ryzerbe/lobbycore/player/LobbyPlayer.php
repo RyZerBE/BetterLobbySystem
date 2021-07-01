@@ -12,6 +12,7 @@ use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\ItemProvider;
 use mysqli;
@@ -19,6 +20,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use function is_null;
+use function time;
 
 class LobbyPlayer
 {
@@ -36,6 +38,12 @@ class LobbyPlayer
     private $hypeTrains = 0;
     /** @var array  */
     private $lottoWin = [];
+    /** @var bool  */
+    private $hasMoved = false;
+    /** @var int  */
+    private $afkTicks = 0;
+    /** @var bool  */
+    private $isAfk = false;
 
     private $activeCosmetics = [];
     private $loginStreak;
@@ -684,5 +692,57 @@ class LobbyPlayer
     public function isNavigatorAnimationEnabled(): bool
     {
         return true; //todo: settings
+    }
+
+    /**
+     * @return int
+     */
+    public function getAfkTicks(): int
+    {
+        return $this->afkTicks;
+    }
+
+    /**
+     * @param int $ticks
+     */
+    public function addAfkTicks(int $ticks = 0): void {
+        $this->afkTicks += $ticks;
+    }
+
+    public function resetAfkTicks(): void
+    {
+        $this->afkTicks = 0;
+    }
+
+    /**
+     * @param bool $hasMoved
+     */
+    public function setHasMoved(bool $hasMoved = true): void
+    {
+        $this->hasMoved = $hasMoved;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMoved(): bool
+    {
+        return $this->hasMoved;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAfk(): bool
+    {
+        return $this->isAfk;
+    }
+
+    /**
+     * @param bool $afk
+     */
+    public function setAfk(bool $afk = true): void
+    {
+        $this->isAfk = $afk;
     }
 }

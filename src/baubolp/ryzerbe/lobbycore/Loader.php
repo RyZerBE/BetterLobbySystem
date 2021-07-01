@@ -36,6 +36,7 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerExhaustListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerInteractListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
+use baubolp\ryzerbe\lobbycore\listener\PlayerMoveListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\provider\WarpProvider;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
@@ -110,7 +111,8 @@ class Loader extends PluginBase
             new BlockFormListener(),
             new LeavesDecayListener(),
             new PlayerInteractListener(),
-            new InventoryPickupItemListener()
+            new InventoryPickupItemListener(),
+            new PlayerMoveListener()
         ];
 
         foreach ($listeners as $listener)

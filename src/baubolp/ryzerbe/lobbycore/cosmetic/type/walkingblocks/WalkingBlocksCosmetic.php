@@ -70,7 +70,7 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
 
         for($x = -1; $x <= 1; $x++) {
             for($z = -1; $z <= 1; $z++) {
-                if($max <= 0) return;
+                if($max <= 0 || (!$solid && $x === 0 && $z === 0)) return;
                 if(mt_rand(1, 100) > $rarity) continue;
                 $block = $blocks[array_rand($blocks)];
 

@@ -5,12 +5,15 @@ namespace baubolp\ryzerbe\lobbycore\task;
 
 use baubolp\core\player\RyzerPlayerProvider;
 use baubolp\core\provider\RankProvider;
+use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
+use baubolp\ryzerbe\lobbycore\animation\type\PlayerAFKAnimation;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
 
 class LobbyTask extends Task
 {
+    private const AFK_TIME = (20 * 60 * 5);// 5 Minutes
 
     /**
      * @inheritDoc
@@ -45,6 +48,21 @@ class LobbyTask extends Task
                     $nearbyEntity->knockBack($player, 0, $nearbyEntity->getX() - $player->getX(), $nearbyEntity->getZ() - $player->getZ(), 1.5);
                 }
             }
+
+            if(!$lobbyPlayer->hasMoved()) {
+                $lobbyPlayer->addAfkTicks($this->getHandler()->getPeriod());
+
+                if($lobbyPlayer->getAfkTicks() > self::AFK_TIME) {
+                    if(!$lobbyPlayer->isAfk()) {
+                        $lobbyPlayer->setAfk();
+                        AnimationProvider::addActiveAnimation(new PlayerAFKAnimation($player));
+                    }
+                }
+            } else {
+                $lobbyPlayer->setAfk(false);
+                $lobbyPlayer->resetAfkTicks();
+            }
+            $lobbyPlayer->setHasMoved(false);
         }
     }
 }

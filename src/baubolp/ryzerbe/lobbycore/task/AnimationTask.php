@@ -29,7 +29,7 @@ class AnimationTask extends Task
         foreach(Server::getInstance()->getOnlinePlayers() as $player) {
             if($player->isRiding()) continue;
             $rbePlayer = LobbyPlayerCache::getLobbyPlayer($player);
-            if(is_null($rbePlayer)) continue;
+            if(is_null($rbePlayer) || $rbePlayer->isAfk()) continue;
             foreach($rbePlayer->getActiveCosmetics() as $cosmetic){
                 $cosmetic->onUpdate($player, $currentTick);
             }
