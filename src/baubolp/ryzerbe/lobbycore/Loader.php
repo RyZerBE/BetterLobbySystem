@@ -17,6 +17,7 @@ use baubolp\ryzerbe\lobbycore\command\WarpCommand;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\entity\CoinBombMinecartEntity;
 use baubolp\ryzerbe\lobbycore\entity\ItemRainItemEntity;
+use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\listener\BlockBreakListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
@@ -56,7 +57,7 @@ class Loader extends PluginBase
         $this->registerEntities();
         $this->startTasks();
         self::createMySQLTables();
-        $this->createConfig();
+        $this->loadConfig();
 
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
@@ -140,15 +141,22 @@ class Loader extends PluginBase
         });
     }
 
-    public function createConfig(): void
+    public function loadConfig(): void
     {
         if(!is_file("/root/RyzerCloud/data/Lobby/config.json")) {
             $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
             $config->set("warps", []);
             $config->set("npcs", []);
+            $config->set("games", ["BedWars" => ["warpName" => "bedwars", "icon" => ""], "FlagWars" => ["warpName" => "flagwars", "icon" => ""]]);
             $config->set("bossbarMessages", []);
             $config->set("news", []);
             $config->save();
+        }
+        $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
+
+        foreach (array_keys($config->get("games")) as $key) {
+            $data = $config->get("games")[$key];
+            NavigatorForm::$games[$key] = ["icon" => $data["icon"], "warpName" => $data["warpName"]];
         }
     }
 }

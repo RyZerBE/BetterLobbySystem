@@ -23,8 +23,10 @@ class PlayerJoinListener implements Listener
         LobbyPlayerCache::registerLobbyPlayer($lobbyPlayer);
         $lobbyPlayer->load();
 
-        if(in_array($player->getName(), PlayerJoinNetworkListener::$willPlay))
+        if(in_array($player->getName(), PlayerJoinNetworkListener::$willPlay)) {
+            if($lobbyPlayer->isJoinAnimationEnabled())
             AnimationProvider::addActiveAnimation(new PlayerJoinAnimation($player));
-
+            unset(PlayerJoinNetworkListener::$willPlay[array_search($player->getName(), PlayerJoinNetworkListener::$willPlay)]);
+        }
     }
 }

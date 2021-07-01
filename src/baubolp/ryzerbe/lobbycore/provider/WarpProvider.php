@@ -32,11 +32,12 @@ class WarpProvider
     }
 
     /**
-     * @param \baubolp\ryzerbe\lobbycore\util\Warp[] $warps
+     * @param string $name
+     * @return \baubolp\ryzerbe\lobbycore\util\Warp|null
      */
-    public static function setWarps(array $warps): void
+    public static function getWarp(string $name): ?Warp
     {
-        self::$warps = $warps;
+        return self::$warps[strtolower($name)] ?? null;
     }
 
     /**
@@ -44,7 +45,7 @@ class WarpProvider
      */
     public static function addWarp(Warp $warp)
     {
-        self::$warps[$warp->getName()] = $warp;
+        self::$warps[strtolower($warp->getName())] = $warp;
     }
 
     /**

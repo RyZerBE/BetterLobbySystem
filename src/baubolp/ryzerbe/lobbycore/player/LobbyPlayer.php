@@ -614,4 +614,20 @@ class LobbyPlayer
     {
         return RyzerPlayerProvider::getRyzerPlayer($this->getPlayer()->getName());
     }
+
+    /**
+     * @return bool
+     */
+    public function isJoinAnimationEnabled(): bool
+    {
+        return true; //todo: settings
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNavigatorAnimationEnabled(): bool
+    {
+        return true; //todo: settings
+    }
 }

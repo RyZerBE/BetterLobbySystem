@@ -7,6 +7,7 @@ namespace baubolp\ryzerbe\lobbycore\util;
 use baubolp\core\util\LocationUtils;
 use pocketmine\level\Location;
 use pocketmine\utils\Config;
+use pocketmine\utils\TextFormat;
 
 class Warp
 {
@@ -26,7 +27,7 @@ class Warp
      */
     public function getName(): string
     {
-        return $this->name;
+        return TextFormat::clean($this->name);
     }
 
     /**
