@@ -6,7 +6,7 @@ namespace baubolp\ryzerbe\lobbycore\provider;
 
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\ItemUtils;
-use baubolp\ryzerbe\lobbycore\form\profile\SettingsOverviewForm;
+use baubolp\ryzerbe\lobbycore\form\profile\ProfileOverviewForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\item\Item;
@@ -56,11 +56,12 @@ class ItemProvider
                 }
                 break;
             case "profile":
-                SettingsOverviewForm::open($player);
+                ProfileOverviewForm::open($player);
                 break;
             case "gadgets":
                 $player->getServer()->getCommandMap()->dispatch($player, "cosmetic");
                 break;
+                //todo: navigator, lobbyswitcher
         }
 
         return true;
