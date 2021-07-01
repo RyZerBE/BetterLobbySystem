@@ -13,6 +13,7 @@ class PlayerQuitListener implements Listener
 
     public function quit(PlayerQuitEvent $event)
     {
+        $event->setQuitMessage("");
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($event->getPlayer()->getName());
         if($lobbyPlayer === null) return;
 

@@ -17,6 +17,7 @@ class PlayerJoinListener implements Listener
 
     public function join(PlayerJoinEvent $event)
     {
+        $event->setJoinMessage("");
         $player = $event->getPlayer();
         $lobbyPlayer = new LobbyPlayer($player);
         LobbyPlayerCache::registerLobbyPlayer($lobbyPlayer);
