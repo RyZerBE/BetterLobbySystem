@@ -44,11 +44,11 @@ class ItemProvider
     public static function execItem(Player $player): bool
     {
         $item = $player->getInventory()->getItemInHand();
-        if($player->hasItemCooldown($item)) return false;
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
         if(is_null($lobbyPlayer)) return false;
-        $player->resetItemCooldown($item, 10);
 
+        if($player->hasItemCooldown($item)) return true;
+        $player->resetItemCooldown($item, 10);
         if(ItemUtils::hasItemTag($item, "lobby_item")) {
             switch (ItemUtils::getItemTag($item, "lobby_item")) {
                 case "shield":
