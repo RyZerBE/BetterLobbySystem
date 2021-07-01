@@ -8,7 +8,6 @@ use pocketmine\item\Item;
 use pocketmine\level\particle\ExplodeParticle;
 use pocketmine\level\sound\FizzSound;
 use pocketmine\math\Vector3;
-use pocketmine\Player;
 use function lcg_value;
 
 class CoinBombMinecartEntity extends Vehicle {

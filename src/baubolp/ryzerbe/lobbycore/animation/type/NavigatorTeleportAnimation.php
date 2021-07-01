@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\animation\type;
 
 
 use baubolp\ryzerbe\lobbycore\animation\Animation;
-use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\util\Warp;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;

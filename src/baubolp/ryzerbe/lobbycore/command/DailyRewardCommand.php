@@ -8,7 +8,6 @@ use baubolp\ryzerbe\lobbycore\form\DailyRewardForm;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\utils\CommandException;
 use pocketmine\Player;
 
 class DailyRewardCommand extends Command

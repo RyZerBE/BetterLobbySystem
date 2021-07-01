@@ -10,7 +10,6 @@ use baubolp\ryzerbe\lobbycore\cosmetic\category\type\WalkingBlocksCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 use pocketmine\utils\SingletonTrait;
 use function is_null;
-use function var_dump;
 
 class CosmeticManager {
     use SingletonTrait;

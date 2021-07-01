@@ -8,7 +8,6 @@ use baubolp\ryzerbe\lobbycore\gui\PrivateServerGUI;
 use baubolp\ryzerbe\lobbycore\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\utils\CommandException;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 

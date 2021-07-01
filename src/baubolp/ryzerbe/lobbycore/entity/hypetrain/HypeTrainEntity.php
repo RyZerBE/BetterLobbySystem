@@ -11,7 +11,6 @@ use pocketmine\Player;
 use pocketmine\Server;
 use function count;
 use function is_null;
-use function var_dump;
 
 class HypeTrainEntity extends BaseHypeTrain {
     public const NETWORK_ID = self::MINECART;

@@ -10,7 +10,6 @@ use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\util\BlockQueue;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
-use function count;
 use function is_null;
 
 class AnimationTask extends Task

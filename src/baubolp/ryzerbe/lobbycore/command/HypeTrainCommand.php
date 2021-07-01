@@ -4,7 +4,6 @@ namespace baubolp\ryzerbe\lobbycore\command;
 
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\ItemUtils;
-use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\command\Command;

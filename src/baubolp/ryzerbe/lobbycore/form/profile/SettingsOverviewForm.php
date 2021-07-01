@@ -4,7 +4,6 @@
 namespace baubolp\ryzerbe\lobbycore\form\profile;
 
 
-use baubolp\core\Ryzer;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use jojoe77777\FormAPI\SimpleForm;

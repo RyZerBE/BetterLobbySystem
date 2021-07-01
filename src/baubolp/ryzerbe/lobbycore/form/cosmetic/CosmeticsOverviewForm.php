@@ -11,7 +11,6 @@ use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use jojoe77777\FormAPI\SimpleForm;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use function is_null;
 
 class CosmeticsOverviewForm {
 
