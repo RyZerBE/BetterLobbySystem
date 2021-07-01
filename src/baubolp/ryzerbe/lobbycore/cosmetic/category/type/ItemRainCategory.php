@@ -4,6 +4,7 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\category\type;
 
 use baubolp\ryzerbe\lobbycore\cosmetic\category\CosmeticCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\itemrain\AquaticItemRainCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\itemrain\BedWarsItemRainCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\itemrain\EndItemRainCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\itemrain\UHCItemRainCosmetic;
@@ -14,7 +15,8 @@ class ItemRainCategory extends CosmeticCategory {
         $cosmetics = [
             new BedWarsItemRainCosmetic(),
             new EndItemRainCosmetic(),
-            new UHCItemRainCosmetic()
+            new UHCItemRainCosmetic(),
+            new AquaticItemRainCosmetic()
         ];
         foreach($cosmetics as $cosmetic) {
             $this->registerCosmetic($cosmetic);
