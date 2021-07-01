@@ -2,13 +2,16 @@
 
 namespace baubolp\ryzerbe\lobbycore\entity\hypetrain;
 
+use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;
 use baubolp\ryzerbe\lobbycore\util\cache\HypeTrainCacheEntry;
 use pocketmine\entity\Entity;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\Player;
 use pocketmine\Server;
 use function count;
 use function is_null;
+use function var_dump;
 
 class HypeTrainEntity extends BaseHypeTrain {
     public const NETWORK_ID = self::MINECART;
@@ -30,6 +33,11 @@ class HypeTrainEntity extends BaseHypeTrain {
     /** @var int  */
     private $totalWagons = 4;
 
+    /** @var int  */
+    private $noMovementTicks = 0;
+    /** @var float  */
+    private $lastRiderRotation = 0.0;
+
     /**
      * HypeTrainEntity constructor.
      * @param Level $level
@@ -45,8 +53,12 @@ class HypeTrainEntity extends BaseHypeTrain {
      * @return bool
      */
     public function onUpdate(int $currentTick): bool{
+        if($this->wasRiderFixTeleport) {
+            $this->wasRiderFixTeleport = false;
+            return parent::onUpdate($currentTick);
+        }
         $rider = $this->getRider();
-        if(is_null($rider) || $rider->isClosed()){
+        if($rider === null || $rider->isClosed()){
             $this->flagForDespawn();
             return false;
         }
@@ -70,6 +82,24 @@ class HypeTrainEntity extends BaseHypeTrain {
             }
         }
 
+        if(($rider->yaw + $rider->pitch) === $this->lastRiderRotation){
+            $this->noMovementTicks++;
+        } else {
+            $this->noMovementTicks = 0;
+        }
+        $this->lastRiderRotation = $rider->yaw + $rider->pitch;
+        if($this->noMovementTicks > 300) {
+            $this->wasRiderFixTeleport = true;
+            $this->noMovementTicks = 0;
+
+            $this->flagForDespawn();
+            $this->onRiderLeave($rider);
+
+            $rider->teleport($rider);
+            if($rider instanceof Player) HypeTrain::spawn($rider);
+            return true;
+        }
+
         $this->yaw = $rider->yaw;
         $this->pitch = $rider->pitch;
         $this->motion = $this->getDirectionVector()->divide(2);
@@ -80,6 +110,15 @@ class HypeTrainEntity extends BaseHypeTrain {
 
         $this->updateMovement();
         return parent::onUpdate($currentTick);
+    }
+
+    /**
+     * @param bool $immediate
+     * @return bool
+     */
+    public function dismountEntity(bool $immediate = false): bool{
+        if($this->wasRiderFixTeleport) return false;
+        return parent::dismountEntity($immediate);
     }
 
     public function addCacheEntry(): void {

@@ -3,7 +3,6 @@
 namespace baubolp\ryzerbe\lobbycore\entity\hypetrain;
 
 use baubolp\ryzerbe\lobbycore\provider\ItemProvider;
-use matze\hypetrain\HypeTrain;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Vehicle;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -18,7 +17,10 @@ use function is_null;
 abstract class BaseHypeTrain extends Vehicle {
 
     /** @var Entity|null  */
-    private $rider = null;
+    protected $rider = null;
+
+    /** @var bool  */
+    protected $wasRiderFixTeleport = false;
 
     /**
      * @param Entity|null $rider
@@ -96,7 +98,7 @@ abstract class BaseHypeTrain extends Vehicle {
     public function attack(EntityDamageEvent $source): void{
         if(!$source instanceof EntityDamageByEntityEvent) return;
         $attacker = $source->getDamager();
-        if(!$attacker instanceof Player || !is_null($this->getRider()) || HypeTrain::isRiding($attacker)) return;
+        if(!$attacker instanceof Player || !is_null($this->getRider()) || $attacker->isRiding()) return;
 
         $this->setRider($attacker);
         $this->sendEntityLink($attacker);
@@ -107,7 +109,7 @@ abstract class BaseHypeTrain extends Vehicle {
      */
     public function onRiderLeave(Entity $entity): void {
         $rider = $this->getRider();
-        if(is_null($rider) || $rider->getId() !== $entity->getId()) return;
+        if(is_null($rider) || $rider->getId() !== $entity->getId() || $this->wasRiderFixTeleport) return;
         $this->setRider(null);
         $this->removeLink($entity);
 
