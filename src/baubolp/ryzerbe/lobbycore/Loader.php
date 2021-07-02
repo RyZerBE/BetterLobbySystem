@@ -9,6 +9,7 @@ use baubolp\ryzerbe\lobbycore\command\BuildCommand;
 use baubolp\ryzerbe\lobbycore\command\CoinbombCommand;
 use baubolp\ryzerbe\lobbycore\command\CosmeticCommand;
 use baubolp\ryzerbe\lobbycore\command\DailyRewardCommand;
+use baubolp\ryzerbe\lobbycore\command\EventCommand;
 use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\HypeTrainCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
@@ -40,6 +41,7 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerMoveListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
+use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\WarpProvider;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
@@ -96,7 +98,8 @@ class Loader extends PluginBase
             new CosmeticCommand(),
             new WarpCommand(),
             new HypeTrainCommand(),
-            new ResetNewsPopupCommand()
+            new ResetNewsPopupCommand(),
+            new EventCommand()
         ]);
     }
 
@@ -168,6 +171,7 @@ class Loader extends PluginBase
             $config->set("games", ["BedWars" => ["warpName" => "bedwars", "icon" => ""], "FlagWars" => ["warpName" => "flagwars", "icon" => ""]]);
             $config->set("bossbarMessages", []);
             $config->set("news", []);
+            $config->set("event", null);
             $config->save();
         }
         $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
@@ -180,6 +184,8 @@ class Loader extends PluginBase
         $news = (array)$config->get("news");
         if(count($news) > 0)
         NewsBookForm::$news = str_replace("&", TextFormat::ESCAPE, implode("\n", $news));
+
+        EventProvider::reload();
     }
 
     public function registerPermissions(): void
@@ -191,7 +197,8 @@ class Loader extends PluginBase
             "lobby.hypetrain",
             "lobby.resetpopup",
             "lobby.status",
-            "lobby.warp"
+            "lobby.warp",
+            "lobby.event"
         ];
 
         foreach ($permissions as $permission)
