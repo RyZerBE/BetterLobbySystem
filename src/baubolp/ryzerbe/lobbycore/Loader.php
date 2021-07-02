@@ -45,6 +45,8 @@ use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
+use pocketmine\permission\Permission;
+use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
@@ -65,6 +67,7 @@ class Loader extends PluginBase
         $this->startTasks();
         self::createMySQLTables();
         $this->loadConfig();
+        $this->registerPermissions();
 
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
@@ -190,5 +193,8 @@ class Loader extends PluginBase
             "lobby.status",
             "lobby.warp"
         ];
+
+        foreach ($permissions as $permission)
+            PermissionManager::getInstance()->addPermission(new Permission($permission, "lobby permission"));
     }
 }
