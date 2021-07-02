@@ -13,6 +13,7 @@ use baubolp\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;
+use baubolp\ryzerbe\lobbycore\form\NewsBookForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\ItemProvider;
 use mysqli;
@@ -153,6 +154,12 @@ class LobbyPlayer
             $res = $mysqli->query("SELECT * FROM Status WHERE playername='$playerName'");
             if($res->num_rows <= 0) $mysqli->query("INSERT INTO `Status`(`playername`, `status`) VALUES ('$playerName', 'false')");
 
+            $res = $mysqli->query("SELECT * FROM `News` WHERE playername='$playerName'");
+            if($res->num_rows > 0)
+                $playerData["news"] = false;
+            else
+                $playerData["news"] = true;
+
             return $playerData;
         }, function(Server $server, array $loadedData) use ($playerName){
             // LOAD DATA \\
@@ -167,6 +174,7 @@ class LobbyPlayer
                 $lobbyPlayer->setNextLoginStreak($loadedData["nextstreakday"]);
                 $lobbyPlayer->setCoinBombs($loadedData["bombs"]);
                 $lobbyPlayer->setHypeTrains($loadedData["hypetrains"]);
+
                 ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
 
                 $cosmetics = [];
@@ -186,6 +194,8 @@ class LobbyPlayer
                     $lobbyPlayer->getPlayer()->teleport(LocationUtils::fromString($loadedData["spawn"]));
 
                 $lobbyPlayer->checkLoginStreak();
+                if((bool)$loadedData["news"] && NewsBookForm::$news != null)
+                    NewsBookForm::open($lobbyPlayer->getPlayer());
             }
         });
     }

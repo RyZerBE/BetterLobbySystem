@@ -22,6 +22,7 @@ use baubolp\ryzerbe\lobbycore\entity\hypetrain\HypeTrainWagonEntity;
 use baubolp\ryzerbe\lobbycore\entity\hypetrain\projectile\HeadProjectileEntity;
 use baubolp\ryzerbe\lobbycore\entity\ItemRainItemEntity;
 use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
+use baubolp\ryzerbe\lobbycore\form\NewsBookForm;
 use baubolp\ryzerbe\lobbycore\listener\BlockBreakListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
@@ -148,13 +149,14 @@ class Loader extends PluginBase
             $mysqli->query("CREATE TABLE IF NOT EXISTS Status(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, status varchar(25) NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Coinbombs(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, bombs integer NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Cosmetics(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL, cosmetic VARCHAR(128) NOT NULL, active INT NOT NULL DEFAULT '0')");
-            $mysqli->query("CREATE TABLE IF NOT EXISTS Hypetrains(id INT NOT NULL KEY AUTO_INCREMENT , playername VARCHAR(32) NOT NULL , hypetrains INT NOT NULL DEFAULT '0')");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS Hypetrains(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL , hypetrains INT NOT NULL DEFAULT '0')");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS News(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL)");
         });
     }
 
     public function loadConfig(): void
     {
-        if(!is_file("/root/RyzerCloud/data/Lobby/config.json")) {
+        if (!is_file("/root/RyzerCloud/data/Lobby/config.json")) {
             $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
             $config->set("warps", []);
             $config->set("npcs", []);
@@ -169,5 +171,9 @@ class Loader extends PluginBase
             $data = $config->get("games")[$key];
             NavigatorForm::$games[$key] = ["icon" => $data["icon"], "warpName" => $data["warpName"]];
         }
+
+        $news = (array)$config->get("news");
+        if(count($news) > 0)
+        NewsBookForm::$news = str_replace("&", TextFormat::ESCAPE, implode("\n", $news));
     }
 }
