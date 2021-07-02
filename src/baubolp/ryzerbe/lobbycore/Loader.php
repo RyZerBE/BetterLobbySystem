@@ -13,6 +13,7 @@ use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\HypeTrainCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
+use baubolp\ryzerbe\lobbycore\command\ResetNewsPopupCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
 use baubolp\ryzerbe\lobbycore\command\WarpCommand;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
@@ -91,7 +92,8 @@ class Loader extends PluginBase
             new CoinbombCommand(),
             new CosmeticCommand(),
             new WarpCommand(),
-            new HypeTrainCommand()
+            new HypeTrainCommand(),
+            new ResetNewsPopupCommand()
         ]);
     }
 
