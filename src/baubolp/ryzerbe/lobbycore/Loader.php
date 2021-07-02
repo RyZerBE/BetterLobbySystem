@@ -178,4 +178,17 @@ class Loader extends PluginBase
         if(count($news) > 0)
         NewsBookForm::$news = str_replace("&", TextFormat::ESCAPE, implode("\n", $news));
     }
+
+    public function registerPermissions(): void
+    {
+        $permissions = [
+            "lobby.build",
+            "lobby.coinbomb",
+            "lobby.fly",
+            "lobby.hypetrain",
+            "lobby.resetpopup",
+            "lobby.status",
+            "lobby.warp"
+        ];
+    }
 }

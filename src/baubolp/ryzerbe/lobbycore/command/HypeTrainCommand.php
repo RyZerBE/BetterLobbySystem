@@ -30,7 +30,7 @@ class HypeTrainCommand extends Command {
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args): void{
         if(!$sender instanceof Player) return;
-        //if(!$this->testPermission($sender)) return;
+        if(!$this->testPermission($sender)) return;
 
         $player = LobbyPlayerCache::getLobbyPlayer($sender);
         if($player === null) return;

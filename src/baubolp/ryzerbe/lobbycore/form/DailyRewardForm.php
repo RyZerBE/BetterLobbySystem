@@ -75,7 +75,7 @@ class DailyRewardForm extends MenuForm
                        break;
                    case 2:
                        if($lobbyPlayer->getDailyCoinBombTime() < time() && $player->hasPermission("lobby.coinbomb")) {
-                           //TODO: ADD COINBOMB TO PLAYER
+                           $lobbyPlayer->addCoinbomb();
                            $lobbyPlayer->setDailyCoinBombTime($lobbyPlayer->getNextLoginStreak());
                            $player->playSound("random.levelup", 5.0, 1.0, [$player]);
                            $player->sendForm(new DailyRewardForm($lobbyPlayer));
@@ -85,7 +85,7 @@ class DailyRewardForm extends MenuForm
                        break;
                    case 3:
                        if($lobbyPlayer->getDailyHypeTrainTime() < time() && $player->hasPermission("lobby.hypetrain")) {
-                           //TODO: ADD HYPETRAIN TO PLAYER
+                           $lobbyPlayer->addHypeTrains();
                            $lobbyPlayer->setDailyHypeTrainTime($lobbyPlayer->getNextLoginStreak());
                            $player->playSound("random.levelup", 5.0, 1.0, [$player]);
                            $player->sendForm(new DailyRewardForm($lobbyPlayer));
