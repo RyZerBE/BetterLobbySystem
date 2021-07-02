@@ -55,4 +55,12 @@ class HypeTrainWagonEntity extends BaseHypeTrain {
         $this->updateMovement();
         return parent::onUpdate($currentTick);
     }
+
+    /**
+     * @param int $seatNumber
+     * @return Vector3
+     */
+    public function getRiderSeatPosition(int $seatNumber = 0): Vector3 {
+        return new Vector3(0, 0, 0);
+    }
 }
