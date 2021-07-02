@@ -9,6 +9,7 @@ use baubolp\core\player\RyzerPlayerProvider;
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\provider\CoinProvider;
 use baubolp\core\provider\LanguageProvider;
+use baubolp\core\provider\RankProvider;
 use baubolp\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
@@ -16,6 +17,7 @@ use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;
 use baubolp\ryzerbe\lobbycore\form\NewsBookForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\ItemProvider;
+use baubolp\ryzerbe\lobbycore\util\ScoreboardUtils;
 use mysqli;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -196,6 +198,8 @@ class LobbyPlayer
                 $lobbyPlayer->checkLoginStreak();
                 if((bool)$loadedData["news"] && NewsBookForm::$news != null)
                     NewsBookForm::open($lobbyPlayer->getPlayer());
+
+                $lobbyPlayer->updateScoreboard();
             }
         });
     }
@@ -754,5 +758,33 @@ class LobbyPlayer
     public function setAfk(bool $afk = true): void
     {
         $this->isAfk = $afk;
+    }
+
+    public function updateScoreboard(): void
+    {
+        $rbePlayer = $this->asRyZerPlayer();
+        if($rbePlayer === null) {
+            $playerName = $this->getPlayer()->getName();
+            AsyncExecutor::submitClosureTask(40, function (int $currentTick) use ($playerName): void{
+                $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($playerName);
+                if($lobbyPlayer != null)
+                    $lobbyPlayer->updateScoreboard();
+            });
+            return;
+        }
+        ScoreboardUtils::remove($this->getPlayer(), "lobby");
+        ScoreboardUtils::create($this->getPlayer(), TextFormat::WHITE.TextFormat::BOLD."RyZer".TextFormat::RED."BE", "lobby");
+        ScoreboardUtils::addEmptyLine($this->getPlayer(), 0, "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 1, TextFormat::GRAY."Rank", "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 2, TextFormat::DARK_GRAY."» ".str_replace("&", TextFormat::ESCAPE, explode(" ", RankProvider::getNameTag($rbePlayer->getRank()))[0]), "lobby");
+        ScoreboardUtils::addEmptyLine($this->getPlayer(), 3, "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 4, TextFormat::GRAY."Coins", "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 5, TextFormat::DARK_GRAY."» ".TextFormat::AQUA.$rbePlayer->getCoins(), "lobby");
+        ScoreboardUtils::addEmptyLine($this->getPlayer(), 6, "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 7, TextFormat::GRAY."Playtime", "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 8, TextFormat::DARK_GRAY."» ".TextFormat::AQUA.$rbePlayer->getOnlineTime(), "lobby");
+        ScoreboardUtils::addEmptyLine($this->getPlayer(), 9, "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 10, TextFormat::GRAY."Clan", "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW.$rbePlayer->getClan().TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, $rbePlayer->getClanTag()).TextFormat::GRAY."]", "lobby");
     }
 }
