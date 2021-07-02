@@ -8,6 +8,7 @@ use baubolp\core\provider\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
@@ -27,11 +28,21 @@ class ResetNewsPopupCommand extends Command
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
         if (!$this->testPermission($sender)) return;
+        if ($sender instanceof Player)
+            $senderName = $sender->getName();
+        else
+            $senderName = null;
 
         AsyncExecutor::submitMySQLAsyncTask("Lobby", function (\mysqli $mysqli) {
             $mysqli->query("TRUNCATE `Lobby`.`News`");
-        }, function (Server $server, $result) use ($sender) {
-            $sender->sendMessage(Loader::PREFIX . TextFormat::GREEN . "Die Datenbank für News wurde geleert. Es erhalten nun alle wieder ein NewsForm!");
+        }, function (Server $server, $result) use ($senderName) {
+            if ($senderName != null) {
+                $player = $server->getPlayerExact($senderName);
+                if (is_null($player)) return;
+                $player->sendMessage(Loader::PREFIX . TextFormat::GREEN . "Die Datenbank für News wurde geleert. Es erhalten nun alle wieder ein NewsForm!");
+            } else {
+                $server->getLogger()->info(Loader::PREFIX . TextFormat::GREEN . "Die Datenbank für News wurde geleert. Es erhalten nun alle wieder ein NewsForm!");
+            }
         });
     }
 }
