@@ -15,6 +15,7 @@ use pocketmine\level\Location;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\EmotePacket;
 use pocketmine\Player;
+use pocketmine\Server;
 use function array_rand;
 use function count;
 use function mt_rand;
@@ -100,7 +101,7 @@ class NPCEntity extends Human implements ChunkLoader {
      * @param Closure|null $closure
      */
     public function setAttackClosure(?Closure $closure): void {
-        $this->interactClosure = $closure;
+        $this->attackClosure = $closure;
     }
 
     /**

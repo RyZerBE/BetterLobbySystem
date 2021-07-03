@@ -142,7 +142,7 @@ class Loader extends PluginBase
     private function loadNPCs(): void {
         /*
          * Available Positions
-         * 
+         *
          * 230.5, 72, 272.5, 0, 0 //Used
          * 224.5, 72, 272.5, 0, 0 //Used
          *
