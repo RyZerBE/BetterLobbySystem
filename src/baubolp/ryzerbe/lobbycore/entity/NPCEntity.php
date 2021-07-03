@@ -40,6 +40,7 @@ class NPCEntity extends Human implements ChunkLoader {
      * @param Skin $skin
      */
     public function __construct(Location $location, Skin $skin){
+        $location->getLevelNonNull()->loadChunk($location->x >> 4, $location->z >> 4);
         $this->skin = $skin;
         parent::__construct($location->getLevelNonNull(), Entity::createBaseNBT($location, null, $location->yaw, $location->pitch));
     }
@@ -87,6 +88,13 @@ class NPCEntity extends Human implements ChunkLoader {
      */
     public function setAttackClosure(?Closure $closure): void {
         $this->interactClosure = $closure;
+    }
+
+    /**
+     * @param bool $lookAtPlayer
+     */
+    public function setLookAtPlayer(bool $lookAtPlayer): void {
+        $this->lookAtPlayer = $lookAtPlayer;
     }
 
     /**

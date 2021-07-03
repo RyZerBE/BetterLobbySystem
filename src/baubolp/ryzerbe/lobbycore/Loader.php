@@ -23,6 +23,7 @@ use baubolp\ryzerbe\lobbycore\entity\hypetrain\HypeTrainEntity;
 use baubolp\ryzerbe\lobbycore\entity\hypetrain\HypeTrainWagonEntity;
 use baubolp\ryzerbe\lobbycore\entity\hypetrain\projectile\HeadProjectileEntity;
 use baubolp\ryzerbe\lobbycore\entity\ItemRainItemEntity;
+use baubolp\ryzerbe\lobbycore\entity\NPCEntity;
 use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\form\NewsBookForm;
 use baubolp\ryzerbe\lobbycore\listener\BlockBreakListener;
@@ -134,7 +135,8 @@ class Loader extends PluginBase
             ItemRainItemEntity::class,
             HypeTrainEntity::class,
             HypeTrainWagonEntity::class,
-            HeadProjectileEntity::class
+            HeadProjectileEntity::class,
+            NPCEntity::class
         ];
         foreach($entities as $entity) {
             Entity::registerEntity($entity, true);
