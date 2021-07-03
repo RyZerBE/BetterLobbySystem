@@ -16,7 +16,10 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\EmotePacket;
 use pocketmine\Player;
 use function array_rand;
+use function count;
 use function mt_rand;
+use function readdir;
+use function register_tick_function;
 use function spl_object_id;
 
 class NPCEntity extends Human implements ChunkLoader {
@@ -25,6 +28,8 @@ class NPCEntity extends Human implements ChunkLoader {
     private $emotes = [];
     /** @var int  */
     private $emoteCooldown = 0;
+    /** @var string  */
+    private $lastEmote = "";
 
     /** @var bool  */
     private $lookAtPlayer = false;
@@ -43,6 +48,14 @@ class NPCEntity extends Human implements ChunkLoader {
         $location->getLevelNonNull()->loadChunk($location->x >> 4, $location->z >> 4);
         $this->skin = $skin;
         parent::__construct($location->getLevelNonNull(), Entity::createBaseNBT($location, null, $location->yaw, $location->pitch));
+    }
+
+    public function initEntity(): void{
+        parent::initEntity();
+
+        $this->setNameTagVisible();
+        $this->setNameTagAlwaysVisible();
+        $this->sendSkin();
     }
 
     /**
@@ -121,8 +134,12 @@ class NPCEntity extends Human implements ChunkLoader {
 
         if($this->getEmotes() !== [] && --$this->emoteCooldown <= 0) {
             $this->emoteCooldown = mt_rand(100, 300);
-            $packet = EmotePacket::create($this->getId(), $this->getRandomEmote(), EmotePacket::FLAG_SERVER);
+            $emote = $this->getRandomEmote();
+            while($this->lastEmote === $emote) $emote = $this->getRandomEmote();
+            $packet = EmotePacket::create($this->getId(), $emote, EmotePacket::FLAG_SERVER);
             $this->getLevel()->broadcastPacketToViewers($this, $packet);
+
+            if(count($this->getEmotes()) > 1) $this->lastEmote = $emote;
         }
         return parent::onUpdate($currentTick);
     }
@@ -131,10 +148,10 @@ class NPCEntity extends Human implements ChunkLoader {
      * @param EntityDamageEvent $source
      */
     public function attack(EntityDamageEvent $source): void{
-        $source->setCancelled();
-        if(!$source instanceof EntityDamageByEntityEvent || $this->attackClosure === null) return;
+        if(!$source instanceof EntityDamageByEntityEvent) return;
         $player = $source->getDamager();
         if(!$player instanceof Player) return;
+        if($this->attackClosure === null) return;
         ($this->attackClosure)($player);
     }
 

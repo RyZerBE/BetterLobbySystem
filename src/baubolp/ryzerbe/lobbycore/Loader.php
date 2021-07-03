@@ -5,6 +5,7 @@ namespace baubolp\ryzerbe\lobbycore;
 
 
 use baubolp\core\provider\AsyncExecutor;
+use baubolp\core\util\Emotes;
 use baubolp\ryzerbe\lobbycore\command\BuildCommand;
 use baubolp\ryzerbe\lobbycore\command\CoinbombCommand;
 use baubolp\ryzerbe\lobbycore\command\CosmeticCommand;
@@ -13,6 +14,7 @@ use baubolp\ryzerbe\lobbycore\command\EventCommand;
 use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\HypeTrainCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
+use baubolp\ryzerbe\lobbycore\command\PositionCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\ResetNewsPopupCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
@@ -46,13 +48,19 @@ use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\WarpProvider;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
+use baubolp\ryzerbe\lobbycore\util\SkinUtils;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\entity\Entity;
+use pocketmine\entity\Skin;
+use pocketmine\level\Location;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+use function uniqid;
 
 class Loader extends PluginBase
 {
@@ -71,6 +79,7 @@ class Loader extends PluginBase
         self::createMySQLTables();
         $this->loadConfig();
         $this->registerPermissions();
+        $this->loadNPCs();
 
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
@@ -100,7 +109,8 @@ class Loader extends PluginBase
             new WarpCommand(),
             new HypeTrainCommand(),
             new ResetNewsPopupCommand(),
-            new EventCommand()
+            new EventCommand(),
+            new PositionCommand()
         ]);
     }
 
@@ -127,6 +137,55 @@ class Loader extends PluginBase
 
         foreach ($listeners as $listener)
             $this->getServer()->getPluginManager()->registerEvents($listener, $this);
+    }
+
+    private function loadNPCs(): void {
+        /*
+         * Available Positions
+         * 
+         * 230.5, 72, 272.5, 0, 0 //Used
+         * 224.5, 72, 272.5, 0, 0 //Used
+         *
+         * 234.5, 71, 274.5, 0, 0
+         * 238.5, 71, 273.5, 0, 0
+         * 219.5, 71, 274.5, 0, 0
+         * 216.5, 71, 271.5, 0, 0
+         */
+
+        $emotes = [
+            Emotes::WAVE, Emotes::THE_WOODPUNCH, Emotes::UNDERWATER_DANCING, Emotes::HAND_STAND, Emotes::SHY_GIGGLING, Emotes::MEDITATING_LIKE_LUKE, Emotes::OFFERING,
+            Emotes::BORED, Emotes::AHH_CHOO, Emotes::GIDDY, Emotes::OVER_HERE, Emotes::GROOVIN, Emotes::WAVING_LIKE_C_3PO, Emotes::THINKING, Emotes::SURRENDERING
+        ];
+
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/backup_skin.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
+
+        //Maybe BedWars?
+        $npc = new NPCEntity(new Location(230.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $closure = (function(Player $player): void {
+            $player->sendMessage("Hi");
+        });
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->setNameTag("§l§aBedWars?");
+        $npc->spawnToAll();
+
+        //Maybe FlagWars?
+        $npc = new NPCEntity(new Location(224.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $closure = (function(Player $player): void {
+            $player->sendMessage("Bye");
+        });
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->setNameTag("§l§aFlagWars?");
+        $npc->spawnToAll();
     }
 
     public function registerEntities(): void {
@@ -200,7 +259,8 @@ class Loader extends PluginBase
             "lobby.resetpopup",
             "lobby.status",
             "lobby.warp",
-            "lobby.event"
+            "lobby.event",
+            "lobby.position"
         ];
 
         foreach ($permissions as $permission)
