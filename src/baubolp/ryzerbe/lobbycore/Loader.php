@@ -82,12 +82,15 @@ class Loader extends PluginBase
         $this->registerPermissions();
         $this->loadNPCs();
 
+
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
         new EventProvider();
 
         if (!InvMenuHandler::isRegistered())
             InvMenuHandler::register($this);
+
+        date_default_timezone_set("Europe/Berlin");
     }
 
     /**

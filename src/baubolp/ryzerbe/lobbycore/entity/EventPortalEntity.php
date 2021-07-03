@@ -111,7 +111,7 @@ class EventPortalEntity extends Human implements ChunkLoader
 
         if ($this->alreadyCollided[$player->getName()] >= time()) return;
 
-        $this->alreadyCollided[$player->getName()] = time() + 5;
+        $this->alreadyCollided[$player->getName()] = time() + 2;
         $event = EventProvider::$event;
 
         if($event === null || $event->isEnd() || !$event->isStarted()) {
