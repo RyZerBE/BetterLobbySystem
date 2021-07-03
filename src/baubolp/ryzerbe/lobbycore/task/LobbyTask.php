@@ -7,9 +7,11 @@ use baubolp\core\player\RyzerPlayerProvider;
 use baubolp\core\provider\RankProvider;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerAFKAnimation;
+use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
+use pocketmine\Server;
 
 class LobbyTask extends Task
 {
@@ -23,7 +25,7 @@ class LobbyTask extends Task
         foreach (LobbyPlayerCache::getPlayers() as $lobbyPlayer) {
             $player = $lobbyPlayer->getPlayer();
             if (!$lobbyPlayer->enabledFlyMode() && !$player->getAllowFlight()) {
-                if ($lobbyPlayer->getPlayer()->isOnGround()){
+                if ($lobbyPlayer->getPlayer()->isOnGround()) {
                     $lobbyPlayer->getPlayer()->setAllowFlight(true);
                 }
             } else {
@@ -49,11 +51,11 @@ class LobbyTask extends Task
                 }
             }
 
-            if(!$lobbyPlayer->hasMoved()) {
+            if (!$lobbyPlayer->hasMoved()) {
                 $lobbyPlayer->addAfkTicks($this->getHandler()->getPeriod());
 
-                if($lobbyPlayer->getAfkTicks() > self::AFK_TIME) {
-                    if(!$lobbyPlayer->isAfk()) {
+                if ($lobbyPlayer->getAfkTicks() > self::AFK_TIME) {
+                    if (!$lobbyPlayer->isAfk()) {
                         $lobbyPlayer->setAfk();
                         AnimationProvider::addActiveAnimation(new PlayerAFKAnimation($player));
                     }
@@ -63,6 +65,11 @@ class LobbyTask extends Task
                 $lobbyPlayer->resetAfkTicks();
             }
             $lobbyPlayer->setHasMoved(false);
+
+            foreach (Server::getInstance()->getDefaultLevel()->getEntities() as $entity) {
+                if ($entity instanceof EventPortalEntity && count(Server::getInstance()->getOnlinePlayers()) > 0)
+                    $entity->updateTitle();
+            }
         }
     }
 }

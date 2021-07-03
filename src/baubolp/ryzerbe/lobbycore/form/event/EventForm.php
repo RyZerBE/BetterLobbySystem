@@ -1,7 +1,7 @@
 <?php
 
 
-namespace baubolp\ryzerbe\lobbycore\form;
+namespace baubolp\ryzerbe\lobbycore\form\event;
 
 
 use BauboLP\Cloud\CloudBridge;

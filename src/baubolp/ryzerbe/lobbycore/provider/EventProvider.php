@@ -4,14 +4,36 @@
 namespace baubolp\ryzerbe\lobbycore\provider;
 
 
+use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
 use baubolp\ryzerbe\lobbycore\util\Event;
 use DateTime;
+use pocketmine\entity\Entity;
+use pocketmine\math\Vector3;
+use pocketmine\Server;
 use pocketmine\utils\Config;
 
 class EventProvider
 {
+    /** @var  */
+    public static $portalVector3;
+
+    public function __construct()
+    {
+        self::$portalVector3 = new Vector3(228.5, 73, 262.5);
+        self::spawnPortal();
+    }
+
     /** @var null|\baubolp\ryzerbe\lobbycore\util\Event  */
     public static $event = null;
+
+    public static function spawnPortal(): void
+    {
+        $vec3 = self::$portalVector3;
+        Server::getInstance()->getDefaultLevel()->loadChunk($vec3->x >> 4, $vec3->z >> 4);
+        $eventPortal = new EventPortalEntity(Server::getInstance()->getDefaultLevel(), Entity::createBaseNBT(self::$portalVector3));
+        $eventPortal->setScale(4);
+        $eventPortal->spawnToAll();
+    }
 
     public static function createEvent(string $eventName, string $description, string $group, DateTime $begin, DateTime $end)
     {

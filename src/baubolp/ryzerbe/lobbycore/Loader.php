@@ -21,6 +21,7 @@ use baubolp\ryzerbe\lobbycore\command\StatusCommand;
 use baubolp\ryzerbe\lobbycore\command\WarpCommand;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\entity\CoinBombMinecartEntity;
+use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
 use baubolp\ryzerbe\lobbycore\entity\hypetrain\HypeTrainEntity;
 use baubolp\ryzerbe\lobbycore\entity\hypetrain\HypeTrainWagonEntity;
 use baubolp\ryzerbe\lobbycore\entity\hypetrain\projectile\HeadProjectileEntity;
@@ -83,6 +84,7 @@ class Loader extends PluginBase
 
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
+        new EventProvider();
 
         if (!InvMenuHandler::isRegistered())
             InvMenuHandler::register($this);
@@ -195,7 +197,8 @@ class Loader extends PluginBase
             HypeTrainEntity::class,
             HypeTrainWagonEntity::class,
             HeadProjectileEntity::class,
-            NPCEntity::class
+            NPCEntity::class,
+            EventPortalEntity::class
         ];
         foreach($entities as $entity) {
             Entity::registerEntity($entity, true);

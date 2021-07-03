@@ -4,12 +4,11 @@
 namespace baubolp\ryzerbe\lobbycore\command;
 
 
-use baubolp\ryzerbe\lobbycore\form\EventForm;
+use baubolp\ryzerbe\lobbycore\form\event\EventForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\utils\CommandException;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 

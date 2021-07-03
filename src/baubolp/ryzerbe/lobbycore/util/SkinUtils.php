@@ -1,23 +1,22 @@
 <?php
 
+
 namespace baubolp\ryzerbe\lobbycore\util;
 
-use function imagecolorat;
-use function imagecreatefrompng;
-use function imagedestroy;
-use function imagesx;
-use function imagesy;
-use function pack;
 
-class SkinUtils {
+class SkinUtils
+{
 
     /**
      * @param string $filePath
      * @return string
      */
     public static function readImage(string $filePath): string {
+        if(!is_file($filePath))
+            return "";
+
         $image = imagecreatefrompng($filePath);
-        $fileContent = "";
+        $fileContent = '';
         for($y = 0, $height = imagesy($image); $y < $height; $y++){
             for($x = 0, $width = imagesx($image); $x < $width; $x++){
                 $color = imagecolorat($image, $x, $y);
@@ -30,4 +29,5 @@ class SkinUtils {
         imagedestroy($image);
         return $fileContent;
     }
+
 }

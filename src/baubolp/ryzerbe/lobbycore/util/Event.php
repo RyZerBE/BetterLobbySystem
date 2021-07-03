@@ -5,6 +5,7 @@ namespace baubolp\ryzerbe\lobbycore\util;
 
 
 use DateTime;
+use pocketmine\utils\TextFormat;
 
 class Event
 {
@@ -42,7 +43,7 @@ class Event
      */
     public function getDescription(): string
     {
-        return $this->description;
+        return str_replace("&", TextFormat::ESCAPE, $this->description);
     }
 
     /**
@@ -83,5 +84,23 @@ class Event
     public function toString(): string
     {
         return $this->eventName.";".$this->description.";".$this->group.";".$this->begin->format("Y-m-d H:i:s").";".$this->end->format("Y-m-d H:i:s");
+    }
+
+    /**
+     * @throws \Exception
+     * @return bool
+     */
+    public function isStarted(): bool
+    {
+        return $this->begin < new DateTime("now");
+    }
+
+    /**
+     * @throws \Exception
+     * @return bool
+     */
+    public function isEnd(): bool
+    {
+        return $this->end < new DateTime("now");
     }
 }
