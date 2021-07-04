@@ -61,12 +61,17 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+use function microtime;
 use function uniqid;
+use function var_dump;
 
 class Loader extends PluginBase
 {
     /** @var self */
     private static $instance = null;
+
+    /** @var bool  */
+    public static $jumpAndRunEnabled = false;
 
     const PREFIX = TextFormat::YELLOW.TextFormat::BOLD."Lobby ".TextFormat::RESET;
 
@@ -81,6 +86,8 @@ class Loader extends PluginBase
         $this->loadConfig();
         $this->registerPermissions();
         $this->loadNPCs();
+
+        self::$jumpAndRunEnabled = (Server::getInstance()->getPluginManager()->getPlugin("GommeJumpAndRun") !== null);
 
 
         CosmeticManager::getInstance();

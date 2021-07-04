@@ -8,10 +8,13 @@ use baubolp\core\provider\RankProvider;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerAFKAnimation;
 use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
+use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
+use matze\gommejar\session\SessionManager;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
+use function readdir;
 
 class LobbyTask extends Task
 {
@@ -24,6 +27,12 @@ class LobbyTask extends Task
     {
         foreach (LobbyPlayerCache::getPlayers() as $lobbyPlayer) {
             $player = $lobbyPlayer->getPlayer();
+            if(Loader::$jumpAndRunEnabled && SessionManager::getInstance()->getSession($player) !== null) {
+                if($player->getAllowFlight() && !$player->isCreative(true)) {
+                    $player->setAllowFlight(false);
+                }
+                continue;
+            }
             if (!$lobbyPlayer->enabledFlyMode() && !$player->getAllowFlight()) {
                 if ($lobbyPlayer->getPlayer()->isOnGround()) {
                     $lobbyPlayer->getPlayer()->setAllowFlight(true);

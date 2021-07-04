@@ -15,12 +15,9 @@ use pocketmine\level\Location;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\EmotePacket;
 use pocketmine\Player;
-use pocketmine\Server;
 use function array_rand;
 use function count;
 use function mt_rand;
-use function readdir;
-use function register_tick_function;
 use function spl_object_id;
 
 class NPCEntity extends Human implements ChunkLoader {

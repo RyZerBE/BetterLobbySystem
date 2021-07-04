@@ -4,12 +4,16 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\type\walkingblocks;
 
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
+use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\util\BlockQueue;
+use matze\gommejar\session\Session;
+use matze\gommejar\session\SessionManager;
 use pocketmine\block\Block;
 use pocketmine\Player;
 use function array_map;
 use function array_rand;
 use function in_array;
+use function is_null;
 use function mt_rand;
 
 abstract class WalkingBlocksCosmetic extends Cosmetic {
@@ -77,7 +81,22 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
                 $tempX = $vector3->x + $x;
                 $tempZ = $vector3->z + $z;
                 $lBlock = $level->getBlockAt($tempX, $y, $tempZ);
-                if(BlockQueue::isUsed($lBlock)) continue;
+
+                $jarBlock = false;
+                if(Loader::$jumpAndRunEnabled) {
+                    /** @var Session $session */
+                    foreach(SessionManager::getInstance()->getSessions() as $session) {
+                        if(
+                            ($session->getTargetVector3() !== null && $session->getTargetVector3()->equals($lBlock->floor())) ||
+                            ($session->getLastVector3() !== null && $session->getLastVector3()->equals($lBlock->floor()))
+                        ) {
+                            $jarBlock = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(BlockQueue::isUsed($lBlock) || $jarBlock) continue;
                 if($solid) {
                     if(!$lBlock->isSolid()) continue;
                 } else {

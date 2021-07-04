@@ -20,7 +20,7 @@ class ItemRainItemEntity extends ItemEntity {
         if($this->isOnGround() || $this->isInsideOfWater()) {
             $this->groundTicks++;
         }
-        if($this->groundTicks > 15) $this->flagForDespawn();
+        if($this->groundTicks > 15 || $this->y <= 0) $this->flagForDespawn();
         return parent::onUpdate($currentTick);
     }
 
