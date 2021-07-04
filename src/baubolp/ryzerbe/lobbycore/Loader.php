@@ -51,6 +51,7 @@ use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
 use baubolp\ryzerbe\lobbycore\util\SkinUtils;
 use muqsit\invmenu\InvMenuHandler;
+use mysqli;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Skin;
 use pocketmine\level\Location;
@@ -223,7 +224,7 @@ class Loader extends PluginBase
 
     public static function createMySQLTables(): void
     {
-        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (\mysqli $mysqli){
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) {
             $mysqli->query("CREATE TABLE IF NOT EXISTS LottoTickets(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(16) NOT NULL, tickets integer NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Position(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(16) NOT NULL, position varchar(32) NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS LoginStreak(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, loginstreak integer NOT NULL, nextstreakday integer NOT NULL, laststreakday integer NOT NULL)");
@@ -233,6 +234,7 @@ class Loader extends PluginBase
             $mysqli->query("CREATE TABLE IF NOT EXISTS Cosmetics(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL, cosmetic VARCHAR(128) NOT NULL, active INT NOT NULL DEFAULT '0')");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Hypetrains(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL , hypetrains INT NOT NULL DEFAULT '0')");
             $mysqli->query("CREATE TABLE IF NOT EXISTS News(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL)");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS Settings(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL, settings TEXT NOT NULL DEFAULT '1:1:1:1:1')");
         });
     }
 

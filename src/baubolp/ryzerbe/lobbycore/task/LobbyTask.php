@@ -14,7 +14,6 @@ use matze\gommejar\session\SessionManager;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
-use function readdir;
 
 class LobbyTask extends Task
 {
@@ -34,7 +33,7 @@ class LobbyTask extends Task
                 continue;
             }
             if (!$lobbyPlayer->enabledFlyMode() && !$player->getAllowFlight()) {
-                if ($lobbyPlayer->getPlayer()->isOnGround()) {
+                if ($lobbyPlayer->getPlayer()->isOnGround() && $lobbyPlayer->isDoublejumpEnabled()) {
                     $lobbyPlayer->getPlayer()->setAllowFlight(true);
                 }
             } else {
@@ -63,7 +62,7 @@ class LobbyTask extends Task
             if (!$lobbyPlayer->hasMoved()) {
                 $lobbyPlayer->addAfkTicks($this->getHandler()->getPeriod());
 
-                if ($lobbyPlayer->getAfkTicks() > self::AFK_TIME) {
+                if ($lobbyPlayer->getAfkTicks() > self::AFK_TIME && $lobbyPlayer->isAFKAnimationEnabled()) {
                     if (!$lobbyPlayer->isAfk()) {
                         $lobbyPlayer->setAfk();
                         AnimationProvider::addActiveAnimation(new PlayerAFKAnimation($player));

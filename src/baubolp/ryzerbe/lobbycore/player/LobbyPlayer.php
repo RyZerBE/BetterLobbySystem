@@ -60,6 +60,9 @@ class LobbyPlayer
     /** @var bool */
     private $shield = false;
 
+    /** @var bool */ //Settings
+    private $joinAnimation = true, $afkAnimation = true, $navigatorAnimation = true, $doubleJump = true, $lastSpawnPosition = true;
+
     public function __construct(Player $player)
     {
         $this->player = $player;
@@ -67,7 +70,6 @@ class LobbyPlayer
 
     public function load(): void
     {
-        $this->getPlayer()->setAllowFlight(true);
         $playerName = $this->getPlayer()->getName();
         AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($playerName){
             $now = time();
@@ -162,6 +164,15 @@ class LobbyPlayer
             else
                 $playerData["news"] = true;
 
+            $res = $mysqli->query("SELECT * FROM Settings WHERE playername='$playerName'");
+            if($res->num_rows > 0) {
+                while ($data = $res->fetch_assoc())
+                    $playerData["settings"] = explode(":", $data["settings"]);
+            }else {
+                $mysqli->query("INSERT INTO `Settings`(`playername`, `settings`) VALUES ('$playerName', '1:1:1:1:1')");
+                $playerData["settings"] = [1, 1, 1, 1, 1];
+            }
+
             return $playerData;
         }, function(Server $server, array $loadedData) use ($playerName){
             // LOAD DATA \\
@@ -176,28 +187,36 @@ class LobbyPlayer
                 $lobbyPlayer->setNextLoginStreak($loadedData["nextstreakday"]);
                 $lobbyPlayer->setCoinBombs($loadedData["bombs"]);
                 $lobbyPlayer->setHypeTrains($loadedData["hypetrains"]);
+                //SETTINGS\\
+                $lobbyPlayer->setJoinAnimation((bool)$loadedData["settings"][0]);
+                $lobbyPlayer->setAfkAnimation((bool)$loadedData["settings"][1]);
+                $lobbyPlayer->setNavigatorAnimation((bool)$loadedData["settings"][2]);
+                $lobbyPlayer->setDoubleJump((bool)$loadedData["settings"][3]);
+                $lobbyPlayer->setLastSpawnPosition((bool)$loadedData["settings"][4]);
 
                 ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
 
                 $cosmetics = [];
                 $activeCosmetics = [];
-                foreach($loadedData["cosmetics"] as $cosmeticData) {
+                foreach ($loadedData["cosmetics"] as $cosmeticData) {
                     $cosmetic = CosmeticManager::getInstance()->getCosmetic($cosmeticData["Cosmetic"]);
-                    if(is_null($cosmetic)) continue;
+                    if (is_null($cosmetic)) continue;
                     $cosmetics[$cosmetic->getIdentifier()] = $cosmetic;
-                    if($cosmeticData["Active"]) $activeCosmetics[$cosmetic->getIdentifier()] = $cosmetic;
+                    if ($cosmeticData["Active"]) $activeCosmetics[$cosmetic->getIdentifier()] = $cosmetic;
                 }
                 $lobbyPlayer->setActiveCosmetics($activeCosmetics);
                 $lobbyPlayer->setCosmetics($cosmetics);
 
-                if($loadedData["spawn"] == 0)
+                if ($loadedData["spawn"] == 0 || !$lobbyPlayer->isLastPositionSpawnEnabled())
                     $lobbyPlayer->getPlayer()->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
                 else
                     $lobbyPlayer->getPlayer()->teleport(LocationUtils::fromString($loadedData["spawn"]));
 
                 $lobbyPlayer->checkLoginStreak();
-                if((bool)$loadedData["news"] && NewsBookForm::$news != null)
+                if ((bool)$loadedData["news"] && NewsBookForm::$news != null)
                     NewsBookForm::open($lobbyPlayer->getPlayer());
+
+                $lobbyPlayer->getPlayer()->setAllowFlight($lobbyPlayer->isDoublejumpEnabled());
 
                 $lobbyPlayer->updateScoreboard();
             }
@@ -697,7 +716,7 @@ class LobbyPlayer
      */
     public function isJoinAnimationEnabled(): bool
     {
-        return true; //todo: settings
+        return $this->joinAnimation;
     }
 
     /**
@@ -705,7 +724,90 @@ class LobbyPlayer
      */
     public function isNavigatorAnimationEnabled(): bool
     {
-        return true; //todo: settings
+        return $this->navigatorAnimation;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAFKAnimationEnabled(): bool
+    {
+        return $this->afkAnimation;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDoublejumpEnabled(): bool
+    {
+        return $this->doubleJump;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLastPositionSpawnEnabled(): bool
+    {
+        return $this->lastSpawnPosition;
+    }
+
+    /**
+     * @param bool $afkAnimation
+     */
+    public function setAfkAnimation(bool $afkAnimation): void
+    {
+        $this->afkAnimation = $afkAnimation;
+    }
+
+    /**
+     * @param bool $doubleJump
+     */
+    public function setDoubleJump(bool $doubleJump): void
+    {
+        $this->doubleJump = $doubleJump;
+    }
+
+    /**
+     * @param bool $joinAnimation
+     */
+    public function setJoinAnimation(bool $joinAnimation): void
+    {
+        $this->joinAnimation = $joinAnimation;
+    }
+
+    /**
+     * @param bool $navigatorAnimation
+     */
+    public function setNavigatorAnimation(bool $navigatorAnimation): void
+    {
+        $this->navigatorAnimation = $navigatorAnimation;
+    }
+
+    /**
+     * @param bool $lastSpawnPosition
+     */
+    public function setLastSpawnPosition(bool $lastSpawnPosition): void
+    {
+        $this->lastSpawnPosition = $lastSpawnPosition;
+    }
+
+    /**
+     * @param array $settings
+     */
+    public function updateLobbySettings(array $settings): void
+    {
+        $this->setJoinAnimation($settings[0]);
+        $this->setAfkAnimation($settings[1]);
+        $this->setNavigatorAnimation($settings[2]);
+        $this->setDoubleJump($settings[3]);
+        $this->setLastSpawnPosition($settings[4]);
+
+        $playerName = $this->getPlayer()->getName();
+        $toString = implode(":", $settings);
+        $this->getPlayer()->playSound("random.levelup", 5.0, 1.0, [$this->getPlayer()]);
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($playerName, $toString){
+            $mysqli->query("UPDATE `Settings` SET settings='$toString' WHERE playername='$playerName'");
+        });
     }
 
     /**

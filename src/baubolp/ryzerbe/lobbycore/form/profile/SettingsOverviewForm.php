@@ -28,7 +28,7 @@ class SettingsOverviewForm
                     $player->getServer()->dispatchCommand($player, "particle");
                     break;
                 case "lobby":
-                    $player->sendMessage(Loader::PREFIX.TextFormat::RED."In Work! :(");
+                    $player->sendForm(new LobbySettingsForm($lobbyPlayer));
                     break;
             }
         });
