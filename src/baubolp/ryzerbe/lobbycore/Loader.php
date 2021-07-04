@@ -18,6 +18,7 @@ use baubolp\ryzerbe\lobbycore\command\PositionCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\ResetNewsPopupCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
+use baubolp\ryzerbe\lobbycore\command\SurveyCommand;
 use baubolp\ryzerbe\lobbycore\command\WarpCommand;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\entity\CoinBombMinecartEntity;
@@ -46,6 +47,7 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerMoveListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
+use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
 use baubolp\ryzerbe\lobbycore\provider\WarpProvider;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
@@ -93,6 +95,7 @@ class Loader extends PluginBase
 
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
+        SurveyProvider::loadSurvey();
         new EventProvider();
 
         if (!InvMenuHandler::isRegistered())
@@ -123,7 +126,8 @@ class Loader extends PluginBase
             new HypeTrainCommand(),
             new ResetNewsPopupCommand(),
             new EventCommand(),
-            new PositionCommand()
+            new PositionCommand(),
+            new SurveyCommand()
         ]);
     }
 
@@ -235,6 +239,7 @@ class Loader extends PluginBase
             $mysqli->query("CREATE TABLE IF NOT EXISTS Hypetrains(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL , hypetrains INT NOT NULL DEFAULT '0')");
             $mysqli->query("CREATE TABLE IF NOT EXISTS News(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Settings(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL, settings TEXT NOT NULL DEFAULT '1:1:1:1:1')");
+            $mysqli->query("CREATE TABLE IF NOT EXISTS Surveys(id INT NOT NULL KEY AUTO_INCREMENT, playername VARCHAR(32) NOT NULL, surveyid TEXT NOT NULL, answerid TEXT NOT NULL)");
         });
     }
 
@@ -248,6 +253,7 @@ class Loader extends PluginBase
             $config->set("bossbarMessages", []);
             $config->set("news", []);
             $config->set("event", null);
+            $config->set("survey", []);
             $config->save();
         }
         $config = new Config("/root/RyzerCloud/data/Lobby/config.json");

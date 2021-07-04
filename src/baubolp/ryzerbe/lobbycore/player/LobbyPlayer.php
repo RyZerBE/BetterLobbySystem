@@ -59,6 +59,8 @@ class LobbyPlayer
     private $cosmetics;
     /** @var bool */
     private $shield = false;
+    /** @var array  */
+    private $alreadyVotedSurveys = [];
 
     /** @var bool */ //Settings
     private $joinAnimation = true, $afkAnimation = true, $navigatorAnimation = true, $doubleJump = true, $lastSpawnPosition = true;
@@ -173,6 +175,13 @@ class LobbyPlayer
                 $playerData["settings"] = [1, 1, 1, 1, 1];
             }
 
+            $playerData["alreadyVotedSurveys"] = [];
+            $res = $mysqli->query("SELECT * FROM Surveys WHERE playername='$playerName'");
+            if($res->num_rows > 0) {
+                while ($data = $res->fetch_assoc())
+                    $playerData["alreadyVotedSurveys"][] = $data["surveyid"];
+            }
+
             return $playerData;
         }, function(Server $server, array $loadedData) use ($playerName){
             // LOAD DATA \\
@@ -193,6 +202,8 @@ class LobbyPlayer
                 $lobbyPlayer->setNavigatorAnimation((bool)$loadedData["settings"][2]);
                 $lobbyPlayer->setDoubleJump((bool)$loadedData["settings"][3]);
                 $lobbyPlayer->setLastSpawnPosition((bool)$loadedData["settings"][4]);
+
+                $lobbyPlayer->setAlreadyVotedSurveys($loadedData["alreadyVotedSurveys"]);
 
                 ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
 
@@ -888,5 +899,21 @@ class LobbyPlayer
         ScoreboardUtils::addEmptyLine($this->getPlayer(), 9, "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 10, TextFormat::GRAY."Clan", "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW.$rbePlayer->getClan().TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, $rbePlayer->getClanTag()).TextFormat::GRAY."]", "lobby");
+    }
+
+    /**
+     * @return array
+     */
+    public function getAlreadyVotedSurveys(): array
+    {
+        return $this->alreadyVotedSurveys;
+    }
+
+    /**
+     * @param array $alreadyVotedSurveys
+     */
+    public function setAlreadyVotedSurveys(array $alreadyVotedSurveys): void
+    {
+        $this->alreadyVotedSurveys = $alreadyVotedSurveys;
     }
 }
