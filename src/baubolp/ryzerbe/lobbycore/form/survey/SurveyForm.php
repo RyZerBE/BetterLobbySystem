@@ -20,11 +20,11 @@ class SurveyForm
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
         if(is_null($lobbyPlayer)) return;
         $form = new SimpleForm(function (Player $player, $data) use ($lobbyPlayer):void{
-            if($data == null) return;
+            if($data == null || $data === "nope") return;
 
             $i = explode(":", $data);
             $surveyId = $i[0];
-            $answerId = $i[1];
+            $answerId = ($i[2] ?? "fallback_answer");//FIXME: #BlameBaubo
             $survey = SurveyProvider::getSurveys()[$surveyId] ?? null;
             if($survey === null) return;
 
@@ -40,7 +40,7 @@ class SurveyForm
         $form->setTitle(TextFormat::AQUA.TextFormat::BOLD."Survey");
         if(count($noVote) <= 0) {
             $form->setContent(LanguageProvider::getMessageContainer("lobby-survey-no-survey", $player->getName()));
-            $form->addButton(TextFormat::RED."Okay :(", -1, "", null);
+            $form->addButton(TextFormat::RED."Okay :(", -1, "", "nope");
             $form->sendToPlayer($player);
             return;
         }

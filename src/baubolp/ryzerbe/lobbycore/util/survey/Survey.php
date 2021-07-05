@@ -33,8 +33,7 @@ class Survey
     {
         $this->surveyAnswers = $surveyAnswers;
         $this->survey = $survey;
-        if($id === null)
-        $this->id = uniqid();
+        if($id === null) $this->id = uniqid();
     }
 
     /**

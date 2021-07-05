@@ -11,6 +11,7 @@ use pocketmine\form\element\Input;
 use pocketmine\form\element\StepSlider;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use function var_dump;
 
 class CreateSurveyForm extends CustomForm
 {
@@ -26,7 +27,7 @@ class CreateSurveyForm extends CustomForm
             $e2 = $this->getElement(1);
 
             $question = $response->getString($e1->getName());
-            $answerCount = $response->getString($e2->getName());
+            $answerCount = $response->getInt($e2->getName()) + 1;
 
             $player->sendForm(new SurveyAnswerForm($question, $answerCount));
         });
