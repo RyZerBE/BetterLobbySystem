@@ -13,7 +13,6 @@ use pocketmine\Player;
 use function array_map;
 use function array_rand;
 use function in_array;
-use function is_null;
 use function mt_rand;
 
 abstract class WalkingBlocksCosmetic extends Cosmetic {

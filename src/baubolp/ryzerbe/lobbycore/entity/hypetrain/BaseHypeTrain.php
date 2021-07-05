@@ -67,6 +67,7 @@ abstract class BaseHypeTrain extends Vehicle {
         $rider = $this->getRider();
         if(is_null($rider) || $rider->isClosed()) return;
 
+        $rider->getDataPropertyManager()->setVector3(Entity::DATA_RIDER_SEAT_POSITION, $this->getRiderSeatPosition(), true);
         $rider->setPosition($this->add($this->getRiderSeatPosition()));
     }
 
