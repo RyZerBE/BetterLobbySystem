@@ -14,7 +14,7 @@ class SurveyAnswer
     public function __construct(string $answerName)
     {
         $this->answerName = $answerName;
-        $this->identifier = "answer:".str_replace(" ", "_", $answerName);
+        $this->identifier = "answer!".str_replace(" ", "_", $answerName);
     }
 
     /**

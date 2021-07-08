@@ -10,7 +10,6 @@ use baubolp\core\provider\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
-use pocketmine\Player;
 use pocketmine\utils\Config;
 
 class Survey
@@ -33,7 +32,7 @@ class Survey
     {
         $this->surveyAnswers = $surveyAnswers;
         $this->survey = $survey;
-        if($id === null) $this->id = uniqid();
+        if($id === null) $this->id = uniqid(); else $this->id = $id;
     }
 
     /**
@@ -66,7 +65,7 @@ class Survey
     public function toString(): string
     {
         $answers = [];
-        foreach ($this->getSurveyAnswers() as $answer) $answers[] = $answer->getIdentifier();
+        foreach ($this->getSurveyAnswers() as $answer) $answers[] = $answer->getAnswerName();
 
         return $this->id.";".$this->survey.";".implode(":", $answers);
     }
@@ -118,10 +117,5 @@ class Survey
         $player->setAlreadyVotedSurveys($av);
         CoinProvider::addCoins($playerName, 50);
         $player->getPlayer()->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer("lobby-survey-voted", $playerName));
-    }
-
-    public function getResult()
-    {
-        //todo: get percent statistic (+Balkendiagramm)
     }
 }

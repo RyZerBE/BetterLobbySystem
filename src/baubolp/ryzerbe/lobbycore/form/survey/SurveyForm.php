@@ -22,9 +22,9 @@ class SurveyForm
         $form = new SimpleForm(function (Player $player, $data) use ($lobbyPlayer):void{
             if($data == null || $data === "nope") return;
 
-            $i = explode(":", $data);
+            $i = explode(";", $data);
             $surveyId = $i[0];
-            $answerId = ($i[2] ?? "fallback_answer");//FIXME: #BlameBaubo
+            $answerId = $i[1];
             $survey = SurveyProvider::getSurveys()[$surveyId] ?? null;
             if($survey === null) return;
 
@@ -53,7 +53,7 @@ class SurveyForm
         }
         $form->setContent($survey->getSurvey());
         foreach ($survey->getSurveyAnswers() as $answer)
-            $form->addButton($answer->getAnswerName(), -1, "", $survey->getId().":".$answer->getIdentifier());
+            $form->addButton($answer->getAnswerName(), -1, "", $survey->getId().";".$answer->getIdentifier());
 
         $form->sendToPlayer($player);
     }

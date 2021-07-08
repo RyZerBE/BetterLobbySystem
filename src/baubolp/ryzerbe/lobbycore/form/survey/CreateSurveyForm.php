@@ -11,7 +11,6 @@ use pocketmine\form\element\Input;
 use pocketmine\form\element\StepSlider;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use function var_dump;
 
 class CreateSurveyForm extends CustomForm
 {
