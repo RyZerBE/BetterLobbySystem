@@ -17,6 +17,7 @@ use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PositionCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\ResetNewsPopupCommand;
+use baubolp\ryzerbe\lobbycore\command\RunningClanWarsCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
 use baubolp\ryzerbe\lobbycore\command\SurveyCommand;
 use baubolp\ryzerbe\lobbycore\command\WarpCommand;
@@ -35,6 +36,7 @@ use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockPlaceListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockUpdateListener;
+use baubolp\ryzerbe\lobbycore\listener\ChunkLoaderListener;
 use baubolp\ryzerbe\lobbycore\listener\EntityDamageListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryPickupItemListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
@@ -47,6 +49,7 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerMoveListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
+use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
 use baubolp\ryzerbe\lobbycore\provider\WarpProvider;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
@@ -96,6 +99,7 @@ class Loader extends PluginBase
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
         SurveyProvider::loadSurvey();
+        RunningClanWarProvider::updateRunningClanWars();
         new EventProvider();
 
         if (!InvMenuHandler::isRegistered())
@@ -127,7 +131,8 @@ class Loader extends PluginBase
             new ResetNewsPopupCommand(),
             new EventCommand(),
             new PositionCommand(),
-            new SurveyCommand()
+            new SurveyCommand(),
+            new RunningClanWarsCommand()
         ]);
     }
 
@@ -149,7 +154,8 @@ class Loader extends PluginBase
             new LeavesDecayListener(),
             new PlayerInteractListener(),
             new InventoryPickupItemListener(),
-            new PlayerMoveListener()
+            new PlayerMoveListener(),
+            new ChunkLoaderListener()
         ];
 
         foreach ($listeners as $listener)
@@ -248,7 +254,6 @@ class Loader extends PluginBase
         if (!is_file("/root/RyzerCloud/data/Lobby/config.json")) {
             $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
             $config->set("warps", []);
-            $config->set("npcs", []);
             $config->set("games", ["BedWars" => ["warpName" => "bedwars", "icon" => ""], "FlagWars" => ["warpName" => "flagwars", "icon" => ""]]);
             $config->set("bossbarMessages", []);
             $config->set("news", []);
