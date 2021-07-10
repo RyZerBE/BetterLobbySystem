@@ -39,7 +39,11 @@ class NavigatorForm
             $icon = self::$games[$game]["icon"];
             $warpName = self::$games[$game]["warpName"];
 
-            $form->addButton($game, $icon, "", $warpName . ":" . $game);
+            if($icon == "-1")
+            $form->addButton($game, -1, "", $warpName . ":" . $game);
+            else {
+                $form->addButton($game, 1, $icon, $warpName . ":" . $game);
+            }
         }
         $form->sendToPlayer($player);
     }
