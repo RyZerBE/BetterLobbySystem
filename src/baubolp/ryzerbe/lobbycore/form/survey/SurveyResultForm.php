@@ -46,7 +46,7 @@ class SurveyResultForm
                    continue;
                }
 
-               $votesAsPercent = (($votes * 100) / count($surveyResult)); //VOTES * 100 / ALL VOTES = P%
+               $votesAsPercent = round((($votes * 100) / count($surveyResult))); //VOTES * 100 / ALL VOTES = P%
                $barGraph .= TextFormat::GREEN . $answer->getAnswerName() . "\n" . TextFormat::WHITE . str_repeat("▀", (int)(($votesAsPercent * 18) / 100)) . TextFormat::GREEN . " ".$votesAsPercent . "%\n";
            }
 
