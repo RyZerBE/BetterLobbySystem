@@ -18,6 +18,7 @@ use baubolp\ryzerbe\lobbycore\command\PositionCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\ResetNewsPopupCommand;
 use baubolp\ryzerbe\lobbycore\command\RunningClanWarsCommand;
+use baubolp\ryzerbe\lobbycore\command\ShopCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
 use baubolp\ryzerbe\lobbycore\command\SurveyCommand;
 use baubolp\ryzerbe\lobbycore\command\WarpCommand;
@@ -52,6 +53,7 @@ use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
 use baubolp\ryzerbe\lobbycore\provider\WarpProvider;
+use baubolp\ryzerbe\lobbycore\shop\ShopManager;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
 use baubolp\ryzerbe\lobbycore\util\SkinUtils;
@@ -99,6 +101,7 @@ class Loader extends PluginBase
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
         SurveyProvider::loadSurvey();
+        ShopManager::registerCategories();
         RunningClanWarProvider::updateRunningClanWars();
         new EventProvider();
 
@@ -132,7 +135,8 @@ class Loader extends PluginBase
             new EventCommand(),
             new PositionCommand(),
             new SurveyCommand(),
-            new RunningClanWarsCommand()
+            new RunningClanWarsCommand(),
+            new ShopCommand()
         ]);
     }
 
