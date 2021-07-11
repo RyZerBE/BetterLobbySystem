@@ -8,6 +8,7 @@ use baubolp\core\provider\RankProvider;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerAFKAnimation;
 use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
+use baubolp\ryzerbe\lobbycore\entity\NPCEntity;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use matze\gommejar\session\SessionManager;
@@ -78,6 +79,22 @@ class LobbyTask extends Task
                 if ($entity instanceof EventPortalEntity && count(Server::getInstance()->getOnlinePlayers()) > 0)
                     $entity->updateTitle();
             }
+        }
+
+        foreach (array_keys(Loader::$entityCheckQueue) as $npcEntityId) {
+            if(Loader::getInstance()->getServer()->getDefaultLevel()->getEntity($npcEntityId) != null) continue;
+
+            $data = Loader::$entityCheckQueue[$npcEntityId];
+            $npcEntity = new NPCEntity($data["location"], $data["skin"]);
+            $npcEntity->setEmotes($data["emotes"]);
+            $npcEntity->setAttackClosure($data["attackClosure"]);
+            $npcEntity->setInteractClosure($data["interactClosure"]);
+            $npcEntity->setScale($data["scale"]);
+            $npcEntity->setNameTag($data["nameTag"]);
+            $npcEntity->setLookAtPlayer($data["lookToPlayer"]);
+            $npcEntity->setNameTagAlwaysVisible();
+            $npcEntity->spawnToAll();
+            unset(Loader::$entityCheckQueue[$npcEntityId]);
         }
     }
 }

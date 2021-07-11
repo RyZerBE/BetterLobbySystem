@@ -2,6 +2,7 @@
 
 namespace baubolp\ryzerbe\lobbycore\entity;
 
+use baubolp\ryzerbe\lobbycore\Loader;
 use Closure;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
@@ -185,6 +186,29 @@ class NPCEntity extends Human implements ChunkLoader {
      */
     public function isLoaderActive(): bool{
         return !$this->isClosed();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDespawned(): bool
+    {
+        return Loader::getInstance()->getServer()->getDefaultLevel()->getEntity($this->getId()) === null;
+    }
+
+    public function spawnToAll(): void
+    {
+        parent::spawnToAll();
+        if(isset(Loader::$entityCheckQueue[$this->getId()])) return;
+
+        Loader::$entityCheckQueue[$this->getId()]["scale"] = $this->getScale();
+        Loader::$entityCheckQueue[$this->getId()]["location"] = $this->getLocation();
+        Loader::$entityCheckQueue[$this->getId()]["skin"] = $this->getSkin();
+        Loader::$entityCheckQueue[$this->getId()]["attackClosure"] = $this->attackClosure;
+        Loader::$entityCheckQueue[$this->getId()]["interactClosure"] = $this->interactClosure;
+        Loader::$entityCheckQueue[$this->getId()]["emotes"] = $this->emotes;
+        Loader::$entityCheckQueue[$this->getId()]["lookToPlayer"] = $this->lookAtPlayer;
+        Loader::$entityCheckQueue[$this->getId()]["nameTag"] = $this->getNameTag();
     }
 
     public function onChunkChanged(Chunk $chunk){}

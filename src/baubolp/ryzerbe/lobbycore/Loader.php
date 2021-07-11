@@ -79,6 +79,9 @@ class Loader extends PluginBase
     /** @var self */
     private static $instance = null;
 
+    /** @var array  */
+    public static $entityCheckQueue = [];
+
     /** @var bool  */
     public static $jumpAndRunEnabled = false;
 
