@@ -46,6 +46,10 @@ class VIPRank extends ShopArticle
         $ryzerPlayer = RyzerPlayerProvider::getRyzerPlayer($player);
         if($ryzerPlayer === null) return;
 
+        if(RankProvider::getRankJoinPower("VIP") <= RankProvider::getRankJoinPower($ryzerPlayer->getRank())) {
+            $player->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer('rank-higher-rankshop', $player->getName()));
+            return;
+        }
         if($ryzerPlayer->getCoins() < $this->getPrice()) {
             $player->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer("not-enough-coins", $player->getName()));
             return;
