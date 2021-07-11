@@ -49,6 +49,7 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerMoveListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
+use baubolp\ryzerbe\lobbycore\listener\RyZerPlayerAuthListener;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
@@ -159,7 +160,8 @@ class Loader extends PluginBase
             new PlayerInteractListener(),
             new InventoryPickupItemListener(),
             new PlayerMoveListener(),
-            new ChunkLoaderListener()
+            new ChunkLoaderListener(),
+            new RyZerPlayerAuthListener()
         ];
 
         foreach ($listeners as $listener)
