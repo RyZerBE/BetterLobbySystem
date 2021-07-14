@@ -6,14 +6,25 @@ namespace baubolp\ryzerbe\lobbycore\provider;
 
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\ItemUtils;
+use baubolp\ryzerbe\lobbycore\cosmetic\category\CosmeticCategory;
+use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\special\HeadCanonSpecialCosmetic;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\special\SpidermanGunSpecialCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;
 use baubolp\ryzerbe\lobbycore\form\LobbySwitcherForm;
 use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\form\profile\ProfileOverviewForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
+use pocketmine\block\Block;
+use pocketmine\entity\Entity;
+use pocketmine\entity\projectile\Projectile;
 use pocketmine\item\Item;
 use pocketmine\level\sound\BlazeShootSound;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -22,6 +33,9 @@ class ItemProvider
 
     public static function giveLobbyItems(Player $player): void
     {
+        $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
+        if($lobbyPlayer === null) return;
+
         self::clearAllInventories($player);
 
         $navigator = ItemUtils::addItemTag(Item::get(Item::FIREWORKS)->setCustomName(TextFormat::GREEN."Navigator"."\n".TextFormat::GRAY."[".TextFormat::AQUA."Click".TextFormat::GRAY."]"), "navigator", "lobby_item");
@@ -33,6 +47,16 @@ class ItemProvider
         $inventory = $player->getInventory();
         if($player->hasPermission("lobby.shield"))
             $inventory->setItem(5, $shield);
+
+        foreach ($lobbyPlayer->getActiveCosmetics() as $activeCosmetic) {
+            if($activeCosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS) {
+                if($activeCosmetic->getIdentifier() === (new SpidermanGunSpecialCosmetic())->getIdentifier()) {
+                    $inventory->setItem(0, ItemUtils::addItemTag(Item::get(Item::DIAMOND_HOE)->setCustomName(TextFormat::GOLD."Spiderman Gun"), "spiderman_gun", "lobby_item"));
+                }else if($activeCosmetic->getIdentifier() === (new HeadCanonSpecialCosmetic())->getIdentifier()) {
+                    $inventory->setItem(0, ItemUtils::addItemTag(Item::get(Item::SKULL, 0)->setCustomName(TextFormat::GOLD."Head Canon"), "head_canon", "hypetrain_item"));
+                }
+            }
+        }
 
         $inventory->setItem(1, $lobbySwitcher);
         $inventory->setItem(2, $gadgets);
@@ -71,6 +95,30 @@ class ItemProvider
                     break;
                 case "lobbyswitcher":
                     LobbySwitcherForm::open($player);
+                    break;
+                case "spiderman_gun":
+                    $nbt = new CompoundTag("", [
+                        "Pos" => new ListTag("Pos", [
+                            new DoubleTag("", $player->x),
+                            new DoubleTag("", $player->y + $player->getEyeHeight()),
+                            new DoubleTag("", $player->z)
+                        ]), "Motion" => new ListTag("Motion", [
+                            new DoubleTag("", $player->getDirectionVector()->x),
+                            new DoubleTag("", $player->getDirectionVector()->y),
+                            new DoubleTag("", $player->getDirectionVector()->z)
+                        ]), "Rotation" => new ListTag("Rotation", [
+                            new FloatTag("", $player->yaw),
+                            new FloatTag("", $player->pitch)]),
+                    ]);
+
+                    $nbt->setString("identifier", "spiderman_gun");
+                    $entity = Entity::createEntity("Snowball", $player->getLevel(), $nbt);
+                    $entity->spawnToAll();
+                    $player->playSound("mob.spider.say", 5.0, 1.0, [$player]);
+                    if ($entity instanceof Projectile)
+                        $entity->setMotion($entity->getMotion()->multiply(2.0));
+
+                    $player->resetItemCooldown($item, 60);
                     break;
             }
         }
