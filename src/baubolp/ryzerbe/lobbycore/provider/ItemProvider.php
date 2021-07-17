@@ -111,13 +111,13 @@ class ItemProvider
                             new FloatTag("", $player->pitch)]),
                     ]);
 
-                    $nbt->setString("identifier", "spiderman_gun");
-                    $entity = Entity::createEntity("Snowball", $player->getLevel(), $nbt);
+                    $nbt->setString("identifier", (new SpidermanGunSpecialCosmetic())->getIdentifier());
+                    $entity = Entity::createEntity("Snowball", $player->getLevel(), $nbt, $player);
                     $entity->spawnToAll();
-                    $player->playSound("mob.spider.say", 5.0, 1.0, [$player]);
                     if ($entity instanceof Projectile)
                         $entity->setMotion($entity->getMotion()->multiply(2.0));
 
+                    $player->playSound("mob.spider.say", 5.0, 1.0, [$player]);
                     $player->resetItemCooldown($item, 60);
                     break;
             }

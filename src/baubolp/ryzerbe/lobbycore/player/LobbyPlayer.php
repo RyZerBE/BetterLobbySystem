@@ -205,8 +205,6 @@ class LobbyPlayer
 
                 $lobbyPlayer->setAlreadyVotedSurveys($loadedData["alreadyVotedSurveys"]);
 
-                ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
-
                 $cosmetics = [];
                 $activeCosmetics = [];
                 foreach ($loadedData["cosmetics"] as $cosmeticData) {
@@ -230,6 +228,7 @@ class LobbyPlayer
                 $lobbyPlayer->getPlayer()->setAllowFlight($lobbyPlayer->isDoublejumpEnabled());
 
                 $lobbyPlayer->updateScoreboard();
+                ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
             }
         });
     }

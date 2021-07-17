@@ -21,8 +21,8 @@ class ProjectileHitEntityListener implements Listener
         if (!$hitEntity instanceof Player) return;
 
         if ($entity->namedtag->getString("identifier", "#CoVid19") == (new SpidermanGunSpecialCosmetic())->getIdentifier()) {
-            $entity->getLevel()->setBlock($entity->asVector3(), Block::get(Block::WEB));
-            BlockQueue::addBlock(Block::get(Block::AIR), 60);
+            BlockQueue::addBlock($entity->getLevel()->getBlock($entity->asVector3()->add(0, -1)), 60);
+            $entity->getLevel()->setBlock($entity->asVector3()->add(0, -1), Block::get(Block::WEB));
         }
     }
 }
