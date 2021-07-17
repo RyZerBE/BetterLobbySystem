@@ -72,9 +72,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
-use function microtime;
 use function uniqid;
-use function var_dump;
 
 class Loader extends PluginBase
 {
@@ -182,12 +180,13 @@ class Loader extends PluginBase
          * 230.5, 72, 272.5, 0, 0 //Used
          * 224.5, 72, 272.5, 0, 0 //Used
          *
-         * 234.5, 71, 274.5, 0, 0
-         * 238.5, 71, 273.5, 0, 0
-         * 219.5, 71, 274.5, 0, 0
-         * 216.5, 71, 271.5, 0, 0
+         * 234.5, 71, 274.5, 0, 0 //Used
+         * 238.5, 71, 273.5, 0, 0 //Used
+         * 219.5, 71, 274.5, 0, 0 //Used
+         * 216.5, 71, 271.5, 0, 0 //Used
          */
 
+        // GAME NPC`s \\
         $emotes = [
             Emotes::WAVE, Emotes::THE_WOODPUNCH, Emotes::UNDERWATER_DANCING, Emotes::HAND_STAND, Emotes::SHY_GIGGLING, Emotes::MEDITATING_LIKE_LUKE, Emotes::OFFERING,
             Emotes::BORED, Emotes::AHH_CHOO, Emotes::GIDDY, Emotes::OVER_HERE, Emotes::GROOVIN, Emotes::WAVING_LIKE_C_3PO, Emotes::THINKING, Emotes::SURRENDERING
@@ -201,7 +200,6 @@ class Loader extends PluginBase
             (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
         );
 
-        //Maybe BedWars?
         $npc = new NPCEntity(new Location(230.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $closure = (function(Player $player): void {
             $player->sendMessage("Hi");
@@ -209,18 +207,113 @@ class Loader extends PluginBase
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
-        $npc->setNameTag("§l§aBedWars?");
+        $npc->updateTitle(TextFormat::YELLOW."CWBW-Training", TextFormat::BLACK."♠ ".TextFormat::AQUA."REWRITE".TextFormat::BLACK." ♠");
         $npc->spawnToAll();
 
-        //Maybe FlagWars?
         $npc = new NPCEntity(new Location(224.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
-        $closure = (function(Player $player): void {
-            $player->sendMessage("Bye");
-        });
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
-        $npc->setNameTag("§l§aFlagWars?");
+        $npc->updateTitle(TextFormat::DARK_AQUA."Flag".TextFormat::AQUA."Wars", TextFormat::BLACK."♠ ".TextFormat::GREEN."NEW".TextFormat::BLACK." ♠");
+        $npc->spawnToAll();
+
+        $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->updateTitle(TextFormat::RED."Clutches", TextFormat::BLACK."♠ ".TextFormat::GREEN."REPLAY AVAILABLE".TextFormat::BLACK." ♠");
+        $npc->spawnToAll();
+
+        $npc = new NPCEntity(new Location(238.5, 71, 273.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->updateTitle(TextFormat::GOLD."FFA", TextFormat::BLACK."♠ ".TextFormat::GREEN."FFA & BuildFFA".TextFormat::BLACK." ♠");
+        $npc->spawnToAll();
+
+        $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->updateTitle(TextFormat::AQUA."M".TextFormat::WHITE."L".TextFormat::AQUA."G Rush", TextFormat::BLACK."♠ ".TextFormat::YELLOW."NEW COOL MAPS".TextFormat::BLACK." ♠");
+        $npc->spawnToAll();
+
+        $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->updateTitle(TextFormat::AQUA."ClanWar", TextFormat::BLACK."♠ ".TextFormat::RED."Exchange System implement".TextFormat::BLACK." ♠");
+        $npc->spawnToAll();
+
+        // GEOMETRIES \\
+        $npc = new NPCEntity(new Location(213.5, 70, 291.5, 0, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/RankShop.png"),
+            "",
+            "geometry.Mobs.Zombie",
+            file_get_contents("/root/RyzerCloud/data/NPC/rankshop_geometry.json")
+        ));
+        $closure = function (Player $player): void{
+            $player->getServer()->dispatchCommand($player, "shop");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setScale(1.5);
+        $npc->updateTitle(TextFormat::GOLD."Coinshop", "");
+        $npc->spawnToAll();
+
+        $npc = new NPCEntity(new Location(235.5, 73, 306.5, 138, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/PServer.png"),
+            "",
+            "geometry.normal1",
+            file_get_contents("/root/RyzerCloud/data/NPC/pserver_geometry.json")
+        ));
+        $closure = function (Player $player): void{
+            $player->getServer()->dispatchCommand($player, "ps");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setScale(1.5);
+        $npc->updateTitle(TextFormat::DARK_PURPLE."Private Server", TextFormat::BLACK."♠ ".TextFormat::AQUA."PRIME RANK ".TextFormat::BLACK."♠");
+        $npc->spawnToAll();
+
+        $npc = new NPCEntity(new Location(221.5, 73, 306.5, 0, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/Lotto.png"),
+            "",
+            "geometry.normal1",
+            file_get_contents("/root/RyzerCloud/data/NPC/lotto_geometry.json")
+        ));
+        $closure = function (Player $player): void{
+            $player->getServer()->dispatchCommand($player, "lotto");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setScale(1.5);
+        $npc->updateTitle(TextFormat::YELLOW."Lotto", TextFormat::BLACK."♠ ".TextFormat::GOLD."PLAY WITH YOUR COINS".TextFormat::BLACK."♠");
+        $npc->spawnToAll();
+
+        // OTHER NPC`s \\
+
+        $npc = new NPCEntity(new Location(231.5, 73, 300.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
+        $closure = function (Player $player): void{
+            $player->getServer()->dispatchCommand($player, "dailyreward");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->updateTitle(TextFormat::AQUA."Daily Rewards", TextFormat::BLACK."♠ ".TextFormat::RED."FOR YOU".TextFormat::BLACK." ♠");
+        $npc->spawnToAll();
+
+        $npc = new NPCEntity(new Location(225.5, 73, 300.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
+        $closure = function (Player $player): void{
+            $player->getServer()->dispatchCommand($player, "survey");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->updateTitle(TextFormat::YELLOW."Survey", TextFormat::BLACK."♠ ".TextFormat::RED."GET COINS FOR VOTING".TextFormat::BLACK." ♠");
         $npc->spawnToAll();
     }
 

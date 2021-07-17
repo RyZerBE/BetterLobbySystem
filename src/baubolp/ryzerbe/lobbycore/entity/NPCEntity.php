@@ -49,6 +49,15 @@ class NPCEntity extends Human implements ChunkLoader {
         parent::__construct($location->getLevelNonNull(), Entity::createBaseNBT($location, null, $location->yaw, $location->pitch));
     }
 
+    /**
+     * @param string $title
+     * @param string $subtitle
+     */
+    public function updateTitle(string $title, string $subtitle): void
+    {
+        $this->setNameTag($title."\n".$subtitle);
+    }
+
     public function initEntity(): void{
         parent::initEntity();
 
