@@ -11,6 +11,7 @@ use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
 use baubolp\ryzerbe\lobbycore\entity\NPCEntity;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
+use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use matze\gommejar\session\SessionManager;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
@@ -96,5 +97,7 @@ class LobbyTask extends Task
             $npcEntity->spawnToAll();
             unset(Loader::$entityCheckQueue[$npcEntityId]);
         }
+        if(Loader::getInstance()->getServer()->getDefaultLevel()->getEntity(EventProvider::$id) == null) EventProvider::spawnPortal();
+
     }
 }

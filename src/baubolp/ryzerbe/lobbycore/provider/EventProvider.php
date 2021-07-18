@@ -16,6 +16,8 @@ class EventProvider
 {
     /** @var  */
     public static $portalVector3;
+    /** @var int  */
+    public static $id = -1;
 
     public function __construct()
     {
@@ -31,8 +33,9 @@ class EventProvider
         $vec3 = self::$portalVector3;
         Server::getInstance()->getDefaultLevel()->loadChunk($vec3->x >> 4, $vec3->z >> 4);
         $eventPortal = new EventPortalEntity(Server::getInstance()->getDefaultLevel(), Entity::createBaseNBT(self::$portalVector3));
-        $eventPortal->setScale(4);
+        $eventPortal->setScale(3);
         $eventPortal->spawnToAll();
+        self::$id = $eventPortal->getId();
     }
 
     public static function createEvent(string $eventName, string $description, string $group, DateTime $begin, DateTime $end)
