@@ -8,7 +8,6 @@ use baubolp\core\listener\own\RyZerPlayerAuthEvent;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerJoinAnimation;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
-use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\event\Listener;
 
 class RyZerPlayerAuthListener implements Listener
@@ -20,8 +19,8 @@ class RyZerPlayerAuthListener implements Listener
     {
         $player = $event->getRyZerPlayer()->getPlayer();
         $lobbyPlayer = new LobbyPlayer($player);
-        LobbyPlayerCache::registerLobbyPlayer($lobbyPlayer);
         $lobbyPlayer->load();
+        $lobbyPlayer->register();
 
         if (in_array($player->getName(), PlayerJoinNetworkListener::$willPlay)) {
             if ($lobbyPlayer->isJoinAnimationEnabled())
