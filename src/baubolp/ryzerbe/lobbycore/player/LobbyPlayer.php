@@ -915,4 +915,9 @@ class LobbyPlayer
     {
         $this->alreadyVotedSurveys = $alreadyVotedSurveys;
     }
+
+    public function reloadInventory(): void{
+        ItemProvider::clearAllInventories($this->getPlayer());
+        ItemProvider::giveLobbyItems($this->getPlayer());
+    }
 }

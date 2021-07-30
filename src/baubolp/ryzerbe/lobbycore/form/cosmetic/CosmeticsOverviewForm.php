@@ -33,8 +33,12 @@ class CosmeticsOverviewForm {
                     //Mhhhhh - Not that good
                     if($lobbyPlayer->isCosmeticActivated($cosmetic)) {
                         $lobbyPlayer->deactivateCosmetic($cosmetic);
+                        if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS)
+                            $lobbyPlayer->reloadInventory();
                     } elseif($lobbyPlayer->isCosmeticUnlocked($cosmetic)) {
                         $lobbyPlayer->activateCosmetic($cosmetic);
+                        if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS)
+                            $lobbyPlayer->reloadInventory();
                     } else {
                         $rbePlayer = $lobbyPlayer->asRyZerPlayer();
                         if($rbePlayer->getCoins() < $cosmetic->getPrice()) {
@@ -52,6 +56,9 @@ class CosmeticsOverviewForm {
 
                             switch ($data) {
                                 case "buy":
+                                    if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS)
+                                        $lobbyPlayer->reloadInventory();
+
                                     CoinProvider::removeCoins($player->getName(), $cosmetic->getPrice());
                                     $lobbyPlayer->unlockCosmetic($cosmetic);
                                     $lobbyPlayer->activateCosmetic($cosmetic);
