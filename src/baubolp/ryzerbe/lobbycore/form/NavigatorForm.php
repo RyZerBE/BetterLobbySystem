@@ -4,6 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 
+use BauboLP\CloudSigns\Provider\CloudSignProvider;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\NavigatorTeleportAnimation;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
@@ -35,14 +36,14 @@ class NavigatorForm
         });
 
         $form->setTitle(TextFormat::AQUA . TextFormat::BOLD . "Games");
-        foreach (array_keys(self::$games) as $game) {
+        foreach (array_keys(self::$games) as $game){
             $icon = self::$games[$game]["icon"];
             $warpName = self::$games[$game]["warpName"];
 
             if($icon == "-1")
-            $form->addButton($game, -1, "", $warpName . ":" . $game);
-            else {
-                $form->addButton($game, 1, $icon, $warpName . ":" . $game);
+                $form->addButton($game, -1, "", $warpName.":".$game);
+            else{
+                $form->addButton($game, 1, $icon, $warpName.":".$game);
             }
         }
         $form->sendToPlayer($player);

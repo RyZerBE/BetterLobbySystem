@@ -897,7 +897,11 @@ class LobbyPlayer
         ScoreboardUtils::addLine($this->getPlayer(), 8, TextFormat::DARK_GRAY."» ".TextFormat::AQUA.$rbePlayer->getOnlineTime(), "lobby");
         ScoreboardUtils::addEmptyLine($this->getPlayer(), 9, "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 10, TextFormat::GRAY."Clan", "lobby");
-        ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW.$rbePlayer->getClan()->getClanName().TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, $rbePlayer->getClanTag()).TextFormat::GRAY."]", "lobby");
+        if($rbePlayer->getClan() === null) {
+            ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW."NO CLAN".TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, "&g???").TextFormat::GRAY."]", "lobby");
+        }else {
+            ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW.$rbePlayer->getClan()->getClanName().TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, $rbePlayer->getClanTag()).TextFormat::GRAY."]", "lobby");
+        }
     }
 
     /**
