@@ -4,6 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\command;
 
 
+use baubolp\core\player\RyzerPlayerProvider;
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\provider\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
@@ -42,6 +43,7 @@ class StatusCommand extends Command
                 $mysqli->query("UPDATE `Status` SET status='false' WHERE playername='$playerName'");
             });
             $sender->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer('lobby-status-reset', $sender->getName()));
+            RyzerPlayerProvider::getRyzerPlayer($sender)?->updateStatus(null);
             return;
         }
         $status = implode(" ", $args);
@@ -55,6 +57,7 @@ class StatusCommand extends Command
         }, function (Server $server, $result) use ($playerName, $status){
             if(($sender = $server->getPlayerExact($playerName)) != null)
             $sender->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer('lobby-status-set', $sender->getName(), ['#status' => $status]));
+            RyzerPlayerProvider::getRyzerPlayer($sender)?->updateStatus($status);
         });
     }
 }
