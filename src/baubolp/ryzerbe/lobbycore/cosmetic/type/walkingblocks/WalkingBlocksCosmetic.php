@@ -6,9 +6,9 @@ use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\util\BlockQueue;
-use matze\gommejar\session\Session;
 use matze\gommejar\session\SessionManager;
 use pocketmine\block\Block;
+use pocketmine\block\BlockIds;
 use pocketmine\Player;
 use function array_map;
 use function array_rand;
@@ -83,7 +83,6 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
 
                 $jarBlock = false;
                 if(Loader::$jumpAndRunEnabled) {
-                    /** @var Session $session */
                     foreach(SessionManager::getInstance()->getSessions() as $session) {
                         if(
                             ($session->getTargetVector3() !== null && $session->getTargetVector3()->equals($lBlock->floor())) ||
@@ -97,7 +96,7 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
 
                 if(BlockQueue::isUsed($lBlock) || $jarBlock) continue;
                 if($solid) {
-                    if(!$lBlock->isSolid()) continue;
+                    if(!$this->canBeReplaced($lBlock)) continue;
                 } else {
                     if(!$lBlock->canBeReplaced() || !in_array($level->getBlockIdAt($tempX, $y - 1, $tempZ), $blockIds)) continue;
                 }
@@ -108,5 +107,15 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
                 $max--;
             }
         }
+    }
+
+    /**
+     * @param Block $block
+     * @return bool
+     */
+    private function canBeReplaced(Block $block): bool {
+        return $block->isSolid() && !in_array($block->getId(), [
+                BlockIds::END_PORTAL_FRAME, BlockIds::CARPET
+            ]);
     }
 }

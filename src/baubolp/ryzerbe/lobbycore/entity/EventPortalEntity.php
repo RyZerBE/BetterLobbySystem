@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\entity;
 
 
 use BauboLP\Cloud\CloudBridge;
-use baubolp\core\entity\HoloGram;
 use baubolp\core\provider\LanguageProvider;
 use BauboLP\NPCSystem\NPCSystem;
 use baubolp\ryzerbe\lobbycore\form\event\EventDescriptionForm;
@@ -20,7 +19,6 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\level\ChunkLoader;
 use pocketmine\level\format\Chunk;
 use pocketmine\level\Level;
-use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;

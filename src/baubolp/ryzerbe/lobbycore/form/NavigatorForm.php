@@ -4,7 +4,6 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 
-use BauboLP\CloudSigns\Provider\CloudSignProvider;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\NavigatorTeleportAnimation;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
@@ -21,7 +20,7 @@ class NavigatorForm
     public static function open(Player $player)
     {
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
-        if (is_null($lobbyPlayer)) return;
+        if ($lobbyPlayer === null) return;
         $form = new SimpleForm(function (Player $player, $data) use ($lobbyPlayer): void {
             if ($data === null) return;
             $data = explode(":", $data);
@@ -29,10 +28,11 @@ class NavigatorForm
             $warp = WarpProvider::getWarp($data[0]);
             if ($warp === null) return;
 
-            if ($lobbyPlayer->isNavigatorAnimationEnabled())
+            if ($lobbyPlayer->isNavigatorAnimationEnabled()){
                 AnimationProvider::addActiveAnimation(new NavigatorTeleportAnimation($player, $warp, $data[1]));
-            else
-                $player->teleport($warp->getLocation());
+            }else{
+                $player->teleport($warp->getLocation(), $player->getYaw(), 0);
+            }
         });
 
         $form->setTitle(TextFormat::AQUA . TextFormat::BOLD . "Games");

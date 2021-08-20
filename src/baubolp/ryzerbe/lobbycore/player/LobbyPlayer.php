@@ -13,7 +13,6 @@ use baubolp\core\provider\RankProvider;
 use baubolp\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
-use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;
 use baubolp\ryzerbe\lobbycore\form\NewsBookForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\ItemProvider;

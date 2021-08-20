@@ -7,6 +7,7 @@ namespace baubolp\ryzerbe\lobbycore\command;
 use baubolp\ryzerbe\lobbycore\form\survey\CreateSurveyForm;
 use baubolp\ryzerbe\lobbycore\form\survey\SurveyDeleteForm;
 use baubolp\ryzerbe\lobbycore\form\survey\SurveyForm;
+use baubolp\ryzerbe\lobbycore\form\survey\SurveyListForm;
 use baubolp\ryzerbe\lobbycore\form\survey\SurveyResultForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
@@ -38,29 +39,42 @@ class SurveyCommand extends Command
         $subCommand = strtolower($args[0]);
 
         switch ($subCommand) {
-            case "create":
+            case "create": {
                 $sender->sendForm(new CreateSurveyForm());
                 break;
-            case "delete":
+            }
+            case "delete": {
                 SurveyDeleteForm::open($sender);
                 break;
-            case "result":
-                if(empty($args[1])) {
-                    $sender->sendMessage(Loader::PREFIX.TextFormat::RED."/survey result <answerId>");
+            }
+            case "result": {
+                if(empty($args[1])){
+                    $sender->sendMessage(Loader::PREFIX.TextFormat::RED."/survey result <surveyId>");
                     return;
                 }
                 $id = $args[1];
                 $survey = SurveyProvider::getSurveys()[$id] ?? null;
-                if($survey === null) {
+                if($survey === null){
                     $sender->sendMessage(Loader::PREFIX.TextFormat::RED."Diese Umfrage ist nicht existent!");
                     return;
                 }
 
                 SurveyResultForm::open($sender, $survey);
                 break;
-            default:
+            }
+            case "list": {
+                $surveys = SurveyProvider::getSurveys();
+                if(empty($surveys)) {
+                    $sender->sendMessage(Loader::PREFIX.TextFormat::RED."Aktuell sind keine Umfragen vorhanden.");
+                    break;
+                }
+                SurveyListForm::open($sender);
+                break;
+            }
+            default: {
                 $sender->sendMessage(Loader::PREFIX.TextFormat::RED."/survey <create|delete|result>");
                 break;
+            }
         }
     }
 }

@@ -53,7 +53,7 @@ class ItemProvider
                 if($activeCosmetic->getIdentifier() === (new SpidermanGunSpecialCosmetic())->getIdentifier()) {
                     $inventory->setItem(0, ItemUtils::addItemTag(Item::get(Item::DIAMOND_HOE)->setCustomName(TextFormat::GOLD."Spiderman Gun"), "spiderman_gun", "lobby_item"));
                 }else if($activeCosmetic->getIdentifier() === (new HeadCanonSpecialCosmetic())->getIdentifier()) {
-                    $inventory->setItem(0, ItemUtils::addItemTag(Item::get(Item::SKULL, 0)->setCustomName(TextFormat::GOLD."Head Canon"), "head_canon", "hypetrain_item"));
+                    $inventory->setItem(0, ItemUtils::addItemTag(Item::get(Item::SKULL, 3)->setCustomName(TextFormat::GOLD."Head Canon"), "head_canon", "hypetrain_item"));
                 }
             }
         }

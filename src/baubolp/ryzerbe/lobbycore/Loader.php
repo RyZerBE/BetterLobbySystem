@@ -6,6 +6,8 @@ namespace baubolp\ryzerbe\lobbycore;
 
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\util\Emotes;
+use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
+use baubolp\ryzerbe\lobbycore\animation\type\NavigatorTeleportAnimation;
 use baubolp\ryzerbe\lobbycore\command\BuildCommand;
 use baubolp\ryzerbe\lobbycore\command\CoinbombCommand;
 use baubolp\ryzerbe\lobbycore\command\CosmeticCommand;
@@ -17,6 +19,7 @@ use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PositionCommand;
 use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\ResetNewsPopupCommand;
+use baubolp\ryzerbe\lobbycore\command\RotateNPCCommand;
 use baubolp\ryzerbe\lobbycore\command\RunningClanWarsCommand;
 use baubolp\ryzerbe\lobbycore\command\ShopCommand;
 use baubolp\ryzerbe\lobbycore\command\StatusCommand;
@@ -52,6 +55,7 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitBlockListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitEntityListener;
 use baubolp\ryzerbe\lobbycore\listener\RyZerPlayerAuthListener;
+use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
@@ -72,6 +76,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+use function explode;
 use function uniqid;
 
 class Loader extends PluginBase
@@ -140,7 +145,8 @@ class Loader extends PluginBase
             new PositionCommand(),
             new SurveyCommand(),
             new RunningClanWarsCommand(),
-            new ShopCommand()
+            new ShopCommand(),
+            new RotateNPCCommand()
         ]);
     }
 
@@ -201,13 +207,24 @@ class Loader extends PluginBase
         );
 
         $npc = new NPCEntity(new Location(230.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
-        $closure = (function(Player $player): void {
-            $player->sendMessage("Hi");
+        $closure = (function(Player $player, NPCEntity $entity): void {
+            $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
+            if($lobbyPlayer === null) return;
+            $warp = WarpProvider::getWarp($entity->namedtag->getString("warpName", "N/A"));
+            if ($warp === null) return;
+
+            $game = TextFormat::clean(explode("\n", $entity->getNameTag())[0]);
+            if ($lobbyPlayer->isNavigatorAnimationEnabled()){
+                AnimationProvider::addActiveAnimation(new NavigatorTeleportAnimation($player, $warp, $game));
+            }else{
+                $player->teleport($warp->getLocation());
+            }
         });
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::YELLOW."CWBW-Training", TextFormat::BLACK."♠ ".TextFormat::AQUA."REWRITE".TextFormat::BLACK." ♠");
+        $npc->namedtag->setString("warpName", "cwtraining");
         $npc->spawnToAll();
 
         $npc = new NPCEntity(new Location(224.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
@@ -215,6 +232,7 @@ class Loader extends PluginBase
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::DARK_AQUA."Flag".TextFormat::AQUA."Wars", TextFormat::BLACK."♠ ".TextFormat::GREEN."NEW".TextFormat::BLACK." ♠");
+        $npc->namedtag->setString("warpName", "flagwars");
         $npc->spawnToAll();
 
         $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
@@ -222,6 +240,7 @@ class Loader extends PluginBase
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::RED."Clutches", TextFormat::BLACK."♠ ".TextFormat::GREEN."REPLAY AVAILABLE".TextFormat::BLACK." ♠");
+        $npc->namedtag->setString("warpName", "clutches");
         $npc->spawnToAll();
 
         $npc = new NPCEntity(new Location(238.5, 71, 273.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
@@ -229,13 +248,15 @@ class Loader extends PluginBase
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::GOLD."FFA", TextFormat::BLACK."♠ ".TextFormat::GREEN."FFA & BuildFFA".TextFormat::BLACK." ♠");
+        $npc->namedtag->setString("warpName", "ffa");
         $npc->spawnToAll();
 
         $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
-        $npc->updateTitle(TextFormat::AQUA."M".TextFormat::WHITE."L".TextFormat::AQUA."G Rush", TextFormat::BLACK."♠ ".TextFormat::YELLOW."NEW COOL MAPS".TextFormat::BLACK." ♠");
+        $npc->updateTitle(TextFormat::WHITE."Training", TextFormat::BLACK."♠ ".TextFormat::YELLOW."NEW COOL MAPS".TextFormat::BLACK." ♠");
+        $npc->namedtag->setString("warpName", "training");
         $npc->spawnToAll();
 
         $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
@@ -243,10 +264,11 @@ class Loader extends PluginBase
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::AQUA."ClanWar", TextFormat::BLACK."♠ ".TextFormat::RED."Exchange System implement".TextFormat::BLACK." ♠");
+        $npc->namedtag->setString("warpName", "clanwar");
         $npc->spawnToAll();
 
         // GEOMETRIES \\
-        $npc = new NPCEntity(new Location(213.5, 70, 291.5, 0, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
+        $npc = new NPCEntity(new Location(213.5, 70, 291.5, 200, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
             uniqid(),
             SkinUtils::readImage("/root/RyzerCloud/data/NPC/RankShop.png"),
             "",
@@ -262,7 +284,7 @@ class Loader extends PluginBase
         $npc->updateTitle(TextFormat::GOLD."Coinshop", "");
         $npc->spawnToAll();
 
-        $npc = new NPCEntity(new Location(235.5, 73, 306.5, 138, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
+        $npc = new NPCEntity(new Location(235.5, 73, 306.5, 150, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
             uniqid(),
             SkinUtils::readImage("/root/RyzerCloud/data/NPC/PServer.png"),
             "",
@@ -278,7 +300,7 @@ class Loader extends PluginBase
         $npc->updateTitle(TextFormat::DARK_PURPLE."Private Server", TextFormat::BLACK."♠ ".TextFormat::AQUA."PRIME RANK ".TextFormat::BLACK."♠");
         $npc->spawnToAll();
 
-        $npc = new NPCEntity(new Location(221.5, 73, 306.5, 0, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
+        $npc = new NPCEntity(new Location(221.5, 73, 306.5, 200, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
             uniqid(),
             SkinUtils::readImage("/root/RyzerCloud/data/NPC/Lotto.png"),
             "",

@@ -6,7 +6,6 @@ use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\Server;
-use function is_null;
 
 class PlayerMoveListener implements Listener {
 

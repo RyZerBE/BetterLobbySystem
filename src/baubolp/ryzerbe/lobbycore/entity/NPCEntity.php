@@ -160,7 +160,7 @@ class NPCEntity extends Human implements ChunkLoader {
         $player = $source->getDamager();
         if(!$player instanceof Player) return;
         if($this->attackClosure === null) return;
-        ($this->attackClosure)($player);
+        ($this->attackClosure)($player, $this);
     }
 
     /**
@@ -171,7 +171,7 @@ class NPCEntity extends Human implements ChunkLoader {
      */
     public function onInteract(Player $player, Item $item, Vector3 $clickPos): bool{
         if($this->interactClosure === null) return false;
-        ($this->interactClosure)($player);
+        ($this->interactClosure)($player, $this);
         return true;
     }
 

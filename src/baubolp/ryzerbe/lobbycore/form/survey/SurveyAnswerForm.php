@@ -7,12 +7,12 @@ namespace baubolp\ryzerbe\lobbycore\form\survey;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\util\survey\Survey;
 use baubolp\ryzerbe\lobbycore\util\survey\SurveyAnswer;
+use jojoe77777\FormAPI\CustomForm as CustomForm;
 use pocketmine\form\CustomForm as PMCustomForm;
 use pocketmine\form\CustomFormResponse;
 use pocketmine\form\element\Input;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use jojoe77777\FormAPI\CustomForm as CustomForm;
 
 class SurveyAnswerForm extends PMCustomForm
 {
