@@ -3,7 +3,6 @@
 
 namespace baubolp\ryzerbe\lobbycore\gui;
 
-
 use BauboLP\Cloud\CloudBridge;
 use BauboLP\Cloud\Packets\PlayerMessagePacket;
 use baubolp\core\provider\CoinProvider;
@@ -18,6 +17,8 @@ use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use function in_array;
+use function mt_rand;
 
 class LottoGUI
 {
@@ -58,8 +59,14 @@ class LottoGUI
                 if (($obj = LobbyPlayerCache::getLobbyPlayer($player)) != null) {
                     $obj->addLottoWin($win);
                     if (count($obj->getLottoWin()) > 4) {
+                        $meta = mt_rand(0, 15);
+                        $usedMeta = [$meta];
                         for ($i = 0; $i < 54; $i++) {
-                            $inv->setItem($i, Item::get(Item::GLASS_PANE));
+                            if($i % 9 === 0) {
+                                while(in_array($meta, $usedMeta)) $meta = mt_rand(0, 15);
+                                $usedMeta[] = $meta;
+                            }
+                            $inv->setItem($i, Item::get(Item::STAINED_GLASS_PANE, $meta));
                         }
                         if ($obj->getTickets() > 0)
                             $inv->setItem(45, Item::get(Item::PAPER)->setCustomName(TextFormat::GREEN . "Play again"));
@@ -74,8 +81,14 @@ class LottoGUI
                         $inv->setItem(22, LottoProvider::getItemByInt($obj->getLottoWin()[2]));
                         $inv->setItem(23, LottoProvider::getItemByInt($obj->getLottoWin()[3]));
                         $inv->setItem(24, LottoProvider::getItemByInt($obj->getLottoWin()[4]));
+
+                        $inv->setItem(31, Item::get(Item::HOPPER)->setCustomName("§r"));
+                        $inv->setItem(40, Item::get(Item::CHEST)->setCustomName(TextFormat::AQUA . "Total".TextFormat::GRAY.": ".TextFormat::GOLD.$coins));
+
                         CoinProvider::addCoins($player->getName(), $coins);
                         $obj->setLottoWin([]);
+
+                        $player->playSound("lodestone_compass.link_compass_to_lodestone", 5.0, 1, [$player]);
 
                         if ($coins > 5000 && $coins < 25000) {
                             foreach (Server::getInstance()->getOnlinePlayers() as $players)
@@ -86,6 +99,8 @@ class LottoGUI
                             $pk->addData("message", "\n\n&aLOTTERIE &8-> &a" . $player->getName() . " &fhat einen Gewinn von &e" . $coins . " Coins &fgemacht! MASHALLA :)");
                             CloudBridge::getInstance()->getClient()->getPacketHandler()->writePacket($pk);
                         }
+                    } else {
+                        $player->playSound("note.pling", 5.0, mt_rand(1, 2), [$player]);
                     }
                 }
                 return $transaction->discard();
