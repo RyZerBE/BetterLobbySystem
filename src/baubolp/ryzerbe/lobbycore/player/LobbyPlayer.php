@@ -21,11 +21,13 @@ use mysqli;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use function floor;
 use function is_null;
+use function str_repeat;
 use function time;
 
-class LobbyPlayer
-{
+class LobbyPlayer  {
+
     /** @var Player */
     private $player;
     /** @var bool */
@@ -901,6 +903,13 @@ class LobbyPlayer
         }else {
             ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW.$rbePlayer->getClan()->getClanName().TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, $rbePlayer->getClanTag()).TextFormat::GRAY."]", "lobby");
         }
+        ScoreboardUtils::addEmptyLine($this->getPlayer(), 12, "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 13, TextFormat::GRAY."Level", "lobby");
+
+        $percentage = floor($rbePlayer->getNetworkLevel()->getProgressPercentage());
+        $percentage__ = $percentage / 10;
+        $progress = TextFormat::GOLD.str_repeat("|", $percentage__).TextFormat::GRAY.str_repeat("|", (10 - $percentage__)); // .TextFormat::DARK_GRAY." [".TextFormat::GRAY.$percentage."%".TextFormat::DARK_GRAY."]" #BlameMojang
+        ScoreboardUtils::addLine($this->getPlayer(), 14, TextFormat::DARK_GRAY."» ".TextFormat::GOLD.$rbePlayer->getNetworkLevel()->getLevel().TextFormat::AQUA." » " . $progress, "lobby");
     }
 
     /**

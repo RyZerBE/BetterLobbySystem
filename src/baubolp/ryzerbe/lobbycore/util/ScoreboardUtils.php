@@ -9,6 +9,7 @@ use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\Player;
+use function mt_rand;
 
 class ScoreboardUtils
 {
@@ -43,7 +44,7 @@ class ScoreboardUtils
         $entry = new ScorePacketEntry();
         $entry->objectiveName = $identifier;
         $entry->type = 3;
-        $entry->customName = str_repeat(" ", mt_rand(1, 5));
+        $entry->customName = "§" . ($score % 8) . ($score > 8 ? "§" . ($score % 8) : "") . "§r";
         $entry->score = $score;
         $entry->scoreboardId = $score;
 
