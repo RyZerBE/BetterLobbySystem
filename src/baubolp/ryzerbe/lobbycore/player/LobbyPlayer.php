@@ -908,7 +908,7 @@ class LobbyPlayer  {
 
         $percentage = floor($rbePlayer->getNetworkLevel()->getProgressPercentage());
         $percentage__ = $percentage / 10;
-        $progress = TextFormat::GOLD.str_repeat("|", $percentage__).TextFormat::GRAY.str_repeat("|", (10 - $percentage__)); // .TextFormat::DARK_GRAY." [".TextFormat::GRAY.$percentage."%".TextFormat::DARK_GRAY."]" #BlameMojang
+        $progress = TextFormat::GOLD.($percentage__ <= 0 ? "" : str_repeat("|", $percentage__)).TextFormat::GRAY.((10 - $percentage__) <= 0 ? "" : str_repeat("|", (10 - $percentage__))); // .TextFormat::DARK_GRAY." [".TextFormat::GRAY.$percentage."%".TextFormat::DARK_GRAY."]" #BlameMojang
         ScoreboardUtils::addLine($this->getPlayer(), 14, TextFormat::DARK_GRAY."» ".TextFormat::GOLD.$rbePlayer->getNetworkLevel()->getLevel().TextFormat::AQUA." » " . $progress, "lobby");
     }
 

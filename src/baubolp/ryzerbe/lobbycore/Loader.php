@@ -50,6 +50,8 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerExhaustListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerInteractListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
+use baubolp\ryzerbe\lobbycore\listener\PlayerLevelProgressListener;
+use baubolp\ryzerbe\lobbycore\listener\PlayerLevelUpListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerMoveListener;
 use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitBlockListener;
@@ -172,7 +174,9 @@ class Loader extends PluginBase
             new ChunkLoaderListener(),
             new RyZerPlayerAuthListener(),
             new ProjectileHitBlockListener(),
-            new ProjectileHitEntityListener()
+            new ProjectileHitEntityListener(),
+            new PlayerLevelUpListener(),
+            new PlayerLevelProgressListener()
         ];
 
         foreach ($listeners as $listener)
