@@ -83,7 +83,7 @@ class LottoGUI
                         $inv->setItem(24, LottoProvider::getItemByInt($obj->getLottoWin()[4]));
 
                         $inv->setItem(31, Item::get(Item::HOPPER)->setCustomName("§r"));
-                        $inv->setItem(40, Item::get(Item::CHEST)->setCustomName(TextFormat::AQUA . "Total".TextFormat::GRAY.": ".TextFormat::GOLD.$coins));
+                        $inv->setItem(40, Item::get(Item::CHEST)->setCustomName(TextFormat::AQUA . "Total".TextFormat::GRAY.": ".TextFormat::GOLD.($coins > 1000 ? TextFormat::BOLD : "").$coins));
 
                         CoinProvider::addCoins($player->getName(), $coins);
                         $obj->setLottoWin([]);
@@ -100,7 +100,7 @@ class LottoGUI
                             CloudBridge::getInstance()->getClient()->getPacketHandler()->writePacket($pk);
                         }
                     } else {
-                        $player->playSound("note.pling", 5.0, mt_rand(1, 2), [$player]);
+                        $player->playSound("note.pling", 5.0, 1 + (mt_rand(0, 4) * 0.2), [$player]);
                     }
                 }
                 return $transaction->discard();
