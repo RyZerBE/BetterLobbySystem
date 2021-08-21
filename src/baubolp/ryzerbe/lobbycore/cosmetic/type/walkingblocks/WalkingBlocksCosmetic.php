@@ -10,6 +10,7 @@ use matze\gommejar\session\SessionManager;
 use pocketmine\block\Block;
 use pocketmine\block\BlockIds;
 use pocketmine\block\Slab;
+use pocketmine\block\Trapdoor;
 use pocketmine\Player;
 use function array_map;
 use function array_rand;
@@ -126,7 +127,7 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
      * @return bool
      */
     private function canBeReplaced(Block $block): bool {
-        return $block->isSolid() && !in_array($block->getId(), [
+        return $block->isSolid() && !$block instanceof Trapdoor && !in_array($block->getId(), [
                 BlockIds::END_PORTAL_FRAME, BlockIds::CARPET
             ]);
     }
