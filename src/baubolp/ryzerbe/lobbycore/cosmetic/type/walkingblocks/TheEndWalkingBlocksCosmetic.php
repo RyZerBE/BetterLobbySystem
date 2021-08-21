@@ -35,6 +35,16 @@ class TheEndWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
             Block::get(Block::END_STONE),
             Block::get(Block::OBSIDIAN),
             Block::get(Block::DRAGON_EGG),
+            Block::get(Block::PURPUR_BLOCK)
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSlabBlocks(): array{
+        return [
+            Block::get(Block::STONE_SLAB2, 1),
         ];
     }
 }

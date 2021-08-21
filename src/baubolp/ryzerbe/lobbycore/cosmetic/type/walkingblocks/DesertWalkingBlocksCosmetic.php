@@ -40,6 +40,16 @@ class DesertWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
     /**
      * @return array
      */
+    public function getSlabBlocks(): array{
+        return [
+            Block::get(Block::STONE_SLAB, 1),
+            Block::get(Block::STONE_SLAB2, 6),
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function getSecondBlockLayer(): array{
         return [
             Block::get(Block::DEAD_BUSH),

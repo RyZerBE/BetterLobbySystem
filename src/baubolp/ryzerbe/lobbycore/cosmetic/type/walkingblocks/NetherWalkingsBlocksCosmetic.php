@@ -37,4 +37,13 @@ class NetherWalkingsBlocksCosmetic extends WalkingBlocksCosmetic {
             Block::get(Block::QUARTZ_ORE),
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getSlabBlocks(): array{
+        return [
+            Block::get(Block::STONE_SLAB, 7)
+        ];
+    }
 }

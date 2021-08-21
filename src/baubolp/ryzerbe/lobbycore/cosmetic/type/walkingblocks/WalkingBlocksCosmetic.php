@@ -9,6 +9,7 @@ use baubolp\ryzerbe\lobbycore\util\BlockQueue;
 use matze\gommejar\session\SessionManager;
 use pocketmine\block\Block;
 use pocketmine\block\BlockIds;
+use pocketmine\block\Slab;
 use pocketmine\Player;
 use function array_map;
 use function array_rand;
@@ -26,6 +27,13 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
      * @return array
      */
     public function getSecondBlockLayer(): array {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSlabBlocks(): array {
         return [];
     }
 
@@ -49,7 +57,7 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
      */
     public function onUpdate(Player $player, int $currentTick): void{
         if($currentTick % 5 !== 0 || $this->getBlocks() === []) return;
-        $this->placeBlocks($player, $this->getBlocks(), ($player->getFloorY() - 1));
+        $this->placeBlocks($player, $this->getBlocks(), ($player->y - 0.25));
         if($this->getSecondBlockLayer() !== []) {
             $this->placeBlocks($player, $this->getSecondBlockLayer(), $player->getFloorY(), false, 10, $this->getMaxSecondLayerBlocks());
         }
@@ -58,12 +66,12 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
     /**
      * @param Player $player
      * @param array $blocks
-     * @param int $y
+     * @param float $y
      * @param bool $solid
      * @param int $rarity
      * @param int $max
      */
-    protected function placeBlocks(Player $player, array $blocks, int $y, bool $solid = true, int $rarity = 60, int $max = 9999): void {
+    protected function placeBlocks(Player $player, array $blocks, float $y, bool $solid = true, int $rarity = 60, int $max = 9999): void {
         $level = $player->getLevel();
         $vector3 = $player->asVector3()->floor();
 
@@ -96,7 +104,11 @@ abstract class WalkingBlocksCosmetic extends Cosmetic {
 
                 if(BlockQueue::isUsed($lBlock) || $jarBlock) continue;
                 if($solid) {
-                    if(!$this->canBeReplaced($lBlock)) continue;
+                    if($lBlock instanceof Slab && ($lBlock->getDamage() & 0x08) === 0) {
+                        $slabs = $this->getSlabBlocks();
+                        if(empty($slabs)) continue;
+                        $block = $slabs[array_rand($slabs)];
+                    } elseif(!$this->canBeReplaced($lBlock)) continue;
                 } else {
                     if(!$lBlock->canBeReplaced() || !in_array($level->getBlockIdAt($tempX, $y - 1, $tempZ), $blockIds)) continue;
                 }
