@@ -22,13 +22,17 @@ class ProfileOverviewForm
 
             switch ($data) {
                 case "clans":
-                    $player->getServer()->dispatchCommand($player, "cui");
+                    $player->sendMessage(Ryzer::PREFIX.TextFormat::RED."Unser ClanSystem wird gerade neu entwickelt!");
+                    //$player->getServer()->dispatchCommand($player, "cui");
                     break;
                 case "friends":
                     $player->sendMessage(Ryzer::PREFIX.TextFormat::RED."Soon! :(");
                     break;
                 case "discord":
                     $player->getServer()->dispatchCommand($player, "verify");
+                    break;
+                case "network_level":
+                    $player->getServer()->dispatchCommand($player, "networklevel");
                     break;
                 case "settings":
                     SettingsOverviewForm::open($player);
@@ -39,6 +43,7 @@ class ProfileOverviewForm
         $form->setTitle(TextFormat::GREEN.TextFormat::BOLD."Your profile");
         $form->addButton(TextFormat::AQUA."Discord Verification"."\n".TextFormat::GRAY."Touch to open", -1, "", "discord");
         $form->addButton(TextFormat::RED."Settings"."\n".TextFormat::GRAY."Touch to open", -1, "", "settings");
+        $form->addButton(TextFormat::LIGHT_PURPLE."Network Level"."\n".TextFormat::GRAY."Touch to open", -1, "", "network_level");
         $form->addButton(TextFormat::GREEN."Friends"."\n".TextFormat::GRAY."Touch to open", -1, "", "friends");
         $form->addButton(TextFormat::YELLOW."Clans"."\n".TextFormat::GRAY."Touch to open", -1, "", "clans");
         $form->sendToPlayer($player);
