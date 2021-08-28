@@ -219,6 +219,7 @@ class Loader extends PluginBase
 
             $game = TextFormat::clean(explode("\n", $entity->getNameTag())[0]);
             if ($lobbyPlayer->isNavigatorAnimationEnabled()){
+                $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
                 AnimationProvider::addActiveAnimation(new NavigatorTeleportAnimation($player, $warp, $game));
             }else{
                 $player->teleport($warp->getLocation());
