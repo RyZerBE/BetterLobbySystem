@@ -885,11 +885,12 @@ class LobbyPlayer  {
             });
             return;
         }
+        $rankName = $rbePlayer->getRank();
         ScoreboardUtils::remove($this->getPlayer(), "lobby");
         ScoreboardUtils::create($this->getPlayer(), TextFormat::WHITE.TextFormat::BOLD."RyZer".TextFormat::RED."BE", "lobby");
         ScoreboardUtils::addEmptyLine($this->getPlayer(), 0, "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 1, TextFormat::GRAY."Rank", "lobby");
-        ScoreboardUtils::addLine($this->getPlayer(), 2, TextFormat::DARK_GRAY."» ".str_replace("&", TextFormat::ESCAPE, explode(" ", RankProvider::getNameTag($rbePlayer->getRank()))[0]), "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 2, TextFormat::DARK_GRAY."» ".RankProvider::getColor($rankName).$rankName, "lobby");
         ScoreboardUtils::addEmptyLine($this->getPlayer(), 3, "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 4, TextFormat::GRAY."Coins", "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 5, TextFormat::DARK_GRAY."» ".TextFormat::AQUA.$rbePlayer->getCoins(), "lobby");
