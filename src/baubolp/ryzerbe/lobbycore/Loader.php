@@ -266,8 +266,8 @@ class Loader extends PluginBase
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
-        $npc->updateTitle(TextFormat::AQUA."ClanWar", TextFormat::BLACK."♠ ".TextFormat::RED."Exchange System implement".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("warpName", "clanwar");
+        $npc->updateTitle(TextFormat::DARK_AQUA."Bedwars", TextFormat::BLACK."♠ ".TextFormat::RED."REWRITE".TextFormat::BLACK." ♠");
+        $npc->namedtag->setString("warpName", "bedwars");
         $npc->spawnToAll();
 
         // GEOMETRIES \\
