@@ -40,7 +40,6 @@ use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockPlaceListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockUpdateListener;
-use baubolp\ryzerbe\lobbycore\listener\ChunkLoaderListener;
 use baubolp\ryzerbe\lobbycore\listener\EntityDamageListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryPickupItemListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
@@ -171,7 +170,6 @@ class Loader extends PluginBase
             new PlayerInteractListener(),
             new InventoryPickupItemListener(),
             new PlayerMoveListener(),
-            new ChunkLoaderListener(),
             new RyZerPlayerAuthListener(),
             new ProjectileHitBlockListener(),
             new ProjectileHitEntityListener(),
