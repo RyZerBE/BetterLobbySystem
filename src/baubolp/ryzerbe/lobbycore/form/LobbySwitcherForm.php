@@ -7,6 +7,7 @@ use BauboLP\Cloud\Bungee\BungeeAPI;
 use BauboLP\Cloud\CloudBridge;
 use BauboLP\Cloud\Provider\CloudProvider;
 use baubolp\core\provider\AsyncExecutor;
+use baubolp\core\Ryzer;
 use baubolp\core\util\query\ServerQuery;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use jojoe77777\FormAPI\SimpleForm;
@@ -44,17 +45,23 @@ class LobbySwitcherForm
             if ($lobbyPlayer === null) return;
             $form = new SimpleForm(function (Player $player, $data) use ($lobbyPlayer): void {
                 if ($data === null) return;
+                if($data === "start") {
+                    CloudBridge::getCloudProvider()->startServer("Lobby", 1);
+                    $player->sendMessage(Ryzer::PREFIX.TextFormat::GREEN."Starte neue Lobby...");
+                    return;
+                }
                 BungeeAPI::transferPlayer($player->getName(), $data);
             });
 
             $form->setTitle(TextFormat::RED.TextFormat::BOLD."LobbySwitcher");
             foreach ($servers as $server => $onlinePlayers) {
                 if(CloudProvider::getServer() === $server){
-                    $form->addButton(TextFormat::RED.$server.TextFormat::DARK_GRAY." [".TextFormat::GRAY.$onlinePlayers.TextFormat::DARK_GRAY." Online]"."\n".TextFormat::DARK_GRAY."(".TextFormat::GREEN."Your lobby".TextFormat::DARK_GRAY.")", -1, "", $server);
+                    $form->addButton(TextFormat::RED.$server.TextFormat::DARK_GRAY." [".TextFormat::GRAY.$onlinePlayers.TextFormat::DARK_GRAY." Online]"."\n".TextFormat::DARK_GRAY."(".TextFormat::GREEN."Your lobby".TextFormat::DARK_GRAY.")", 0, "textures/ui/world_glyph_color", $server);
                 }else{
-                    $form->addButton(TextFormat::GREEN.$server.TextFormat::DARK_GRAY." [".TextFormat::GRAY.$onlinePlayers.TextFormat::DARK_GRAY." Online]"."\n".TextFormat::DARK_GRAY."(".TextFormat::RED."Click to connect".TextFormat::DARK_GRAY.")", -1, "", $server);
+                    $form->addButton(TextFormat::GREEN.$server.TextFormat::DARK_GRAY." [".TextFormat::GRAY.$onlinePlayers.TextFormat::DARK_GRAY." Online]"."\n".TextFormat::DARK_GRAY."(".TextFormat::RED."Click to connect".TextFormat::DARK_GRAY.")", 0, "textures/ui/world_glyph_color", $server);
                 }
             }
+            if($player->hasPermission("cloud.admin")) $form->addButton(TextFormat::GREEN."Start new lobby", 0, "textures/ui/servers", "start");
             $form->sendToPlayer($player);
         });
     }

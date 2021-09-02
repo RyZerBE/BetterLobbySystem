@@ -4,6 +4,9 @@
 namespace baubolp\ryzerbe\lobbycore;
 
 
+use BauboLP\Cloud\Bungee\BungeeAPI;
+use BauboLP\Cloud\CloudBridge;
+use BauboLP\Cloud\Packets\PlayerMoveServerPacket;
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\util\Emotes;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
@@ -213,7 +216,11 @@ class Loader extends PluginBase
             $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
             if($lobbyPlayer === null) return;
             $warp = WarpProvider::getWarp($entity->namedtag->getString("warpName", "N/A"));
-            if ($warp === null) return;
+            if ($warp === null){
+                $directConnect = $entity->namedtag->getString("directConnect", "N/A");
+                if($directConnect != "N/A") BungeeAPI::transferPlayer($player->getName(), $directConnect);
+                return;
+            };
 
             $game = TextFormat::clean(explode("\n", $entity->getNameTag())[0]);
             if ($lobbyPlayer->isNavigatorAnimationEnabled()){
@@ -259,7 +266,7 @@ class Loader extends PluginBase
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::WHITE."Training", TextFormat::BLACK."♠ ".TextFormat::YELLOW."NEW COOL MAPS".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("warpName", "training");
+        $npc->namedtag->setString("directConnect", "challenge");
         $npc->spawnToAll();
 
         $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
@@ -394,9 +401,12 @@ class Loader extends PluginBase
         }
         $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
 
-        foreach (array_keys($config->get("games")) as $key) {
+        foreach (array_keys($config->get("games")) as $key){
             $data = $config->get("games")[$key];
-            NavigatorForm::$games[$key] = ["icon" => $data["icon"], "warpName" => $data["warpName"]];
+            if(isset($data["warpName"]))
+                NavigatorForm::$games[$key] = ["icon" => $data["icon"], "warpName" => $data["warpName"]];
+            else if(isset($data["directConnect"]))
+                NavigatorForm::$games[$key] = ["icon" => $data["icon"], "directConnect" => $data["directConnect"]];
         }
 
         $news = (array)$config->get("news");
