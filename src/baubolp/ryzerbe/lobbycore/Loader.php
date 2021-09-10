@@ -245,12 +245,11 @@ class Loader extends PluginBase
         $npc->namedtag->setString("warpName", "flagwars");
         $npc->spawnToAll();
 
-        $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
-        $npc->updateTitle(TextFormat::RED."Clutches", TextFormat::BLACK."♠ ".TextFormat::GREEN."REPLAY AVAILABLE".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("warpName", "clutches");
+        $npc->updateTitle(TextFormat::WHITE.TextFormat::BOLD."???", "");
         $npc->spawnToAll();
 
         $npc = new NPCEntity(new Location(238.5, 71, 273.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
@@ -269,7 +268,7 @@ class Loader extends PluginBase
         $npc->namedtag->setString("directConnect", "challenge");
         $npc->spawnToAll();
 
-        $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
+        $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
