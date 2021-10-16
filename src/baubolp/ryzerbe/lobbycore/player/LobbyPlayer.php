@@ -11,9 +11,12 @@ use baubolp\core\provider\CoinProvider;
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\provider\RankProvider;
 use baubolp\core\util\LocationUtils;
+use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
+use baubolp\ryzerbe\lobbycore\animation\type\PlayerJoinAnimation;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 use baubolp\ryzerbe\lobbycore\form\NewsBookForm;
+use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\ItemProvider;
 use baubolp\ryzerbe\lobbycore\util\ScoreboardUtils;
@@ -21,7 +24,11 @@ use mysqli;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use function array_map;
+use function array_search;
 use function floor;
+use function in_array;
+use function intval;
 use function is_null;
 use function str_repeat;
 use function time;
@@ -223,13 +230,21 @@ class LobbyPlayer  {
                     $lobbyPlayer->getPlayer()->teleport(LocationUtils::fromString($loadedData["spawn"]));
 
                 $lobbyPlayer->checkLoginStreak();
-                if ((bool)$loadedData["news"] && NewsBookForm::$news != null)
+                if ($loadedData["news"] && NewsBookForm::$news != null)
                     NewsBookForm::open($lobbyPlayer->getPlayer());
 
                 $lobbyPlayer->getPlayer()->setAllowFlight($lobbyPlayer->isDoublejumpEnabled());
 
                 $lobbyPlayer->updateScoreboard();
                 ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
+
+                $player = $lobbyPlayer->getPlayer();
+                if (in_array($player->getName(), PlayerJoinNetworkListener::$willPlay)) {
+                    if ($lobbyPlayer->isJoinAnimationEnabled()){
+                        AnimationProvider::addActiveAnimation(new PlayerJoinAnimation($player));
+                    }
+                    unset(PlayerJoinNetworkListener::$willPlay[array_search($player->getName(), PlayerJoinNetworkListener::$willPlay)]);
+                }
             }
         });
     }
@@ -814,7 +829,9 @@ class LobbyPlayer  {
         $this->setLastSpawnPosition($settings[4]);
 
         $playerName = $this->getPlayer()->getName();
-        $toString = implode(":", $settings);
+        $toString = implode(":", array_map(function(bool $setting): int {
+            return intval($setting);
+        }, $settings));
         $this->getPlayer()->playSound("random.levelup", 5.0, 1.0, [$this->getPlayer()]);
         AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($playerName, $toString){
             $mysqli->query("UPDATE `Settings` SET settings='$toString' WHERE playername='$playerName'");
@@ -871,6 +888,31 @@ class LobbyPlayer  {
     public function setAfk(bool $afk = true): void
     {
         $this->isAfk = $afk;
+    }
+
+    public function isNearCloudSign(int $distance = 5): bool {
+        /*
+        $distance = $distance ** 2;
+        $player = $this->getPlayer();
+
+        $ignore = [];
+        for($x = -$distance; $x <= $distance; $x++) {
+            for($z = -$distance; $z <= $distance; $z++) {
+                $chunkX = floor($player->x + $x) << 4;
+                $chunkZ = floor($player->z + $z) << 4;
+                $hash = Level::chunkHash($chunkX, $chunkZ);
+                if(in_array($hash, $ignore)) continue;
+                $ignore[] = $hash;
+                $chunk = $player->getLevel()->getChunk($chunkX, $chunkZ);
+                if($chunk === null) continue;
+                foreach(array_filter($chunk->getTiles(), function(Tile $tile): bool {
+                    return $tile instanceof Sign && CloudSignProvider::isCloudSign($tile->getBlock());
+                }) as $cloudSign) {
+                    if($cloudSign->distanceSquared($player) <= $distance) return true;
+                }
+            }
+        }*/
+        return false;
     }
 
     public function updateScoreboard(): void
