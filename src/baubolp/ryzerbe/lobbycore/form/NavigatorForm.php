@@ -4,6 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 use BauboLP\Cloud\Bungee\BungeeAPI;
+use baubolp\core\provider\StaffProvider;
 use baubolp\core\Ryzer;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\NavigatorTeleportAnimation;
@@ -37,7 +38,7 @@ class NavigatorForm
             $warp = WarpProvider::getWarp($data[0]);
             if ($warp === null) {
                 if($data[0] === "challenge") { //REMOVE
-                    if(!$player->hasPermission("cloud.admin")) {
+                    if(!$player->hasPermission("cloud.admin") && !$player->hasPermission("core.login") && !StaffProvider::isLogin($player->getName())) {
                         $player->sendMessage(Ryzer::PREFIX.TextFormat::DARK_RED."Du hast keine Befugniss den Trainingserver zu betreten, da der gerade in Entwicklung ist! Permission: cloud.admin");
                         return;
                     }
