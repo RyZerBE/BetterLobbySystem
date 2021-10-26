@@ -6,7 +6,6 @@ namespace baubolp\ryzerbe\lobbycore\provider;
 
 use baubolp\core\provider\LanguageProvider;
 use baubolp\core\util\ItemUtils;
-use baubolp\ryzerbe\lobbycore\cosmetic\category\CosmeticCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\special\HeadCanonSpecialCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\special\SpidermanGunSpecialCosmetic;
@@ -16,7 +15,6 @@ use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\form\profile\ProfileOverviewForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
-use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\entity\projectile\Projectile;
 use pocketmine\item\Item;
