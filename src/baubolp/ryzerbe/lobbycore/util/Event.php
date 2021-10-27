@@ -4,7 +4,9 @@
 namespace baubolp\ryzerbe\lobbycore\util;
 
 
+use baubolp\core\provider\LanguageProvider;
 use DateTime;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 class Event
@@ -19,6 +21,8 @@ class Event
     private $begin;
     /** @var \DateTime  */
     private $end;
+    /** @var bool  */
+    private bool $displayedMessage = false;
 
     /**
      * Event constructor.
@@ -36,6 +40,16 @@ class Event
         $this->description = $description;
         $this->eventName = $eventName;
         $this->end = $end;
+    }
+
+    public function displayMessage() {
+        if($this->displayedMessage) return;
+
+        $this->displayedMessage = true;
+        foreach(Server::getInstance()->getOnlinePlayers() as $player) {
+            $player->sendMessage(LanguageProvider::getMessageContainer("event-start-broadcast", $player->getName(), ["#name" => $this->getEventName()]));
+            $player->playSound("random.explode", 5.0, 1.0, [$player]);
+        }
     }
 
     /**

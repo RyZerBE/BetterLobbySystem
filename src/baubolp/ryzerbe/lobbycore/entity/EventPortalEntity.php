@@ -58,16 +58,21 @@ class EventPortalEntity extends Human implements ChunkLoader
         }
 
         if($event->isStarted()) {
+            $event->displayMessage();
             $diff = $event->getEnd()->diff(new DateTime("now"));
             $days = $diff->d;
             $hours = $diff->h;
             $minutes = $diff->i;
+            $seconds = $diff->s;
+
             if ($days > 0)
                 $this->setNameTag($event->getEventName() . TextFormat::GRAY . "(" . TextFormat::GREEN . "Started" . TextFormat::GRAY . ")" . "\n" . TextFormat::YELLOW . "End in " . TextFormat::GREEN . $days . TextFormat::YELLOW . " Days, " . TextFormat::GREEN . $hours . TextFormat::YELLOW . " Hours and " . TextFormat::GREEN . $minutes . TextFormat::YELLOW . " Minutes");
             else if ($hours > 0)
                 $this->setNameTag($event->getEventName() . TextFormat::GRAY . "(" . TextFormat::GREEN . "Started" . TextFormat::GRAY . ")" . "\n" . TextFormat::YELLOW . "End in " . TextFormat::GREEN . $hours . TextFormat::YELLOW . " Hours and " . TextFormat::GREEN . $minutes . TextFormat::YELLOW . " Minutes");
-            else
+            else if($minutes > 0)
                 $this->setNameTag($event->getEventName() . TextFormat::GRAY . "(" . TextFormat::GREEN . "Started" . TextFormat::GRAY . ")" . "\n" . TextFormat::YELLOW . "End in " . TextFormat::GREEN . $minutes . TextFormat::YELLOW . " Minutes");
+            else
+                $this->setNameTag($event->getEventName() . TextFormat::GRAY . "(" . TextFormat::GREEN . "Started" . TextFormat::GRAY . ")" . "\n" . TextFormat::YELLOW . "End in " . TextFormat::GREEN . $seconds . TextFormat::YELLOW . " Seconds");
 
             if ($event->isEnd())
                 EventProvider::resetEvent();
@@ -78,13 +83,16 @@ class EventPortalEntity extends Human implements ChunkLoader
         $days = $diff->d;
         $hours = $diff->h;
         $minutes = $diff->i;
+        $seconds = $diff->s;
 
         if ($days > 0)
             $this->setNameTag($event->getEventName() . "\n" . TextFormat::YELLOW . "Start in " . TextFormat::GREEN . $days . TextFormat::YELLOW . " Days, " . TextFormat::GREEN . $hours . TextFormat::YELLOW . " Hours and " . TextFormat::GREEN . $minutes . TextFormat::YELLOW . " Minutes");
         else if ($hours > 0)
             $this->setNameTag($event->getEventName() . "\n" . TextFormat::YELLOW . "Start in " . TextFormat::GREEN . $hours . TextFormat::YELLOW . " Hours and " . TextFormat::GREEN . $minutes . TextFormat::YELLOW . " Minutes");
-        else
+        else if($minutes > 0)
             $this->setNameTag($event->getEventName() . "\n" . TextFormat::YELLOW . "Start in " . TextFormat::GREEN . $minutes . TextFormat::YELLOW . " Minutes");
+        else
+            $this->setNameTag($event->getEventName() . "\n" . TextFormat::YELLOW . "Start in " . TextFormat::GREEN . $seconds . TextFormat::YELLOW . " Seconds");
     }
 
     public function attack(EntityDamageEvent $source): void
