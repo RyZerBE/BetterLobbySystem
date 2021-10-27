@@ -56,7 +56,7 @@ class LobbyTask extends Task
                     $playerRP = $lobbyPlayer->asRyZerPlayer();
                     if (is_null($playerRP) || is_null($nearbyRP)) continue;
 
-                    if (RankProvider::getRankJoinPower($nearbyRP->getRank()) > RankProvider::getRankJoinPower($playerRP->getRank())) continue;
+                    if (RankProvider::getRankJoinPower($nearbyRP->getRank()) >= RankProvider::getRankJoinPower($playerRP->getRank()) || $lobbyPlayer->isNearCloudSign()) continue;
                     $nearbyEntity->knockBack($player, 0, $nearbyEntity->getX() - $player->getX(), $nearbyEntity->getZ() - $player->getZ(), 1.5);
                 }
             }
