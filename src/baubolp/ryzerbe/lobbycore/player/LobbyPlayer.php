@@ -514,6 +514,11 @@ class LobbyPlayer  {
      */
     public function setDailyXPTime($dailyXPTime): void{
         $this->dailyXPTime = $dailyXPTime;
+
+        $playerName = $this->getPlayer()->getName();
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) use ($dailyXPTime, $playerName){
+            $mysqli->query("UPDATE `DailyReward` SET xp='$dailyXPTime' WHERE playername='$playerName'");
+        });
     }
 
     public function checkLoginStreak(): void
