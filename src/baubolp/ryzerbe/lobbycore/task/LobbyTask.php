@@ -94,6 +94,7 @@ class LobbyTask extends Task
             $npcEntity->setNameTag($data["nameTag"]);
             $npcEntity->setLookAtPlayer($data["lookToPlayer"]);
             $npcEntity->setNameTagAlwaysVisible();
+            $npcEntity->namedtag->setString("warpName", $data["warp"]);
             $npcEntity->spawnToAll();
             unset(Loader::$entityCheckQueue[$npcEntityId]);
         }
