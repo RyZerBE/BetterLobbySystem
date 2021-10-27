@@ -274,6 +274,14 @@ class Loader extends PluginBase
         $npc->namedtag->setString("warpName", "bedwars");
         $npc->spawnToAll();
 
+        $npc = new NPCEntity(new Location(242.5, 70, 286.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($emotes);
+        $npc->updateTitle(TextFormat::GOLD."Jump and Run", TextFormat::BLACK."♠ ".TextFormat::WHITE."WITH STATS".TextFormat::BLACK." ♠");
+        $npc->namedtag->setString("warpName", "JaR");
+        $npc->spawnToAll();
+
         // GEOMETRIES \\
         $npc = new NPCEntity(new Location(213.5, 70, 291.5, 200, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
             uniqid(),
