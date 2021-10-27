@@ -64,6 +64,8 @@ class LobbyPlayer  {
     private $dailyCoinBombTime;
     private $dailyLottoTicketTime;
     private $dailyHypeTrainTime;
+    private $dailyXPTime;
+
     private $cosmetics;
     /** @var bool */
     private $shield = false;
@@ -133,12 +135,14 @@ class LobbyPlayer  {
                 $playerData["lottoTicketTime"] = $now;
                 $playerData["coinBombTime"] = $now;
                 $playerData["hypeTrainTime"] = $now;
+                $playerData["xpTime"] = $now;
             }else {
                 while($data = $res->fetch_assoc()) {
                     $playerData["coinTime"] = $data["coins"];
                     $playerData["lottoTicketTime"] = $data["lottoticket"];
                     $playerData["coinBombTime"] = $data["coinbomb"];
                     $playerData["hypeTrainTime"] = $data["hypetrain"];
+                    $playerData["xpTime"] = $data["xp"];
                 }
             }
 
@@ -199,6 +203,7 @@ class LobbyPlayer  {
                 $lobbyPlayer->setDailyCoinTime($loadedData["coinTime"]);
                 $lobbyPlayer->setDailyHypeTrainTime($loadedData["hypeTrainTime"]);
                 $lobbyPlayer->setDailyLottoTicketTime($loadedData["lottoTicketTime"]);
+                $lobbyPlayer->setDailyXPTime($loadedData["xpTime"]);
                 $lobbyPlayer->setLoginStreak($loadedData["loginstreak"]);
                 $lobbyPlayer->setLastLoginStreak($loadedData["laststreakday"]);
                 $lobbyPlayer->setNextLoginStreak($loadedData["nextstreakday"]);
@@ -495,6 +500,20 @@ class LobbyPlayer  {
     public function getDailyLottoTicketTime()
     {
         return $this->dailyLottoTicketTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDailyXPTime(){
+        return $this->dailyXPTime;
+    }
+
+    /**
+     * @param mixed $dailyXPTime
+     */
+    public function setDailyXPTime($dailyXPTime): void{
+        $this->dailyXPTime = $dailyXPTime;
     }
 
     public function checkLoginStreak(): void

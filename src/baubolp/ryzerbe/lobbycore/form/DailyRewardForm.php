@@ -5,6 +5,7 @@ namespace baubolp\ryzerbe\lobbycore\form;
 
 
 use baubolp\core\provider\CoinProvider;
+use baubolp\core\provider\NetworkLevelProvider;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use baubolp\ryzerbe\lobbycore\provider\LottoProvider;
 use pocketmine\form\FormIcon;
@@ -29,6 +30,11 @@ class DailyRewardForm extends MenuForm
             $options[] = new MenuOption(TextFormat::GREEN . "1x LottoTicket" . "\n" . TextFormat::GRAY . "[" . TextFormat::YELLOW . "Click to get" . TextFormat::GRAY . "]", new FormIcon("textures/items/map_mansion", FormIcon::IMAGE_TYPE_PATH));
         else
             $options[] = new MenuOption(TextFormat::GREEN . "1x LottoTicket" . "\n" . TextFormat::GRAY . "[" . TextFormat::RED . "You have to wait" . TextFormat::GRAY . "]", new FormIcon("textures/items/map_mansion", FormIcon::IMAGE_TYPE_PATH));
+
+        if ($lobbyPlayer->getDailyXPTime() < time())
+            $options[] = new MenuOption(TextFormat::GREEN . "10 XP" . "\n" . TextFormat::GRAY . "[" . TextFormat::YELLOW . "Click to get" . TextFormat::GRAY . "]", new FormIcon("textures/items/experience_bottle", FormIcon::IMAGE_TYPE_PATH));
+        else
+            $options[] = new MenuOption(TextFormat::GREEN . "10 XP" . "\n" . TextFormat::GRAY . "[" . TextFormat::RED . "You have to wait" . TextFormat::GRAY . "]", new FormIcon("textures/items/experience_bottle", FormIcon::IMAGE_TYPE_PATH));
 
         if($lobbyPlayer->getPlayer()->hasPermission("lobby.coinbomb")) {
             if ($lobbyPlayer->getDailyCoinBombTime() < time())
@@ -63,6 +69,16 @@ class DailyRewardForm extends MenuForm
                        }
 
                        break;
+                   case 2:
+                       if($lobbyPlayer->getDailyXPTime() < time()) {
+                           $lobbyPlayer->asRyZerPlayer()->getNetworkLevel()->addXP(10, null);
+                           $lobbyPlayer->setDailyXPTime($lobbyPlayer->getNextLoginStreak());
+                           $player->playSound("random.levelup", 5.0, 1.0, [$player]);
+                           $player->sendForm(new DailyRewardForm($lobbyPlayer));
+                       }else {
+                           $player->playSound("note.bass", 5.0, 1.0, [$player]);
+                       }
+                       break;
                    case 1:
                        if($lobbyPlayer->getDailyLottoTicketTime() < time()) {
                            LottoProvider::addTicket($lobbyPlayer);
@@ -73,7 +89,7 @@ class DailyRewardForm extends MenuForm
                            $player->playSound("note.bass", 5.0, 1.0, [$player]);
                        }
                        break;
-                   case 2:
+                   case 3:
                        if($lobbyPlayer->getDailyCoinBombTime() < time() && $player->hasPermission("lobby.coinbomb")) {
                            $lobbyPlayer->addCoinbomb();
                            $lobbyPlayer->setDailyCoinBombTime($lobbyPlayer->getNextLoginStreak());
@@ -83,7 +99,7 @@ class DailyRewardForm extends MenuForm
                            $player->playSound("note.bass", 5.0, 1.0, [$player]);
                        }
                        break;
-                   case 3:
+                   case 4:
                        if($lobbyPlayer->getDailyHypeTrainTime() < time() && $player->hasPermission("lobby.hypetrain")) {
                            $lobbyPlayer->addHypeTrains();
                            $lobbyPlayer->setDailyHypeTrainTime($lobbyPlayer->getNextLoginStreak());
