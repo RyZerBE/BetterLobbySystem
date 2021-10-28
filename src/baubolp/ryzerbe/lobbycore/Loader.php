@@ -228,12 +228,27 @@ class Loader extends PluginBase
                 $player->teleport($warp->getLocation());
             }
         });
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/cwbwtraining.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::YELLOW."CWBW-Training", TextFormat::BLACK."♠ ".TextFormat::AQUA."REWRITE".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "cwtraining");
         $npc->spawnToAll();
+
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/flagwars.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
 
         $npc = new NPCEntity(new Location(224.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
@@ -243,13 +258,27 @@ class Loader extends PluginBase
         $npc->namedtag->setString("warpName", "flagwars");
         $npc->spawnToAll();
 
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/questionmark.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
+
         $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::WHITE.TextFormat::BOLD."???", "");
         $npc->spawnToAll();
-
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/ffa.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
         $npc = new NPCEntity(new Location(238.5, 71, 273.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
@@ -257,7 +286,13 @@ class Loader extends PluginBase
         $npc->updateTitle(TextFormat::GOLD."FFA", TextFormat::BLACK."♠ ".TextFormat::GREEN."FFA & BuildFFA".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "ffa");
         $npc->spawnToAll();
-
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/training.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
         $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
@@ -265,7 +300,13 @@ class Loader extends PluginBase
         $npc->updateTitle(TextFormat::WHITE."Training", TextFormat::BLACK."♠ ".TextFormat::YELLOW."NEW COOL MAPS".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("directConnect", "challenge");
         $npc->spawnToAll();
-
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/bedwars.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
         $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
@@ -273,7 +314,13 @@ class Loader extends PluginBase
         $npc->updateTitle(TextFormat::DARK_AQUA."Bedwars", TextFormat::BLACK."♠ ".TextFormat::RED."REWRITE".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "bedwars");
         $npc->spawnToAll();
-
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/jumpandrun.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
         $npc = new NPCEntity(new Location(242.5, 70, 286.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
@@ -332,7 +379,13 @@ class Loader extends PluginBase
         $npc->spawnToAll();
 
         // OTHER NPC`s \\
-
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/dailyrewards.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
         $npc = new NPCEntity(new Location(231.5, 73, 300.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $closure = function (Player $player): void{
             $player->getServer()->dispatchCommand($player, "dailyreward");
@@ -342,11 +395,18 @@ class Loader extends PluginBase
         $npc->setEmotes($emotes);
         $npc->updateTitle(TextFormat::AQUA."Daily Rewards", TextFormat::BLACK."♠ ".TextFormat::RED."FOR YOU".TextFormat::BLACK." ♠");
         $npc->spawnToAll();
-
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/baubo.png"),
+            "",
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
+            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
+        );
         $npc = new NPCEntity(new Location(225.5, 73, 300.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $closure = function (Player $player): void{
             $player->getServer()->dispatchCommand($player, "survey");
         };
+
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($emotes);
