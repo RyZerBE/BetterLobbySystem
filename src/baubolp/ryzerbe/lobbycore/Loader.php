@@ -57,6 +57,7 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitBlockListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitEntityListener;
 use baubolp\ryzerbe\lobbycore\listener\RyZerPlayerAuthListener;
+use baubolp\ryzerbe\lobbycore\listener\CoinUpdateListener;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
@@ -175,7 +176,8 @@ class Loader extends PluginBase
             new ProjectileHitBlockListener(),
             new ProjectileHitEntityListener(),
             new PlayerLevelUpListener(),
-            new PlayerLevelProgressListener()
+            new PlayerLevelProgressListener(),
+            new CoinUpdateListener()
         ];
 
         foreach ($listeners as $listener)

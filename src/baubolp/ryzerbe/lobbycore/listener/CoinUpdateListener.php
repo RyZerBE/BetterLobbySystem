@@ -8,6 +8,7 @@ use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\event\Listener;
 
 class CoinUpdateListener implements Listener {
+
     /**
      * @param PlayerCoinsAddEvent $event
      */
