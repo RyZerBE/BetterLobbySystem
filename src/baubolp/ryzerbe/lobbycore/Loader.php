@@ -5,6 +5,8 @@ namespace baubolp\ryzerbe\lobbycore;
 
 
 use BauboLP\Cloud\Bungee\BungeeAPI;
+use BauboLP\Cloud\CloudBridge;
+use BauboLP\Cloud\Packets\NetworkInfoPacket;
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\util\Emotes;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
@@ -41,6 +43,7 @@ use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockPlaceListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockUpdateListener;
+use baubolp\ryzerbe\lobbycore\listener\CloudPacketReceiveListener;
 use baubolp\ryzerbe\lobbycore\listener\EntityDamageListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryPickupItemListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
@@ -177,7 +180,8 @@ class Loader extends PluginBase
             new ProjectileHitEntityListener(),
             new PlayerLevelUpListener(),
             new PlayerLevelProgressListener(),
-            new CoinUpdateListener()
+            new CoinUpdateListener(),
+            new CloudPacketReceiveListener()
         ];
 
         foreach ($listeners as $listener)
@@ -459,7 +463,7 @@ class Loader extends PluginBase
         if (!is_file("/root/RyzerCloud/data/Lobby/config.json")) {
             $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
             $config->set("warps", []);
-            $config->set("games", ["BedWars" => ["warpName" => "bedwars", "icon" => ""], "FlagWars" => ["warpName" => "flagwars", "icon" => ""]]);
+            $config->set("games", ["BedWars" => ["warpName" => "bedwars", "groups" => ["BW2x1", "BW2x2"], "icon" => ""], "FlagWars" => ["warpName" => "flagwars", "icon" => "", "groups" => ["FlagWars4x2"]]]);
             $config->set("bossbarMessages", []);
             $config->set("news", []);
             $config->set("event", null);
@@ -471,9 +475,9 @@ class Loader extends PluginBase
         foreach (array_keys($config->get("games")) as $key){
             $data = $config->get("games")[$key];
             if(isset($data["warpName"]))
-                NavigatorForm::$games[$key] = ["icon" => $data["icon"], "warpName" => $data["warpName"]];
+                NavigatorForm::$games[$key] = ["icon" => $data["icon"], "warpName" => $data["warpName"], "groups" => $data["groups"], "players" => 0];
             else if(isset($data["directConnect"]))
-                NavigatorForm::$games[$key] = ["icon" => $data["icon"], "directConnect" => $data["directConnect"]];
+                NavigatorForm::$games[$key] = ["icon" => $data["icon"], "directConnect" => $data["directConnect"], "groups" => $data["groups"], "players" => 0];
         }
 
         $news = (array)$config->get("news");

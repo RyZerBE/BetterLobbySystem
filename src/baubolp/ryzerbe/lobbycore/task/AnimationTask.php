@@ -4,6 +4,8 @@
 namespace baubolp\ryzerbe\lobbycore\task;
 
 
+use BauboLP\Cloud\CloudBridge;
+use BauboLP\Cloud\Packets\NetworkInfoPacket;
 use baubolp\ryzerbe\lobbycore\animation\Animation;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
@@ -22,6 +24,10 @@ class AnimationTask extends Task
      */
     public function onRun(int $currentTick): void
     {
+        if($currentTick % (20 * 30) === 0) {
+            $pk = new NetworkInfoPacket();
+            CloudBridge::getInstance()->getClient()->getPacketHandler()->writePacket($pk);
+        }
         foreach (array_values(AnimationProvider::$activeAnimation) as $animation) {
             if($animation instanceof Animation){
                 $animation->tick();

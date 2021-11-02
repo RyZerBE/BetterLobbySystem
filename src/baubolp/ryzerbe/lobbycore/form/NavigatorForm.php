@@ -69,9 +69,9 @@ class NavigatorForm
             $warpName = self::$games[$game]["warpName"] ?? self::$games[$game]["directConnect"];
 
             if($icon == "-1")
-                $form->addButton($game, -1, "", $warpName.":".$game);
+                $form->addButton($game."\n".TextFormat::GRAY."» ".(TextFormat::GREEN.NavigatorForm::$games[$game]["players"] ?? 0)." Players", -1, "", $warpName.":".$game);
             else{
-                $form->addButton($game, 1, $icon, $warpName.":".$game);
+                $form->addButton($game."\n".TextFormat::GRAY."» ".(TextFormat::GREEN.NavigatorForm::$games[$game]["players"] ?? 0)." Players", 1, $icon, $warpName.":".$game);
             }
         }
         $form->sendToPlayer($player);
