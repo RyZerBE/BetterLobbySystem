@@ -4,16 +4,18 @@
 namespace baubolp\ryzerbe\lobbycore\shop;
 
 
+use baubolp\ryzerbe\lobbycore\shop\article\StatsResetTokenArticle;
 use baubolp\ryzerbe\lobbycore\shop\article\VIPRank;
 use baubolp\ryzerbe\lobbycore\shop\category\RankCategory;
+use baubolp\ryzerbe\lobbycore\shop\category\StatsCategory;
 
 class ShopManager
 {
-    /** @var \baubolp\ryzerbe\lobbycore\shop\ShopCategory[]  */
+    /** @var ShopCategory[] */
     public static $categories = [];
 
     /**
-     * @return \baubolp\ryzerbe\lobbycore\shop\ShopCategory[]
+     * @return ShopCategory[]
      */
     public static function getCategories(): array
     {
@@ -21,7 +23,7 @@ class ShopManager
     }
 
     /**
-     * @param \baubolp\ryzerbe\lobbycore\shop\ShopCategory $category
+     * @param ShopCategory $category
      */
     public static function registerCategory(ShopCategory $category): void
     {
@@ -30,13 +32,16 @@ class ShopManager
 
     public static function registerCategories(): void
     {
-        $rankCategory = new RankCategory();
+       /* $rankCategory = new RankCategory();
         $rankCategory->addArticle(new VIPRank());
-        $rankCategory->register();
+        $rankCategory->register();*/
+        $statsCategory = new StatsCategory();
+        $statsCategory->addArticle(new StatsResetTokenArticle());
+        $statsCategory->register();
     }
 
     /**
-     * @param \baubolp\ryzerbe\lobbycore\shop\ShopCategory $category
+     * @param ShopCategory $category
      */
     public static function removeCategory(ShopCategory $category): void
     {
