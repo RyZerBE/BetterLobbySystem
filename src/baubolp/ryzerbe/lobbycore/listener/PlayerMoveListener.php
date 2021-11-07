@@ -15,10 +15,6 @@ class PlayerMoveListener implements Listener {
     public function onMove(PlayerMoveEvent $event): void {
         $player = $event->getPlayer();
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
-
-        if($player->getY() <= 0) {
-            $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
-        }
         if($lobbyPlayer === null) return;
         $lobbyPlayer->setHasMoved();
     }
