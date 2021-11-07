@@ -7,10 +7,6 @@ use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\event\Listener;
 
 class PlayerLevelUpListener implements Listener {
-
-    /**
-     * @param PlayerLevelUpEvent $event
-     */
     public function onLevelUp(PlayerLevelUpEvent $event): void {
         LobbyPlayerCache::getLobbyPlayer($event->getPlayer())?->updateScoreboard();
     }

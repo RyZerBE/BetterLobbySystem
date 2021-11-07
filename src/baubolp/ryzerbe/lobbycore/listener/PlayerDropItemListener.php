@@ -12,11 +12,8 @@ use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDropItemEvent;
 
-class PlayerDropItemListener implements Listener
-{
-
-    public function dropItem(PlayerDropItemEvent $event)
-    {
+class PlayerDropItemListener implements Listener {
+    public function onPlayerDropItem(PlayerDropItemEvent $event): void{
         $item = $event->getItem();
         $player = $event->getPlayer();
         $event->setCancelled();

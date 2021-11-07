@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\form;
 
 
 use baubolp\core\provider\CoinProvider;
-use baubolp\core\provider\NetworkLevelProvider;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use baubolp\ryzerbe\lobbycore\provider\LottoProvider;
 use pocketmine\form\FormIcon;

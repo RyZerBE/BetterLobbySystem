@@ -8,13 +8,8 @@ use baubolp\core\listener\own\RyZerPlayerAuthEvent;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use pocketmine\event\Listener;
 
-class RyZerPlayerAuthListener implements Listener
-{
-    /**
-     * @param \baubolp\core\listener\own\RyZerPlayerAuthEvent $event
-     */
-    public function auth(RyZerPlayerAuthEvent $event)
-    {
+class RyZerPlayerAuthListener implements Listener {
+    public function onRyZerPlayerAuth(RyZerPlayerAuthEvent $event): void{
         $player = $event->getRyZerPlayer()->getPlayer();
         $lobbyPlayer = new LobbyPlayer($player);
         $lobbyPlayer->load();

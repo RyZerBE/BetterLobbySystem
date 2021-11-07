@@ -11,16 +11,13 @@ use pocketmine\event\Listener;
 class BlockBreakListener implements Listener
 {
 
-    public function break(BlockBreakEvent $event)
-    {
+    public function onBlockBreak(BlockBreakEvent $event): void{
         $player = $event->getPlayer();
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
-
         if($lobbyPlayer === null) {
             $event->setCancelled();
             return;
         }
-
         if(!$lobbyPlayer->enabledBuildMode()) $event->setCancelled();
     }
 }

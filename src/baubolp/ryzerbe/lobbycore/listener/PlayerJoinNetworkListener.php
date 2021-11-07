@@ -7,13 +7,10 @@ namespace baubolp\ryzerbe\lobbycore\listener;
 use BauboLP\Cloud\Events\PlayerJoinNetworkEvent;
 use pocketmine\event\Listener;
 
-class PlayerJoinNetworkListener implements Listener
-{
-    /** @var array  */
-    public static $willPlay = [];
+class PlayerJoinNetworkListener implements Listener {
+    public static array $willPlay = [];
 
-    public function joinNetwork(PlayerJoinNetworkEvent $event)
-    {
+    public function onPlayerJoinNetwork(PlayerJoinNetworkEvent $event): void{
         self::$willPlay[] = $event->getPlayerName();
     }
 }

@@ -5,8 +5,6 @@ namespace baubolp\ryzerbe\lobbycore;
 
 
 use BauboLP\Cloud\Bungee\BungeeAPI;
-use BauboLP\Cloud\CloudBridge;
-use BauboLP\Cloud\Packets\NetworkInfoPacket;
 use baubolp\core\provider\AsyncExecutor;
 use baubolp\core\util\Emotes;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
@@ -44,6 +42,7 @@ use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockPlaceListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockUpdateListener;
 use baubolp\ryzerbe\lobbycore\listener\CloudPacketReceiveListener;
+use baubolp\ryzerbe\lobbycore\listener\CoinUpdateListener;
 use baubolp\ryzerbe\lobbycore\listener\EntityDamageListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryPickupItemListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
@@ -60,7 +59,6 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitBlockListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitEntityListener;
 use baubolp\ryzerbe\lobbycore\listener\RyZerPlayerAuthListener;
-use baubolp\ryzerbe\lobbycore\listener\CoinUpdateListener;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
