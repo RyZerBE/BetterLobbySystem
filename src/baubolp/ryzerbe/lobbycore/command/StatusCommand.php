@@ -4,9 +4,9 @@
 namespace baubolp\ryzerbe\lobbycore\command;
 
 
-use baubolp\core\player\RyzerPlayerProvider;
-use baubolp\core\provider\AsyncExecutor;
-use baubolp\core\provider\LanguageProvider;
+use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\util\async\AsyncExecutor;
+use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;

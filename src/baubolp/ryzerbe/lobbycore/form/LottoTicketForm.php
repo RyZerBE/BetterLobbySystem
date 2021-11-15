@@ -4,9 +4,9 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 
-use baubolp\core\player\RyzerPlayerProvider;
-use baubolp\core\provider\CoinProvider;
-use baubolp\core\provider\LanguageProvider;
+use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\gui\LottoGUI;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;

@@ -2,7 +2,7 @@
 
 namespace baubolp\ryzerbe\lobbycore\entity;
 
-use baubolp\core\util\ItemUtils;
+use ryzerbe\core\util\ItemUtils;
 use pocketmine\entity\Vehicle;
 use pocketmine\item\Item;
 use pocketmine\level\particle\ExplodeParticle;

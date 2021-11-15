@@ -2,8 +2,8 @@
 
 namespace baubolp\ryzerbe\lobbycore\form\cosmetic;
 
-use baubolp\core\provider\CoinProvider;
-use baubolp\core\provider\LanguageProvider;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\cosmetic\category\CosmeticCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\Loader;

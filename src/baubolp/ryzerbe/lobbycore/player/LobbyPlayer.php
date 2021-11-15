@@ -4,13 +4,12 @@
 namespace baubolp\ryzerbe\lobbycore\player;
 
 
-use baubolp\core\player\RyzerPlayer;
-use baubolp\core\player\RyzerPlayerProvider;
-use baubolp\core\provider\AsyncExecutor;
-use baubolp\core\provider\CoinProvider;
-use baubolp\core\provider\LanguageProvider;
-use baubolp\core\provider\RankProvider;
-use baubolp\core\util\LocationUtils;
+use ryzerbe\core\player\RyZerPlayer;
+use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\util\async\AsyncExecutor;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerJoinAnimation;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
@@ -754,7 +753,7 @@ class LobbyPlayer  {
     }
 
     /**
-     * @return \baubolp\core\player\RyzerPlayer|null
+     * @return \ryzerbe\core\player\RyZerPlayer|null
      */
     public function asRyZerPlayer(): ?RyzerPlayer
     {
@@ -946,17 +945,17 @@ class LobbyPlayer  {
             $playerName = $this->getPlayer()->getName();
             AsyncExecutor::submitClosureTask(40, function (int $currentTick) use ($playerName): void{
                 $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($playerName);
-                if($lobbyPlayer != null)
-                    $lobbyPlayer->updateScoreboard();
+                $lobbyPlayer?->updateScoreboard();
             });
             return;
         }
-        $rankName = $rbePlayer->getRank();
+        $rankName = $rbePlayer->getRank()->getRankName();
+
         ScoreboardUtils::remove($this->getPlayer(), "lobby");
         ScoreboardUtils::create($this->getPlayer(), TextFormat::WHITE.TextFormat::BOLD."RyZer".TextFormat::RED."BE", "lobby");
         ScoreboardUtils::addEmptyLine($this->getPlayer(), 0, "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 1, TextFormat::GRAY."Rank", "lobby");
-        ScoreboardUtils::addLine($this->getPlayer(), 2, TextFormat::DARK_GRAY."» ".RankProvider::getColor($rankName).$rankName, "lobby");
+        ScoreboardUtils::addLine($this->getPlayer(), 2, TextFormat::DARK_GRAY."» ".$rbePlayer->getRank()->getColor().$rankName, "lobby");
         ScoreboardUtils::addEmptyLine($this->getPlayer(), 3, "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 4, TextFormat::GRAY."Coins", "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 5, TextFormat::DARK_GRAY."» ".TextFormat::AQUA.$rbePlayer->getCoins(), "lobby");

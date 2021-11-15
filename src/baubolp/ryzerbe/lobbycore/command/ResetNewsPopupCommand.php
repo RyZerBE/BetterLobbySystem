@@ -4,7 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\command;
 
 
-use baubolp\core\provider\AsyncExecutor;
+use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;

@@ -3,8 +3,7 @@
 
 namespace baubolp\ryzerbe\lobbycore\task;
 
-use baubolp\core\player\RyzerPlayerProvider;
-use baubolp\core\provider\RankProvider;
+use ryzerbe\core\player\RyZerPlayerProvider;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerAFKAnimation;
 use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
@@ -56,7 +55,7 @@ class LobbyTask extends Task
                     $playerRP = $lobbyPlayer->asRyZerPlayer();
                     if (is_null($playerRP) || is_null($nearbyRP)) continue;
 
-                    if (RankProvider::getRankJoinPower($nearbyRP->getRank()) >= RankProvider::getRankJoinPower($playerRP->getRank()) || $lobbyPlayer->isNearCloudSign()) continue;
+                    if ($nearbyRP->getRank()->getJoinPower() >= $playerRP->getRank()->getJoinPower() || $lobbyPlayer->isNearCloudSign()) continue;
                     $nearbyEntity->knockBack($player, 0, $nearbyEntity->getX() - $player->getX(), $nearbyEntity->getZ() - $player->getZ(), 1.5);
                 }
             }

@@ -4,7 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 
-use baubolp\core\provider\AsyncExecutor;
+use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use jojoe77777\FormAPI\SimpleForm;
 use pocketmine\Player;

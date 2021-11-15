@@ -5,7 +5,7 @@ namespace baubolp\ryzerbe\lobbycore\entity;
 
 
 use BauboLP\Cloud\CloudBridge;
-use baubolp\core\provider\LanguageProvider;
+use ryzerbe\core\language\LanguageProvider;
 use BauboLP\NPCSystem\NPCSystem;
 use baubolp\ryzerbe\lobbycore\form\event\EventDescriptionForm;
 use baubolp\ryzerbe\lobbycore\Loader;

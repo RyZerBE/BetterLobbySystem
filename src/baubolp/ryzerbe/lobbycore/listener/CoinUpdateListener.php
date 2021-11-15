@@ -2,10 +2,10 @@
 
 namespace baubolp\ryzerbe\lobbycore\listener;
 
-use baubolp\core\event\PlayerCoinsAddEvent;
-use baubolp\core\event\PlayerCoinsRemoveEvent;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\event\Listener;
+use ryzerbe\core\event\player\coin\PlayerCoinsAddEvent;
+use ryzerbe\core\event\player\coin\PlayerCoinsRemoveEvent;
 
 class CoinUpdateListener implements Listener {
 

@@ -4,13 +4,13 @@
 namespace baubolp\ryzerbe\lobbycore\shop\article;
 
 
-use baubolp\core\player\RyzerPlayerProvider;
-use baubolp\core\provider\CoinProvider;
-use baubolp\core\provider\LanguageProvider;
-use baubolp\core\provider\RankProvider;
+use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\shop\ShopArticle;
 use pocketmine\Player;
+use ryzerbe\core\rank\RankManager;
 
 class VIPRank extends ShopArticle
 {
@@ -46,7 +46,9 @@ class VIPRank extends ShopArticle
         $ryzerPlayer = RyzerPlayerProvider::getRyzerPlayer($player);
         if($ryzerPlayer === null) return;
 
-        if(RankProvider::getRankJoinPower("VIP") <= RankProvider::getRankJoinPower($ryzerPlayer->getRank())) {
+        $rank = RankManager::getInstance()->getRank("VIP");
+        if($rank === null) return;
+        if($rank->getJoinPower() <= $ryzerPlayer->getRank()->getJoinPower()) {
             $player->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer('rank-higher-rankshop', $player->getName()));
             return;
         }
@@ -56,7 +58,7 @@ class VIPRank extends ShopArticle
         }
 
         CoinProvider::removeCoins($player->getName(), $this->getPrice());
-        RankProvider::setRank($player->getName(), "SHOP", "VIP");
+        $ryzerPlayer->setRank($rank, true, true, true);
         $player->kick("rank upgrade", false); //next fallback server...
     }
 }

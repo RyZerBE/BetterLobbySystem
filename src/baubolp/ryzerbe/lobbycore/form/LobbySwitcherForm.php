@@ -6,14 +6,14 @@ namespace baubolp\ryzerbe\lobbycore\form;
 use BauboLP\Cloud\Bungee\BungeeAPI;
 use BauboLP\Cloud\CloudBridge;
 use BauboLP\Cloud\Provider\CloudProvider;
-use baubolp\core\provider\AsyncExecutor;
-use baubolp\core\Ryzer;
-use baubolp\core\util\query\ServerQuery;
+use ryzerbe\core\RyZerBE;
+use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use jojoe77777\FormAPI\SimpleForm;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\util\query\ServerQuery;
 use function exec;
 
 class LobbySwitcherForm
@@ -47,7 +47,7 @@ class LobbySwitcherForm
                 if ($data === null) return;
                 if($data === "start") {
                     CloudBridge::getCloudProvider()->startServer("Lobby", 1);
-                    $player->sendMessage(Ryzer::PREFIX.TextFormat::GREEN."Starte neue Lobby...");
+                    $player->sendMessage(RyZerBE::PREFIX.TextFormat::GREEN."Starte neue Lobby...");
                     return;
                 }
                 BungeeAPI::transferPlayer($player->getName(), $data);

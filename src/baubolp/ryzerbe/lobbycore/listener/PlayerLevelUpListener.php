@@ -2,9 +2,9 @@
 
 namespace baubolp\ryzerbe\lobbycore\listener;
 
-use baubolp\core\event\PlayerLevelUpEvent;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\event\Listener;
+use ryzerbe\core\event\player\networklevel\PlayerLevelUpEvent;
 
 class PlayerLevelUpListener implements Listener {
 

@@ -2,10 +2,10 @@
 
 namespace baubolp\ryzerbe\lobbycore\shop\article;
 
-use baubolp\core\player\RyzerPlayerProvider;
-use baubolp\core\provider\CoinProvider;
-use baubolp\core\provider\LanguageProvider;
-use baubolp\core\Ryzer;
+use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\RyZerBE;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\shop\ShopArticle;
 use pocketmine\command\ConsoleCommandSender;

@@ -5,8 +5,8 @@ namespace baubolp\ryzerbe\lobbycore\gui;
 
 use BauboLP\Cloud\CloudBridge;
 use BauboLP\Cloud\Packets\PlayerMessagePacket;
-use baubolp\core\provider\CoinProvider;
-use baubolp\core\provider\LanguageProvider;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\LottoProvider;

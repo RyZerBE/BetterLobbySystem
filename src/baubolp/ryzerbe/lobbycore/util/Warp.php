@@ -4,7 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\util;
 
 
-use baubolp\core\util\LocationUtils;
+use ryzerbe\core\util\LocationUtils;
 use pocketmine\level\Location;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;

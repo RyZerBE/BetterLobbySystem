@@ -4,14 +4,14 @@
 namespace baubolp\ryzerbe\lobbycore\listener;
 
 
-use baubolp\core\listener\own\RyZerPlayerAuthEvent;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use pocketmine\event\Listener;
+use ryzerbe\core\event\player\RyZerPlayerAuthEvent;
 
 class RyZerPlayerAuthListener implements Listener
 {
     /**
-     * @param \baubolp\core\listener\own\RyZerPlayerAuthEvent $event
+     * @param RyZerPlayerAuthEvent $event
      */
     public function auth(RyZerPlayerAuthEvent $event)
     {

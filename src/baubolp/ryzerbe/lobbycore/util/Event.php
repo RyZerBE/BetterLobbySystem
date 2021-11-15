@@ -4,7 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\util;
 
 
-use baubolp\core\provider\LanguageProvider;
+use ryzerbe\core\language\LanguageProvider;
 use DateTime;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;

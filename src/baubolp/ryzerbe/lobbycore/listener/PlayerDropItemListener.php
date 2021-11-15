@@ -4,7 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\listener;
 
 
-use baubolp\core\util\ItemUtils;
+use ryzerbe\core\util\ItemUtils;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\CoinbombAnimation;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain\HypeTrain;

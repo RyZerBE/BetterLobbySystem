@@ -4,8 +4,8 @@
 namespace baubolp\ryzerbe\lobbycore\form\profile;
 
 
-use baubolp\core\provider\AsyncExecutor;
-use baubolp\core\Ryzer;
+use ryzerbe\core\util\async\AsyncExecutor;
+use ryzerbe\core\RyZerBE;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use jojoe77777\FormAPI\SimpleForm;
 use mysqli;

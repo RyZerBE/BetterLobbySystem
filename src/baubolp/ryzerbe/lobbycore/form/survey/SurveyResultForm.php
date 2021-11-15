@@ -4,7 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\form\survey;
 
 
-use baubolp\core\provider\AsyncExecutor;
+use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
 use baubolp\ryzerbe\lobbycore\util\survey\Survey;
 use jojoe77777\FormAPI\SimpleForm;

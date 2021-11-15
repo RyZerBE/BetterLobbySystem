@@ -4,8 +4,8 @@
 namespace baubolp\ryzerbe\lobbycore\listener;
 
 
-use baubolp\core\provider\CoinProvider;
-use baubolp\core\util\ItemUtils;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\util\ItemUtils;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\Listener;
 use pocketmine\Player;

@@ -4,8 +4,8 @@
 namespace baubolp\ryzerbe\lobbycore\provider;
 
 
-use baubolp\core\provider\LanguageProvider;
-use baubolp\core\util\ItemUtils;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\util\ItemUtils;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\special\HeadCanonSpecialCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\special\SpidermanGunSpecialCosmetic;

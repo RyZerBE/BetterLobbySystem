@@ -4,8 +4,6 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 use BauboLP\Cloud\Bungee\BungeeAPI;
-use baubolp\core\provider\StaffProvider;
-use baubolp\core\Ryzer;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\NavigatorTeleportAnimation;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
@@ -13,6 +11,8 @@ use baubolp\ryzerbe\lobbycore\provider\WarpProvider;
 use jojoe77777\FormAPI\SimpleForm;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\provider\StaffProvider;
+use ryzerbe\core\RyZerBE;
 use function array_keys;
 use function in_array;
 
@@ -38,8 +38,8 @@ class NavigatorForm
             $warp = WarpProvider::getWarp($data[0]);
             if ($warp === null) {
                 if($data[0] === "challenge") { //REMOVE
-                    if(!$player->hasPermission("cloud.admin") && !$player->hasPermission("core.login") && !StaffProvider::isLogin($player->getName())) {
-                        $player->sendMessage(Ryzer::PREFIX.TextFormat::DARK_RED."Du hast keine Befugniss den Trainingserver zu betreten, da der gerade in Entwicklung ist! Permission: cloud.admin");
+                    if(!$player->hasPermission("cloud.admin") && !StaffProvider::loggedIn($player->getName())) {
+                        $player->sendMessage(RyZerBE::PREFIX.TextFormat::DARK_RED."Du hast keine Befugniss den Trainingserver zu betreten, da der gerade in Entwicklung ist! Permission: cloud.admin");
                         return;
                     }
                     BungeeAPI::transferPlayer($player->getName(), "challenge");

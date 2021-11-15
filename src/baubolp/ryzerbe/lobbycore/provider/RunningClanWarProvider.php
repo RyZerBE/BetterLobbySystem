@@ -4,7 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\provider;
 
 
-use baubolp\core\provider\AsyncExecutor;
+use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\util\ClanWarMatch;
 use mysqli;

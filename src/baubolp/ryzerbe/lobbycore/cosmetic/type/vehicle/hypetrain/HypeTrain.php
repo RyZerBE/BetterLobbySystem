@@ -2,7 +2,7 @@
 
 namespace baubolp\ryzerbe\lobbycore\cosmetic\type\vehicle\hypetrain;
 
-use baubolp\core\util\ItemUtils;
+use ryzerbe\core\util\ItemUtils;
 use baubolp\ryzerbe\lobbycore\entity\hypetrain\HypeTrainEntity;
 use baubolp\ryzerbe\lobbycore\entity\hypetrain\projectile\HeadProjectileEntity;
 use pocketmine\entity\Entity;

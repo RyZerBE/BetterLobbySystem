@@ -4,7 +4,7 @@
 namespace baubolp\ryzerbe\lobbycore\provider;
 
 
-use baubolp\core\util\LocationUtils;
+use ryzerbe\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\util\Warp;
 use pocketmine\level\Location;
 use pocketmine\utils\Config;

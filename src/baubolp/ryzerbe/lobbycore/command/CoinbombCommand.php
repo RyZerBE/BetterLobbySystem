@@ -4,8 +4,6 @@
 namespace baubolp\ryzerbe\lobbycore\command;
 
 
-use baubolp\core\provider\LanguageProvider;
-use baubolp\core\util\ItemUtils;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\command\Command;
@@ -13,6 +11,8 @@ use pocketmine\command\CommandSender;
 use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\util\ItemUtils;
 
 class CoinbombCommand extends Command
 {
