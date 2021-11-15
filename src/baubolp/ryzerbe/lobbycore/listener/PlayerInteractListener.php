@@ -5,21 +5,19 @@ namespace baubolp\ryzerbe\lobbycore\listener;
 
 
 use baubolp\ryzerbe\lobbycore\provider\ItemProvider;
-use pocketmine\block\Block;
+use pocketmine\block\BlockIds;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use function in_array;
 
-class PlayerInteractListener implements Listener
-{
+class PlayerInteractListener implements Listener {
     private const NOT_INTERACTABLE_BLOCKS = [
-        Block::DRAGON_EGG,
-        Block::CHEST,
-        Block::FURNACE
+        BlockIds::DRAGON_EGG,
+        BlockIds::CHEST,
+        BlockIds::FURNACE
     ];
 
-    public function interact(PlayerInteractEvent $event)
-    {
+    public function onPlayerInteract(PlayerInteractEvent $event): void{
         $player = $event->getPlayer();
         $block = $event->getBlock();
         if (ItemProvider::execItem($player) || in_array($block->getId(), self::NOT_INTERACTABLE_BLOCKS)) {

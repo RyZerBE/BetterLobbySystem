@@ -5,8 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\shop;
 
 
 use baubolp\ryzerbe\lobbycore\shop\article\StatsResetTokenArticle;
-use baubolp\ryzerbe\lobbycore\shop\article\VIPRank;
-use baubolp\ryzerbe\lobbycore\shop\category\RankCategory;
 use baubolp\ryzerbe\lobbycore\shop\category\StatsCategory;
 
 class ShopManager

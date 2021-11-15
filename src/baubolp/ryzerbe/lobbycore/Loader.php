@@ -40,6 +40,7 @@ use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockPlaceListener;
 use baubolp\ryzerbe\lobbycore\listener\BlockUpdateListener;
 use baubolp\ryzerbe\lobbycore\listener\CloudPacketReceiveListener;
+use baubolp\ryzerbe\lobbycore\listener\CoinUpdateListener;
 use baubolp\ryzerbe\lobbycore\listener\EntityDamageListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryPickupItemListener;
 use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
@@ -56,7 +57,6 @@ use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitBlockListener;
 use baubolp\ryzerbe\lobbycore\listener\ProjectileHitEntityListener;
 use baubolp\ryzerbe\lobbycore\listener\RyZerPlayerAuthListener;
-use baubolp\ryzerbe\lobbycore\listener\CoinUpdateListener;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
@@ -79,6 +79,7 @@ use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use ryzerbe\core\util\async\AsyncExecutor;
+use ryzerbe\core\util\emote\EmoteIds;
 use function explode;
 use function uniqid;
 
@@ -199,9 +200,9 @@ class Loader extends PluginBase
          */
 
         // GAME NPC`s \\
-        $emotes = [
-            Emotes::WAVE, Emotes::THE_WOODPUNCH, Emotes::UNDERWATER_DANCING, Emotes::HAND_STAND, Emotes::SHY_GIGGLING, Emotes::MEDITATING_LIKE_LUKE, Emotes::OFFERING,
-            Emotes::BORED, Emotes::AHH_CHOO, Emotes::GIDDY, Emotes::OVER_HERE, Emotes::GROOVIN, Emotes::WAVING_LIKE_C_3PO, Emotes::THINKING, Emotes::SURRENDERING
+        $EmoteIds = [
+            EmoteIds::WAVE, EmoteIds::THE_WOODPUNCH, EmoteIds::UNDERWATER_DANCING, EmoteIds::HAND_STAND, EmoteIds::SHY_GIGGLING, EmoteIds::MEDITATING_LIKE_LUKE, EmoteIds::OFFERING,
+            EmoteIds::BORED, EmoteIds::AHH_CHOO, EmoteIds::GIDDY, EmoteIds::OVER_HERE, EmoteIds::GROOVIN, EmoteIds::WAVING_LIKE_C_3PO, EmoteIds::THINKING, EmoteIds::SURRENDERING
         ];
 
         $skin = new Skin(
@@ -240,7 +241,7 @@ class Loader extends PluginBase
         );
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::YELLOW."CWBW-Training", TextFormat::BLACK."♠ ".TextFormat::AQUA."REWRITE".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "cwtraining");
         $npc->spawnToAll();
@@ -256,7 +257,7 @@ class Loader extends PluginBase
         $npc = new NPCEntity(new Location(224.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::DARK_AQUA."Flag".TextFormat::AQUA."Wars", TextFormat::BLACK."♠ ".TextFormat::GREEN."NEW".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "flagwars");
         $npc->spawnToAll();
@@ -272,7 +273,7 @@ class Loader extends PluginBase
         $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::WHITE.TextFormat::BOLD."???", "");
         $npc->spawnToAll();
         $skin = new Skin(
@@ -285,7 +286,7 @@ class Loader extends PluginBase
         $npc = new NPCEntity(new Location(238.5, 71, 273.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::GOLD."FFA", TextFormat::BLACK."♠ ".TextFormat::GREEN."FFA & BuildFFA".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "ffa");
         $npc->spawnToAll();
@@ -299,7 +300,7 @@ class Loader extends PluginBase
         $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::WHITE."Training", TextFormat::BLACK."♠ ".TextFormat::YELLOW."NEW COOL MAPS".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("directConnect", "challenge");
         $npc->spawnToAll();
@@ -313,7 +314,7 @@ class Loader extends PluginBase
         $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::DARK_AQUA."Bedwars", TextFormat::BLACK."♠ ".TextFormat::RED."REWRITE".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "bedwars");
         $npc->spawnToAll();
@@ -327,7 +328,7 @@ class Loader extends PluginBase
         $npc = new NPCEntity(new Location(242.5, 70, 286.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::GOLD."Jump and Run", TextFormat::BLACK."♠ ".TextFormat::WHITE."WITH STATS".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "JaR");
         $npc->spawnToAll();
@@ -395,7 +396,7 @@ class Loader extends PluginBase
         };
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::AQUA."Daily Rewards", TextFormat::BLACK."♠ ".TextFormat::RED."FOR YOU".TextFormat::BLACK." ♠");
         $npc->spawnToAll();
         $skin = new Skin(
@@ -412,7 +413,7 @@ class Loader extends PluginBase
 
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->setEmotes($emotes);
+        $npc->setEmoteIds($EmoteIds);
         $npc->updateTitle(TextFormat::YELLOW."Survey", TextFormat::BLACK."♠ ".TextFormat::RED."GET COINS FOR VOTING".TextFormat::BLACK." ♠");
         $npc->spawnToAll();
     }

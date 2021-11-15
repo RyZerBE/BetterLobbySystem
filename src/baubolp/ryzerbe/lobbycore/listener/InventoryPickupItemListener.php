@@ -10,11 +10,8 @@ use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\Listener;
 use pocketmine\Player;
 
-class InventoryPickupItemListener implements Listener
-{
-
-    public function pickup(InventoryPickupItemEvent $event)
-    {
+class InventoryPickupItemListener implements Listener {
+    public function pickup(InventoryPickupItemEvent $event): void {
         $itemEntity = $event->getItem();
         $item = $itemEntity->getItem();
         $event->setCancelled();

@@ -228,21 +228,22 @@ class LobbyPlayer  {
                 $lobbyPlayer->setActiveCosmetics($activeCosmetics);
                 $lobbyPlayer->setCosmetics($cosmetics);
 
-                if ($loadedData["spawn"] == 0 || !$lobbyPlayer->isLastPositionSpawnEnabled())
-                    $lobbyPlayer->getPlayer()->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
-                else
-                    $lobbyPlayer->getPlayer()->teleport(LocationUtils::fromString($loadedData["spawn"]));
+                $player = $lobbyPlayer->getPlayer();
+                if ($loadedData["spawn"] == 0 || !$lobbyPlayer->isLastPositionSpawnEnabled()){
+                    $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0.5, 1, 0.5));
+                }else{
+                    $player->teleport(LocationUtils::fromString($loadedData["spawn"]));
+                }
 
                 $lobbyPlayer->checkLoginStreak();
                 if ($loadedData["news"] && NewsBookForm::$news != null)
-                    NewsBookForm::open($lobbyPlayer->getPlayer());
+                    NewsBookForm::open($player);
 
-                $lobbyPlayer->getPlayer()->setAllowFlight($lobbyPlayer->isDoublejumpEnabled());
+                $player->setAllowFlight($lobbyPlayer->isDoublejumpEnabled());
 
                 $lobbyPlayer->updateScoreboard();
-                ItemProvider::giveLobbyItems($lobbyPlayer->getPlayer());
+                ItemProvider::giveLobbyItems($player);
 
-                $player = $lobbyPlayer->getPlayer();
                 if (in_array($player->getName(), PlayerJoinNetworkListener::$willPlay)) {
                     if ($lobbyPlayer->isJoinAnimationEnabled()){
                         AnimationProvider::addActiveAnimation(new PlayerJoinAnimation($player));

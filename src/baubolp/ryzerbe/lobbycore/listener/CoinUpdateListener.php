@@ -8,20 +8,13 @@ use ryzerbe\core\event\player\coin\PlayerCoinsAddEvent;
 use ryzerbe\core\event\player\coin\PlayerCoinsRemoveEvent;
 
 class CoinUpdateListener implements Listener {
-
-    /**
-     * @param PlayerCoinsAddEvent $event
-     */
-    public function add(PlayerCoinsAddEvent $event){
+    public function onPlayerCoinsAdd(PlayerCoinsAddEvent $event): void{
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($event->getPlayer());
         if($lobbyPlayer === null) return;
         $lobbyPlayer->updateScoreboard();
     }
 
-    /**
-     * @param PlayerCoinsRemoveEvent $event
-     */
-    public function remove(PlayerCoinsRemoveEvent $event){
+    public function onPlayerCoinsRemove(PlayerCoinsRemoveEvent $event): void{
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($event->getPlayer());
         if($lobbyPlayer === null) return;
         $lobbyPlayer->updateScoreboard();

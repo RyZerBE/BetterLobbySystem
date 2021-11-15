@@ -8,14 +8,11 @@ use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 
-class InventoryTransactionListener implements Listener
-{
+class InventoryTransactionListener implements Listener {
     /**
-     * @param InventoryTransactionEvent $event
      * @priority MONITOR
      */
-    public function ChestInvFix(InventoryTransactionEvent $event): void
-    {
+    public function onInventoryTransaction(InventoryTransactionEvent $event): void {
         $transaction = $event->getTransaction();
         $player = $transaction->getSource();
         foreach ($transaction->getActions() as $action) {
