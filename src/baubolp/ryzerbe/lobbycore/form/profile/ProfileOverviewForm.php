@@ -54,7 +54,7 @@ class ProfileOverviewForm
                     });
                     break;
                 case "friends":
-                    $player->sendMessage(Ryzer::PREFIX.TextFormat::RED."Dieses Feature kommt in einem weiteren Update von uns!");
+                    $player->sendMessage(RyZerBE::PREFIX.TextFormat::RED."Dieses Feature kommt in einem weiteren Update von uns!");
                     break;
                 case "discord":
                     $player->getServer()->dispatchCommand($player, "verify");
