@@ -968,7 +968,7 @@ class LobbyPlayer  {
         if($rbePlayer->getClan() === null) {
             ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW."NO CLAN".TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, "&g???").TextFormat::GRAY."]", "lobby");
         }else {
-            ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW.$rbePlayer->getClan()->getClanName().TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, $rbePlayer->getClanTag()).TextFormat::GRAY."]", "lobby");
+            ScoreboardUtils::addLine($this->getPlayer(), 11, TextFormat::DARK_GRAY."» ".TextFormat::YELLOW.$rbePlayer->getClan()->getClanName().TextFormat::GRAY."[".str_replace("&", TextFormat::ESCAPE, $rbePlayer->getClan()->getClanTag()).TextFormat::GRAY."]", "lobby");
         }
         ScoreboardUtils::addEmptyLine($this->getPlayer(), 12, "lobby");
         ScoreboardUtils::addLine($this->getPlayer(), 13, TextFormat::GRAY."Level", "lobby");

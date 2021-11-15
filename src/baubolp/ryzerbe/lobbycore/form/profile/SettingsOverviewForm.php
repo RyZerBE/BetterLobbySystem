@@ -23,8 +23,8 @@ class SettingsOverviewForm
                 case "language":
                     $player->getServer()->dispatchCommand($player, "language");
                     break;
-                case "more_particle":
-                    $player->getServer()->dispatchCommand($player, "particle");
+                case "settings":
+                    $player->getServer()->dispatchCommand($player, "settings");
                     break;
                 case "lobby":
                     $player->sendForm(new LobbySettingsForm($lobbyPlayer));
@@ -35,7 +35,7 @@ class SettingsOverviewForm
         $form->setTitle(TextFormat::GREEN.TextFormat::BOLD."Your settings");
         $form->addButton(TextFormat::AQUA."Language"."\n".TextFormat::GRAY."Touch to select", -1, "", "language");
         $form->addButton(TextFormat::YELLOW."Lobby"."\n".TextFormat::GRAY."Touch to setting", -1, "", "lobby");
-        $form->addButton(TextFormat::GOLD."More Particle"."\n".TextFormat::GRAY."Touch to setting", -1, "", "more_particle");
+        $form->addButton(TextFormat::RED."Profile Settings"."\n".TextFormat::GRAY."Touch to setting", -1, "", "settings");
         $form->sendToPlayer($player);
     }
 }

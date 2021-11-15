@@ -6,7 +6,6 @@ namespace baubolp\ryzerbe\lobbycore\entity;
 
 use BauboLP\Cloud\CloudBridge;
 use ryzerbe\core\language\LanguageProvider;
-use BauboLP\NPCSystem\NPCSystem;
 use baubolp\ryzerbe\lobbycore\form\event\EventDescriptionForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
@@ -34,10 +33,10 @@ class EventPortalEntity extends Human implements ChunkLoader
     {
         $this->skin = new Skin(
             "EndPortalEntity",
-            SkinUtils::readImage(NPCSystem::PATH . "/portal.png"),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/portal.png"),
             "",
             "geometry.portal",
-            file_get_contents(NPCSystem::PATH . "/portal.json")
+            file_get_contents("/root/RyzerCloud/data/NPC/portal.json")
         );
         parent::__construct($level, $nbt);
     }

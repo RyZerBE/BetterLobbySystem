@@ -59,6 +59,9 @@ class ProfileOverviewForm
                 case "discord":
                     $player->getServer()->dispatchCommand($player, "verify");
                     break;
+                case "party":
+                    $player->getServer()->dispatchCommand($player, "p");
+                    break;
                 case "network_level":
                     $player->getServer()->dispatchCommand($player, "networklevel");
                     break;
@@ -73,6 +76,7 @@ class ProfileOverviewForm
         $form->addButton(TextFormat::GOLD."Stats"."\n".TextFormat::GRAY."Touch to open", 1, "https://media.discordapp.net/attachments/602115215307309066/905423812433170503/statistic.png?width=327&height=327", "stats");
         $form->addButton(TextFormat::LIGHT_PURPLE."Network Level"."\n".TextFormat::GRAY."Touch to open", 1, "https://media.discordapp.net/attachments/412217468287713282/881161840237879336/15_Top_Player_game_competition-512.png?width=410&height=410", "network_level");
         $form->addButton(TextFormat::GREEN."Friends"."\n".TextFormat::GRAY."Touch to open", 1, "https://media.discordapp.net/attachments/412217468287713282/881164230009684029/friends.png?width=160&height=160", "friends");
+        $form->addButton(TextFormat::DARK_PURPLE."Party"."\n".TextFormat::GRAY."Touch to open", 1, "https://media.discordapp.net/attachments/602115215307309066/909802469658337290/confetti-party-popper-paper-spark-512.png?width=410&height=410", "party");
         $form->addButton(TextFormat::YELLOW."Clans"."\n".TextFormat::GRAY."Touch to open", 1, "https://media.discordapp.net/attachments/412217468287713282/881162752280903750/War_Leagues.png?width=144&height=144", "clans");
         $form->addButton(TextFormat::RED."Settings"."\n".TextFormat::GRAY."Touch to open", 1, "https://media.discordapp.net/attachments/412217468287713282/881163563354443806/99-998662_customizable-services-gear-settings-icon-clipart.png?width=242&height=242", "settings");
         $form->sendToPlayer($player);
