@@ -94,6 +94,8 @@ class LobbyTask extends Task
             $npcEntity->setLookAtPlayer($data["lookToPlayer"]);
             $npcEntity->setNameTagAlwaysVisible();
             $npcEntity->namedtag->setString("warpName", $data["warp"]);
+            if($data["directConnect"] !== "N/A")
+            $npcEntity->namedtag->setString("directConnect", $data["directConnect"]);
             $npcEntity->spawnToAll();
             unset(Loader::$entityCheckQueue[$npcEntityId]);
         }

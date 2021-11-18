@@ -217,6 +217,7 @@ class NPCEntity extends Human implements ChunkLoader {
         Loader::$entityCheckQueue[$this->getId()]["interactClosure"] = $this->interactClosure;
         Loader::$entityCheckQueue[$this->getId()]["emotes"] = $this->emotes;
         Loader::$entityCheckQueue[$this->getId()]["warp"] = $this->namedtag->getString("warpName", "N/A");
+        Loader::$entityCheckQueue[$this->getId()]["directConnect"] = $this->namedtag->getString("directConnect", "N/A");
         Loader::$entityCheckQueue[$this->getId()]["lookToPlayer"] = $this->lookAtPlayer;
         Loader::$entityCheckQueue[$this->getId()]["nameTag"] = $this->getNameTag();
     }

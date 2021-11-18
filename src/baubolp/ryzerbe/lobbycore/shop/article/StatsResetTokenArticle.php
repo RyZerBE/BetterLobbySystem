@@ -46,6 +46,6 @@ class StatsResetTokenArticle extends ShopArticle {
 
         CoinProvider::removeCoins($player->getName(), $this->getPrice());
         Server::getInstance()->getCommandMap()->dispatch(new ConsoleCommandSender(), "statsreset add ".$player->getName()." 1");
-        $player->sendMessage(Ryzer::PREFIX.LanguageProvider::getMessageContainer("lobby-shop-article-bought", $player->getName(), ["#article" => $this->getName()]));
+        $player->sendMessage(RyZerBE::PREFIX.LanguageProvider::getMessageContainer("lobby-shop-article-bought", $player->getName(), ["#article" => $this->getName()]));
     }
 }

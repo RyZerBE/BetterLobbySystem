@@ -135,7 +135,7 @@ class Loader extends PluginBase
     {
         Loader::getInstance()->getServer()->getCommandMap()->registerAll("lobbycore", [
             new BuildCommand(),
-            new PrivateServerCommand(),
+          #  new PrivateServerCommand(),
             new FlyCommand(),
             new LottoCommand(),
             new DailyRewardCommand(),
@@ -213,7 +213,6 @@ class Loader extends PluginBase
             (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
         );
 
-        $npc = new NPCEntity(new Location(230.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $closure = (function(Player $player, NPCEntity $entity): void {
             $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
             if($lobbyPlayer === null) return;
@@ -239,11 +238,21 @@ class Loader extends PluginBase
             (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
             (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
         );
+        $npc = new NPCEntity(new Location(230.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::YELLOW."CWBW-Training", TextFormat::BLACK."♠ ".TextFormat::AQUA."REWRITE".TextFormat::BLACK." ♠");
+        $npc->updateTitle(TextFormat::YELLOW."CWBW-Training", TextFormat::BLACK."♠ ".TextFormat::AQUA."Practice CWBW Scenarios".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "cwtraining");
+        $npc->spawnToAll();
+
+        $npc = new NPCEntity(new Location(300.5, 69, 320.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->setLookAtPlayer(true);
+        $npc->updateTitle(TextFormat::YELLOW."Sort your inventories", "");
+        $npc->namedtag->setString("directConnect", "onlysortcwt");
         $npc->spawnToAll();
 
         $skin = new Skin(
@@ -258,7 +267,7 @@ class Loader extends PluginBase
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::DARK_AQUA."Flag".TextFormat::AQUA."Wars", TextFormat::BLACK."♠ ".TextFormat::GREEN."NEW".TextFormat::BLACK." ♠");
+        $npc->updateTitle(TextFormat::DARK_AQUA."Flag".TextFormat::AQUA."Wars", TextFormat::BLACK."♠ ".TextFormat::GREEN."NEW GAME".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "flagwars");
         $npc->spawnToAll();
 
@@ -301,7 +310,7 @@ class Loader extends PluginBase
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::WHITE."Training", TextFormat::BLACK."♠ ".TextFormat::YELLOW."NEW COOL MAPS".TextFormat::BLACK." ♠");
+        $npc->updateTitle(TextFormat::WHITE."Training", TextFormat::BLACK."♠ ".TextFormat::YELLOW."Practice and prove your skills".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("directConnect", "challenge");
         $npc->spawnToAll();
         $skin = new Skin(
@@ -315,7 +324,7 @@ class Loader extends PluginBase
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::DARK_AQUA."Bedwars", TextFormat::BLACK."♠ ".TextFormat::RED."REWRITE".TextFormat::BLACK." ♠");
+        $npc->updateTitle(TextFormat::DARK_AQUA."Bedwars", TextFormat::BLACK."♠ ".TextFormat::RED."Cool Maps & Cosmetics".TextFormat::BLACK." ♠");
         $npc->namedtag->setString("warpName", "bedwars");
         $npc->spawnToAll();
         $skin = new Skin(
@@ -364,7 +373,7 @@ class Loader extends PluginBase
         $npc->setInteractClosure($closure);
         $npc->setScale(1.5);
         $npc->updateTitle(TextFormat::DARK_PURPLE."Private Server", TextFormat::BLACK."♠ ".TextFormat::AQUA."PRIME RANK ".TextFormat::BLACK."♠");
-        $npc->spawnToAll();
+        //$npc->spawnToAll(); come soon
 
         $npc = new NPCEntity(new Location(221.5, 73, 306.5, 200, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
             uniqid(),
