@@ -4,13 +4,13 @@
 namespace baubolp\ryzerbe\lobbycore\command;
 
 
-use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\util\async\AsyncExecutor;
 
 class ResetNewsPopupCommand extends Command
 {

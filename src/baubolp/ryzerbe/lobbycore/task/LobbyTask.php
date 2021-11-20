@@ -3,7 +3,6 @@
 
 namespace baubolp\ryzerbe\lobbycore\task;
 
-use ryzerbe\core\player\RyZerPlayerProvider;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerAFKAnimation;
 use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
@@ -15,6 +14,7 @@ use matze\gommejar\session\SessionManager;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
+use ryzerbe\core\player\RyZerPlayerProvider;
 
 class LobbyTask extends Task
 {

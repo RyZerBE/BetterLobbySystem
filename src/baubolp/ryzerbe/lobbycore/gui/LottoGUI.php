@@ -5,8 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\gui;
 
 use BauboLP\Cloud\CloudBridge;
 use BauboLP\Cloud\Packets\PlayerMessagePacket;
-use ryzerbe\core\provider\CoinProvider;
-use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\LottoProvider;
@@ -17,6 +15,8 @@ use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\provider\CoinProvider;
 use function in_array;
 use function mt_rand;
 

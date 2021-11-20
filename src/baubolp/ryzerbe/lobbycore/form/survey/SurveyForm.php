@@ -4,12 +4,12 @@
 namespace baubolp\ryzerbe\lobbycore\form\survey;
 
 
-use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
 use jojoe77777\FormAPI\SimpleForm;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
 
 class SurveyForm
 {

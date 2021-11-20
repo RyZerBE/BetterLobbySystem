@@ -2,8 +2,6 @@
 
 namespace baubolp\ryzerbe\lobbycore\form\cosmetic;
 
-use ryzerbe\core\provider\CoinProvider;
-use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\cosmetic\category\CosmeticCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\Loader;
@@ -11,6 +9,8 @@ use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use jojoe77777\FormAPI\SimpleForm;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\provider\CoinProvider;
 
 class CosmeticsOverviewForm {
 

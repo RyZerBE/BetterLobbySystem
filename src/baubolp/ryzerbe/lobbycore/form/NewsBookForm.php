@@ -4,11 +4,11 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 
-use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use jojoe77777\FormAPI\SimpleForm;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\util\async\AsyncExecutor;
 
 class NewsBookForm
 {

@@ -4,7 +4,6 @@
 namespace baubolp\ryzerbe\lobbycore\form\survey;
 
 
-use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
 use baubolp\ryzerbe\lobbycore\util\survey\Survey;
 use jojoe77777\FormAPI\SimpleForm;
@@ -12,6 +11,7 @@ use mysqli;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\util\async\AsyncExecutor;
 
 class SurveyResultForm
 {

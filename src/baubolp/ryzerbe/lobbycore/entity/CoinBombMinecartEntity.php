@@ -2,12 +2,12 @@
 
 namespace baubolp\ryzerbe\lobbycore\entity;
 
-use ryzerbe\core\util\ItemUtils;
 use pocketmine\entity\Vehicle;
 use pocketmine\item\Item;
 use pocketmine\level\particle\ExplodeParticle;
 use pocketmine\level\sound\FizzSound;
 use pocketmine\math\Vector3;
+use ryzerbe\core\util\ItemUtils;
 use function lcg_value;
 
 class CoinBombMinecartEntity extends Vehicle {

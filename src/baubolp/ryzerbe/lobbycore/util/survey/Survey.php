@@ -4,13 +4,13 @@
 namespace baubolp\ryzerbe\lobbycore\util\survey;
 
 
-use ryzerbe\core\util\async\AsyncExecutor;
-use ryzerbe\core\provider\CoinProvider;
-use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use baubolp\ryzerbe\lobbycore\provider\SurveyProvider;
 use pocketmine\utils\Config;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\util\async\AsyncExecutor;
 
 class Survey
 {

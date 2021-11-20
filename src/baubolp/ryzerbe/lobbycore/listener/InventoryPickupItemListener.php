@@ -4,11 +4,11 @@
 namespace baubolp\ryzerbe\lobbycore\listener;
 
 
-use ryzerbe\core\provider\CoinProvider;
-use ryzerbe\core\util\ItemUtils;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\Listener;
 use pocketmine\Player;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\util\ItemUtils;
 
 class InventoryPickupItemListener implements Listener {
     public function pickup(InventoryPickupItemEvent $event): void {

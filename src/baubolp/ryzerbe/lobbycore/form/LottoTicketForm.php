@@ -4,9 +4,6 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 
-use ryzerbe\core\player\RyZerPlayerProvider;
-use ryzerbe\core\provider\CoinProvider;
-use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\gui\LottoGUI;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
@@ -16,6 +13,9 @@ use pocketmine\form\MenuForm;
 use pocketmine\form\MenuOption;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\provider\CoinProvider;
 
 class LottoTicketForm extends MenuForm
 {

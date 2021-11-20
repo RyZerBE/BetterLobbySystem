@@ -66,7 +66,7 @@ class NavigatorTeleportAnimation extends Animation
             $player->removeAllEffects();
             $player->teleport($this->warp->getLocation(), $player->getYaw(), 0);
             $player->playSound('firework.blast', 5, 1.0, [$player]);
-            $player->sendTitle($this->gameMode, TextFormat::WHITE."RyZer".TextFormat::RED."BE");
+            $player->sendTitle($this->gameMode, TextFormat::WHITE."RyZer".TextFormat::RED."BE", 0, 20, 0);
             $this->stop();
             return;
         }

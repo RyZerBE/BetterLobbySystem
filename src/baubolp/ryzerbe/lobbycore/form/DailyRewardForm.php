@@ -4,7 +4,6 @@
 namespace baubolp\ryzerbe\lobbycore\form;
 
 
-use ryzerbe\core\provider\CoinProvider;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use baubolp\ryzerbe\lobbycore\provider\LottoProvider;
 use pocketmine\form\FormIcon;
@@ -12,6 +11,7 @@ use pocketmine\form\MenuForm;
 use pocketmine\form\MenuOption;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\provider\CoinProvider;
 
 class DailyRewardForm extends MenuForm
 {

@@ -28,6 +28,7 @@ class PositionCommand extends Command {
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args): void{
         if(!$sender instanceof Player || !$this->testPermission($sender)) return;
+
         $sender->sendMessage(str_repeat("-", 20));
         $sender->sendMessage("X:" . round($sender->x, 1));
         $sender->sendMessage("Y:" . round($sender->y, 1));

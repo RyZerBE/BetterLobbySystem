@@ -10,12 +10,9 @@ use function floor;
 use function is_null;
 
 class PlayerAFKAnimation extends Animation {
+    private Player $player;
 
-    /** @var Player  */
-    private $player;
-
-    /** @var array  */
-    private $titles = [
+    private array $titles = [
         [
             "§fRyzer§cBE", "§f_yzer§cBE", "§f__zer§cBE", "§f___er§cBE", "§f____r§cBE", "§f_____§cBE", "§f_____§c_E",
             "§f_____§c__", "§f_____§c_E", "§f_____§cBE", "§f____r§cBE", "§f___er§cBE", "§f__zer§cBE", "§f_yzer§cBE", "§fRyzer§cBE",
@@ -75,7 +72,7 @@ class PlayerAFKAnimation extends Animation {
 
         if($this->getCurrentTick() % 10 !== 0) return;
         $title = $this->titles[$this->currentTitle][$this->currentTitleKey++];
-        $player->sendTitle($title);
+        $player->sendTitle($title, "", 0, 20, 0);
 
         if(!isset($this->titles[$this->currentTitle][$this->currentTitleKey])) {
             $this->currentTitle = array_rand($this->titles);

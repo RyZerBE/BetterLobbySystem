@@ -16,7 +16,6 @@ use baubolp\ryzerbe\lobbycore\command\FlyCommand;
 use baubolp\ryzerbe\lobbycore\command\HypeTrainCommand;
 use baubolp\ryzerbe\lobbycore\command\LottoCommand;
 use baubolp\ryzerbe\lobbycore\command\PositionCommand;
-use baubolp\ryzerbe\lobbycore\command\PrivateServerCommand;
 use baubolp\ryzerbe\lobbycore\command\ResetNewsPopupCommand;
 use baubolp\ryzerbe\lobbycore\command\RotateNPCCommand;
 use baubolp\ryzerbe\lobbycore\command\RunningClanWarsCommand;
@@ -34,29 +33,6 @@ use baubolp\ryzerbe\lobbycore\entity\ItemRainItemEntity;
 use baubolp\ryzerbe\lobbycore\entity\NPCEntity;
 use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\form\NewsBookForm;
-use baubolp\ryzerbe\lobbycore\listener\BlockBreakListener;
-use baubolp\ryzerbe\lobbycore\listener\BlockFormListener;
-use baubolp\ryzerbe\lobbycore\listener\BlockGrowListener;
-use baubolp\ryzerbe\lobbycore\listener\BlockPlaceListener;
-use baubolp\ryzerbe\lobbycore\listener\BlockUpdateListener;
-use baubolp\ryzerbe\lobbycore\listener\CloudPacketReceiveListener;
-use baubolp\ryzerbe\lobbycore\listener\CoinUpdateListener;
-use baubolp\ryzerbe\lobbycore\listener\EntityDamageListener;
-use baubolp\ryzerbe\lobbycore\listener\InventoryPickupItemListener;
-use baubolp\ryzerbe\lobbycore\listener\InventoryTransactionListener;
-use baubolp\ryzerbe\lobbycore\listener\LeavesDecayListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerDropItemListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerExhaustListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerInteractListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerJoinListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerJoinNetworkListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerLevelProgressListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerLevelUpListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerMoveListener;
-use baubolp\ryzerbe\lobbycore\listener\PlayerQuitListener;
-use baubolp\ryzerbe\lobbycore\listener\ProjectileHitBlockListener;
-use baubolp\ryzerbe\lobbycore\listener\ProjectileHitEntityListener;
-use baubolp\ryzerbe\lobbycore\listener\RyZerPlayerAuthListener;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
@@ -80,6 +56,7 @@ use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use ryzerbe\core\util\async\AsyncExecutor;
 use ryzerbe\core\util\emote\EmoteIds;
+use ryzerbe\core\util\loader\ListenerDirectoryLoader;
 use function explode;
 use function uniqid;
 
@@ -100,7 +77,7 @@ class Loader extends PluginBase
     {
         self::$instance = $this;
         $this->registerCommands();
-        $this->registerListeners();
+        ListenerDirectoryLoader::load($this, $this->getFile(), __DIR__ . "/listener/");
         $this->registerEntities();
         $this->startTasks();
         self::createMySQLTables();
@@ -152,38 +129,6 @@ class Loader extends PluginBase
             new ShopCommand(),
             new RotateNPCCommand()
         ]);
-    }
-
-    public function registerListeners(): void
-    {
-        $listeners = [
-            new PlayerJoinNetworkListener(),
-            new PlayerJoinListener(),
-            new PlayerQuitListener(),
-            new InventoryTransactionListener(),
-            new BlockPlaceListener(),
-            new BlockBreakListener(),
-            new PlayerDropItemListener(),
-            new PlayerExhaustListener(),
-            new EntityDamageListener(),
-            new BlockGrowListener(),
-            new BlockUpdateListener(),
-            new BlockFormListener(),
-            new LeavesDecayListener(),
-            new PlayerInteractListener(),
-            new InventoryPickupItemListener(),
-            new PlayerMoveListener(),
-            new RyZerPlayerAuthListener(),
-            new ProjectileHitBlockListener(),
-            new ProjectileHitEntityListener(),
-            new PlayerLevelUpListener(),
-            new PlayerLevelProgressListener(),
-            new CoinUpdateListener(),
-            new CloudPacketReceiveListener()
-        ];
-
-        foreach ($listeners as $listener)
-            $this->getServer()->getPluginManager()->registerEvents($listener, $this);
     }
 
     private function loadNPCs(): void {

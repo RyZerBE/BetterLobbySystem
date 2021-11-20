@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\entity;
 
 
 use BauboLP\Cloud\CloudBridge;
-use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\form\event\EventDescriptionForm;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
@@ -23,6 +22,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
 
 class EventPortalEntity extends Human implements ChunkLoader
 {

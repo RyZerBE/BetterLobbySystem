@@ -4,10 +4,10 @@
 namespace baubolp\ryzerbe\lobbycore\provider;
 
 
-use ryzerbe\core\util\async\AsyncExecutor;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
 use pocketmine\item\Item;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\util\async\AsyncExecutor;
 
 class LottoProvider
 {

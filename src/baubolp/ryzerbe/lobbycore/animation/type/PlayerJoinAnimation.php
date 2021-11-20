@@ -54,7 +54,7 @@ class PlayerJoinAnimation extends Animation
                 return;
             }
 
-            $player->sendTitle($title, TextFormat::YELLOW . "Welcome");
+            $player->sendTitle($title, TextFormat::YELLOW . "Welcome", 0, 20, 0);
             $player->playSound("note.bass", 5.0, 2.0, [$player]);
         }else
             $this->stop();

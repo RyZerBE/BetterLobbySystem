@@ -4,12 +4,6 @@
 namespace baubolp\ryzerbe\lobbycore\player;
 
 
-use ryzerbe\core\player\RyZerPlayer;
-use ryzerbe\core\player\RyZerPlayerProvider;
-use ryzerbe\core\util\async\AsyncExecutor;
-use ryzerbe\core\provider\CoinProvider;
-use ryzerbe\core\language\LanguageProvider;
-use ryzerbe\core\util\LocationUtils;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerJoinAnimation;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
@@ -23,6 +17,12 @@ use mysqli;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\player\RyZerPlayer;
+use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\provider\CoinProvider;
+use ryzerbe\core\util\async\AsyncExecutor;
+use ryzerbe\core\util\LocationUtils;
 use function array_map;
 use function array_search;
 use function floor;

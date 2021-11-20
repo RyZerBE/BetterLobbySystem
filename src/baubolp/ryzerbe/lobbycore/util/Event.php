@@ -4,10 +4,10 @@
 namespace baubolp\ryzerbe\lobbycore\util;
 
 
-use ryzerbe\core\language\LanguageProvider;
 use DateTime;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
 
 class Event
 {

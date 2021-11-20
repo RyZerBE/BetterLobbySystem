@@ -4,12 +4,12 @@
 namespace baubolp\ryzerbe\lobbycore\shop\article;
 
 
-use ryzerbe\core\player\RyZerPlayerProvider;
-use ryzerbe\core\provider\CoinProvider;
-use ryzerbe\core\language\LanguageProvider;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\shop\ShopArticle;
 use pocketmine\Player;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\provider\CoinProvider;
 use ryzerbe\core\rank\RankManager;
 
 class VIPRank extends ShopArticle
