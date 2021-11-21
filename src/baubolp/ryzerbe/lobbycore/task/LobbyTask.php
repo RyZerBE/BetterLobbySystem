@@ -31,7 +31,7 @@ class LobbyTask extends Task {
                 continue;
             }
             if(!$lobbyPlayer->enabledFlyMode() && !$player->getAllowFlight()){
-                if($lobbyPlayer->getPlayer()->isOnGround() && $lobbyPlayer->isDoublejumpEnabled()){
+                if($lobbyPlayer->getPlayer()->isOnGround() && $lobbyPlayer->isDoubleJumpEnabled()){
                     $lobbyPlayer->getPlayer()->setAllowFlight(true);
                 }
             }

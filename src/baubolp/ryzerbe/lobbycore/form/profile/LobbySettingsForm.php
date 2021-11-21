@@ -15,7 +15,7 @@ class LobbySettingsForm extends CustomForm {
             new Toggle("joinanimation", TextFormat::GREEN . "▷ " . TextFormat::RED . "Join-Animation", $lobbyPlayer->isJoinAnimationEnabled()),
             new Toggle("afkanimation", TextFormat::GREEN . "▷ " . TextFormat::RED . "AFK-Animation", $lobbyPlayer->isAFKAnimationEnabled()),
             new Toggle("navigatoranimation", TextFormat::GREEN . "▷ " . TextFormat::RED . "Navigator-Animation", $lobbyPlayer->isNavigatorAnimationEnabled()),
-            new Toggle("doublejump", TextFormat::GREEN . "▷ " . TextFormat::RED . "Doublejump", $lobbyPlayer->isDoublejumpEnabled()),
+            new Toggle("doublejump", TextFormat::GREEN . "▷ " . TextFormat::RED . "Doublejump", $lobbyPlayer->isDoubleJumpEnabled()),
             new Toggle("spawn", TextFormat::GREEN . "▷ " . TextFormat::RED . "Spawn on your last position in the lobby", $lobbyPlayer->isLastPositionSpawnEnabled()),
         ];
         parent::__construct(TextFormat::YELLOW . TextFormat::BOLD . "Lobby " . TextFormat::RED . "Settings", $elements, function(Player $player, CustomFormResponse $response) use ($lobbyPlayer): void{

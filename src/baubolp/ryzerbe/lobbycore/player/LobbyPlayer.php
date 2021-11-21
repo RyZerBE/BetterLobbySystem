@@ -222,7 +222,7 @@ class LobbyPlayer {
                 if($loadedData["news"] && NewsBookForm::$news != null){
                     NewsBookForm::open($player);
                 }
-                $player->setAllowFlight($lobbyPlayer->isDoublejumpEnabled());
+                $player->setAllowFlight($lobbyPlayer->isDoubleJumpEnabled());
                 $lobbyPlayer->updateScoreboard();
                 ItemProvider::giveLobbyItems($player);
                 if(in_array($player->getName(), PlayerJoinNetworkListener::$willPlay)){
@@ -235,23 +235,14 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @return Player
-     */
     public function getPlayer(): Player{
         return $this->player;
     }
 
-    /**
-     * @param int $tickets
-     */
     public function setTickets(int $tickets): void{
         $this->tickets = $tickets;
     }
 
-    /**
-     * @param mixed $dailyCoinBombTime
-     */
     public function setDailyCoinBombTime($dailyCoinBombTime): void{
         $this->dailyCoinBombTime = $dailyCoinBombTime;
         $playerName = $this->getPlayer()->getName();
@@ -260,9 +251,6 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @param mixed $dailyCoinTime
-     */
     public function setDailyCoinTime($dailyCoinTime): void{
         $this->dailyCoinTime = $dailyCoinTime;
         $playerName = $this->getPlayer()->getName();
@@ -271,9 +259,6 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @param mixed $dailyHypeTrainTime
-     */
     public function setDailyHypeTrainTime($dailyHypeTrainTime): void{
         $this->dailyHypeTrainTime = $dailyHypeTrainTime;
         $playerName = $this->getPlayer()->getName();
@@ -282,9 +267,6 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @param mixed $dailyLottoTicketTime
-     */
     public function setDailyLottoTicketTime($dailyLottoTicketTime): void{
         $this->dailyLottoTicketTime = $dailyLottoTicketTime;
         $playerName = $this->getPlayer()->getName();
@@ -293,9 +275,6 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @param mixed $dailyXPTime
-     */
     public function setDailyXPTime($dailyXPTime): void{
         $this->dailyXPTime = $dailyXPTime;
         $playerName = $this->getPlayer()->getName();
@@ -304,30 +283,18 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @param mixed $loginStreak
-     */
     public function setLoginStreak($loginStreak): void{
         $this->loginStreak = $loginStreak;
     }
 
-    /**
-     * @param mixed $lastLoginStreak
-     */
     public function setLastLoginStreak($lastLoginStreak): void{
         $this->lastLoginStreak = $lastLoginStreak;
     }
 
-    /**
-     * @param mixed $nextLoginStreak
-     */
     public function setNextLoginStreak($nextLoginStreak): void{
         $this->nextLoginStreak = $nextLoginStreak;
     }
 
-    /**
-     * @param int $coinBombs
-     */
     public function setCoinBombs(int $coinBombs): void{
         $this->coinBombs = $coinBombs;
         $playerName = $this->getPlayer()->getName();
@@ -336,9 +303,6 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @param int $hypeTrains
-     */
     public function setHypeTrains(int $hypeTrains): void{
         $this->hypeTrains = $hypeTrains;
         $playerName = $this->getPlayer()->getName();
@@ -347,65 +311,38 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @param bool $joinAnimation
-     */
     public function setJoinAnimation(bool $joinAnimation): void{
         $this->joinAnimation = $joinAnimation;
     }
 
-    /**
-     * @param bool $afkAnimation
-     */
     public function setAfkAnimation(bool $afkAnimation): void{
         $this->afkAnimation = $afkAnimation;
     }
 
-    /**
-     * @param bool $navigatorAnimation
-     */
     public function setNavigatorAnimation(bool $navigatorAnimation): void{
         $this->navigatorAnimation = $navigatorAnimation;
     }
 
-    /**
-     * @param bool $doubleJump
-     */
     public function setDoubleJump(bool $doubleJump): void{
         $this->doubleJump = $doubleJump;
     }
 
-    /**
-     * @param bool $lastSpawnPosition
-     */
     public function setLastSpawnPosition(bool $lastSpawnPosition): void{
         $this->lastSpawnPosition = $lastSpawnPosition;
     }
 
-    /**
-     * @param array $alreadyVotedSurveys
-     */
     public function setAlreadyVotedSurveys(array $alreadyVotedSurveys): void{
         $this->alreadyVotedSurveys = $alreadyVotedSurveys;
     }
 
-    /**
-     * @param array $activeCosmetics
-     */
     public function setActiveCosmetics(array $activeCosmetics): void{
         $this->activeCosmetics = $activeCosmetics;
     }
 
-    /**
-     * @param array $cosmetics
-     */
     public function setCosmetics(array $cosmetics): void{
         $this->cosmetics = $cosmetics;
     }
 
-    /**
-     * @return bool
-     */
     public function isLastPositionSpawnEnabled(): bool{
         return $this->lastSpawnPosition;
     }
@@ -437,23 +374,14 @@ class LobbyPlayer {
         }
     }
 
-    /**
-     * @return mixed
-     */
     public function getLastLoginStreak(){
         return $this->lastLoginStreak;
     }
 
-    /**
-     * @return mixed
-     */
     public function getNextLoginStreak(){
         return $this->nextLoginStreak;
     }
 
-    /**
-     * @return mixed
-     */
     public function getLoginStreak(){
         return $this->loginStreak;
     }
@@ -474,10 +402,7 @@ class LobbyPlayer {
         });
     }
 
-    /**
-     * @return bool
-     */
-    public function isDoublejumpEnabled(): bool{
+    public function isDoubleJumpEnabled(): bool{
         return $this->doubleJump;
     }
 
