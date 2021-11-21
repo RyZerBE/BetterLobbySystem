@@ -60,13 +60,11 @@ use function explode;
 use function uniqid;
 
 class Loader extends PluginBase {
-    const PREFIX = TextFormat::YELLOW . TextFormat::BOLD . "Lobby " . TextFormat::RESET;
-    /** @var array */
-    public static $entityCheckQueue = [];
-    /** @var bool */
-    public static $jumpAndRunEnabled = false;
-    /** @var self */
-    private static $instance = null;
+    public const PREFIX = TextFormat::YELLOW . TextFormat::BOLD . "Lobby " . TextFormat::RESET;
+
+    public static array $entityCheckQueue = [];
+    public static bool $jumpAndRunEnabled = false;
+    private static ?Loader $instance = null;
 
     public function onEnable(){
         self::$instance = $this;
@@ -113,9 +111,6 @@ class Loader extends PluginBase {
         ]);
     }
 
-    /**
-     * @return Loader
-     */
     public static function getInstance(): ?Loader{
         return self::$instance;
     }
@@ -211,22 +206,12 @@ class Loader extends PluginBase {
             "lobby.event",
             "lobby.position",
         ];
-        foreach($permissions as $permission) PermissionManager::getInstance()->addPermission(new Permission($permission, "lobby permission"));
+        foreach($permissions as $permission){
+            PermissionManager::getInstance()->addPermission(new Permission($permission, "lobby permission"));
+        }
     }
 
     private function loadNPCs(): void{
-        /*
-         * Available Positions
-         *
-         * 230.5, 72, 272.5, 0, 0 //Used
-         * 224.5, 72, 272.5, 0, 0 //Used
-         *
-         * 234.5, 71, 274.5, 0, 0 //Used
-         * 238.5, 71, 273.5, 0, 0 //Used
-         * 219.5, 71, 274.5, 0, 0 //Used
-         * 216.5, 71, 271.5, 0, 0 //Used
-         */
-        // GAME NPC`s \\
         $EmoteIds = [
             EmoteIds::WAVE,
             EmoteIds::THE_WOODPUNCH,
@@ -269,6 +254,8 @@ class Loader extends PluginBase {
                 $player->teleport($warp->getLocation());
             }
         });
+
+        // CWBW-Training
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/cwbwtraining.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(230.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
@@ -277,6 +264,8 @@ class Loader extends PluginBase {
         $npc->updateTitle(TextFormat::YELLOW . "CWBW-Training", TextFormat::BLACK . "♠ " . TextFormat::AQUA . "Practice CWBW Scenarios" . TextFormat::BLACK . " ♠");
         $npc->namedtag->setString("warpName", "cwtraining");
         $npc->spawnToAll();
+
+        // CW-Training Inventory Sort
         $npc = new NPCEntity(new Location(300.5, 69, 320.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
@@ -285,6 +274,8 @@ class Loader extends PluginBase {
         $npc->updateTitle(TextFormat::YELLOW . "Sort your inventories", "");
         $npc->namedtag->setString("directConnect", "onlysortcwt");
         $npc->spawnToAll();
+
+        // FlagWars
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/flagwars.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(224.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
@@ -293,6 +284,8 @@ class Loader extends PluginBase {
         $npc->updateTitle(TextFormat::DARK_AQUA . "Flag" . TextFormat::AQUA . "Wars", TextFormat::BLACK . "♠ " . TextFormat::GREEN . "NEW GAME" . TextFormat::BLACK . " ♠");
         $npc->namedtag->setString("warpName", "flagwars");
         $npc->spawnToAll();
+
+        // "Coming Soon"
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/questionmark.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
@@ -300,6 +293,8 @@ class Loader extends PluginBase {
         $npc->setEmotes($EmoteIds);
         $npc->updateTitle(TextFormat::WHITE . TextFormat::BOLD . "???", "");
         $npc->spawnToAll();
+
+        // FFA
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/ffa.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(238.5, 71, 273.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
@@ -308,6 +303,8 @@ class Loader extends PluginBase {
         $npc->updateTitle(TextFormat::GOLD . "FFA", TextFormat::BLACK . "♠ " . TextFormat::GREEN . "FFA & BuildFFA" . TextFormat::BLACK . " ♠");
         $npc->namedtag->setString("warpName", "ffa");
         $npc->spawnToAll();
+
+        // Training
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/training.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
@@ -316,6 +313,8 @@ class Loader extends PluginBase {
         $npc->updateTitle(TextFormat::WHITE . "Training", TextFormat::BLACK . "♠ " . TextFormat::YELLOW . "Practice and prove your skills" . TextFormat::BLACK . " ♠");
         $npc->namedtag->setString("directConnect", "TrainingLobby");
         $npc->spawnToAll();
+
+        // BedWars
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/bedwars.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
@@ -324,6 +323,8 @@ class Loader extends PluginBase {
         $npc->updateTitle(TextFormat::DARK_AQUA . "Bedwars", TextFormat::BLACK . "♠ " . TextFormat::RED . "Cool Maps & Cosmetics" . TextFormat::BLACK . " ♠");
         $npc->namedtag->setString("warpName", "bedwars");
         $npc->spawnToAll();
+
+        // JumpAndRun
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/jumpandrun.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(242.5, 70, 286.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
@@ -332,7 +333,8 @@ class Loader extends PluginBase {
         $npc->updateTitle(TextFormat::GOLD . "Jump and Run", TextFormat::BLACK . "♠ " . TextFormat::WHITE . "WITH STATS" . TextFormat::BLACK . " ♠");
         $npc->namedtag->setString("warpName", "JaR");
         $npc->spawnToAll();
-        // GEOMETRIES \\
+
+        // Coin Shop
         $npc = new NPCEntity(new Location(213.5, 70, 291.5, 200, 0, Server::getInstance()->getDefaultLevel()), new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/RankShop.png"), "", "geometry.Mobs.Zombie", file_get_contents("/root/RyzerCloud/data/NPC/rankshop_geometry.json")));
         $closure = function(Player $player): void{
             $player->getServer()->dispatchCommand($player, "shop");
@@ -342,6 +344,8 @@ class Loader extends PluginBase {
         $npc->setScale(1.5);
         $npc->updateTitle(TextFormat::GOLD . "Coinshop", "");
         $npc->spawnToAll();
+
+        // Private Server
         $npc = new NPCEntity(new Location(235.5, 73, 306.5, 150, 0, Server::getInstance()->getDefaultLevel()), new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/PServer.png"), "", "geometry.normal1", file_get_contents("/root/RyzerCloud/data/NPC/pserver_geometry.json")));
         $closure = function(Player $player): void{
             $player->getServer()->dispatchCommand($player, "ps");
@@ -351,6 +355,8 @@ class Loader extends PluginBase {
         $npc->setScale(1.5);
         $npc->updateTitle(TextFormat::DARK_PURPLE . "Private Server", TextFormat::BLACK . "♠ " . TextFormat::AQUA . "PRIME RANK " . TextFormat::BLACK . "♠");
         //$npc->spawnToAll(); come soon
+
+        // Lotto
         $npc = new NPCEntity(new Location(221.5, 73, 306.5, 200, 0, Server::getInstance()->getDefaultLevel()), new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/Lotto.png"), "", "geometry.normal1", file_get_contents("/root/RyzerCloud/data/NPC/lotto_geometry.json")));
         $closure = function(Player $player): void{
             $player->getServer()->dispatchCommand($player, "lotto");
@@ -360,7 +366,9 @@ class Loader extends PluginBase {
         $npc->setScale(1.5);
         $npc->updateTitle(TextFormat::YELLOW . "Lotto", TextFormat::BLACK . "♠ " . TextFormat::GOLD . "PLAY WITH YOUR COINS" . TextFormat::BLACK . "♠");
         $npc->spawnToAll();
-        // OTHER NPC`s \\
+
+
+        // Daily Reward
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/dailyrewards.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(231.5, 73, 300.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $closure = function(Player $player): void{
@@ -371,6 +379,8 @@ class Loader extends PluginBase {
         $npc->setEmotes($EmoteIds);
         $npc->updateTitle(TextFormat::AQUA . "Daily Rewards", TextFormat::BLACK . "♠ " . TextFormat::RED . "FOR YOU" . TextFormat::BLACK . " ♠");
         $npc->spawnToAll();
+
+        // Survey
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/baubo.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(225.5, 73, 300.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $closure = function(Player $player): void{
