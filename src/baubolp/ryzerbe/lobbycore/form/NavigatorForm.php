@@ -15,16 +15,12 @@ use function array_keys;
 use function in_array;
 
 class NavigatorForm {
-    /** @var array */
-    public static $games = [];
-    /** @var array */
-    public static array $games_order = [];
+    public static array $games = [];
 
     public static function open(Player $player){
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
         if($lobbyPlayer === null) return;
-        $playername = $player->getName();
-        $games = self::$games_order[$playername] ?? array_keys(self::$games);
+        $games = array_keys(self::$games);
         $form = new SimpleForm(function(Player $player, $data) use ($lobbyPlayer, $games): void{
             if($data === null) return;
             $data = explode(":", $data);
@@ -38,11 +34,6 @@ class NavigatorForm {
                 BungeeAPI::transferPlayer($player->getName(), $data[0]);
                 return;
             }
-            $games__ = [$data[1]];
-            foreach($games as $game){
-                if(!in_array($game, $games__)) $games__[] = $game;
-            }
-            self::$games_order[$player->getName()] = $games__;
             if($lobbyPlayer->isNavigatorAnimationEnabled()){
                 AnimationProvider::addActiveAnimation(new NavigatorTeleportAnimation($player, $warp, $data[1]));
             }
