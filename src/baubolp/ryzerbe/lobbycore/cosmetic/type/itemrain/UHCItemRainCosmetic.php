@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\type\itemrain;
 use pocketmine\item\Item;
 
 class UHCItemRainCosmetic extends ItemRainCosmetic {
-
     /**
      * @return string
      */
@@ -37,7 +36,7 @@ class UHCItemRainCosmetic extends ItemRainCosmetic {
             Item::get(Item::GOLDEN_APPLE),
             Item::get(Item::ENCHANTED_GOLDEN_APPLE),
             Item::get(Item::ENCHANTED_BOOK),
-            Item::get(Item::ANVIL)
+            Item::get(Item::ANVIL),
         ];
     }
 }

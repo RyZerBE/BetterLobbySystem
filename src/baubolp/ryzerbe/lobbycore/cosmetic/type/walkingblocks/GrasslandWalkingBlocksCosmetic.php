@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\type\walkingblocks;
 use pocketmine\block\Block;
 
 class GrasslandWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
-
     /**
      * @return string
      */
@@ -33,7 +32,7 @@ class GrasslandWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
     public function getBlocks(): array{
         return [
             Block::get(Block::GRASS),
-            Block::get(Block::DIRT, 1)
+            Block::get(Block::DIRT, 1),
         ];
     }
 
@@ -42,7 +41,7 @@ class GrasslandWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
      */
     public function getSecondBlockLayer(): array{
         return [
-            Block::get(Block::TALLGRASS)
+            Block::get(Block::TALLGRASS),
         ];
     }
 }

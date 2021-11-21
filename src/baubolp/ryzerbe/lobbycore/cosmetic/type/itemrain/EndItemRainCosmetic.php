@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\type\itemrain;
 use pocketmine\item\Item;
 
 class EndItemRainCosmetic extends ItemRainCosmetic {
-
     /**
      * @return string
      */
@@ -34,7 +33,7 @@ class EndItemRainCosmetic extends ItemRainCosmetic {
         return [
             Item::get(Item::END_ROD),
             Item::get(Item::DRAGON_EGG),
-            Item::get(Item::DRAGON_BREATH)
+            Item::get(Item::DRAGON_BREATH),
         ];
     }
 }

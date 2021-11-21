@@ -11,16 +11,15 @@ use baubolp\ryzerbe\lobbycore\cosmetic\type\itemrain\NetherItemRainCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\itemrain\UHCItemRainCosmetic;
 
 class ItemRainCategory extends CosmeticCategory {
-
     public function loadCosmetics(): void{
         $cosmetics = [
             new BedWarsItemRainCosmetic(),
             new EndItemRainCosmetic(),
             new UHCItemRainCosmetic(),
             new AquaticItemRainCosmetic(),
-            new NetherItemRainCosmetic()
+            new NetherItemRainCosmetic(),
         ];
-        foreach($cosmetics as $cosmetic) {
+        foreach($cosmetics as $cosmetic){
             $this->registerCosmetic($cosmetic);
         }
     }

@@ -10,7 +10,6 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class RotateNPCCommand extends Command {
-
     /**
      * RotateNPCCommand constructor.
      */
@@ -27,14 +26,13 @@ class RotateNPCCommand extends Command {
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args): void{
         if(!$sender instanceof Player || !$this->testPermission($sender)) return;
-
-        if(!isset($args[0])) {
-            $sender->sendMessage(Loader::PREFIX.TextFormat::RED."/rotatenpc [Yaw] [Pitch = 0]");
+        if(!isset($args[0])){
+            $sender->sendMessage(Loader::PREFIX . TextFormat::RED . "/rotatenpc [Yaw] [Pitch = 0]");
             return;
         }
         $entity = $sender->getLevel()->getNearestEntity($sender, 5, NPCEntity::class);
-        if($entity === null) {
-            $sender->sendMessage(Loader::PREFIX.TextFormat::RED."Es konnte kein NPC gefunden werden.");
+        if($entity === null){
+            $sender->sendMessage(Loader::PREFIX . TextFormat::RED . "Es konnte kein NPC gefunden werden.");
             return;
         }
         $yaw = (float)$args[0];

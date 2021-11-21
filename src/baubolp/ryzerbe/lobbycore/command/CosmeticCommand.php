@@ -8,7 +8,6 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 
 class CosmeticCommand extends Command {
-
     /**
      * CosmeticCommand constructor.
      */

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace baubolp\ryzerbe\lobbycore\listener;
-
 
 use BauboLP\Cloud\Events\PlayerJoinNetworkEvent;
 use pocketmine\event\Listener;

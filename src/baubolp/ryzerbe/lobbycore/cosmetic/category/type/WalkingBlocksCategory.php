@@ -12,7 +12,6 @@ use baubolp\ryzerbe\lobbycore\cosmetic\type\walkingblocks\TheEndWalkingBlocksCos
 use baubolp\ryzerbe\lobbycore\cosmetic\type\walkingblocks\WoolWalkingBlocksCosmetic;
 
 class WalkingBlocksCategory extends CosmeticCategory {
-
     public function loadCosmetics(): void{
         $cosmetics = [
             new GrasslandWalkingBlocksCosmetic(),
@@ -20,9 +19,9 @@ class WalkingBlocksCategory extends CosmeticCategory {
             new RichRichWalkingBlocksCosmetic(),
             new NetherWalkingsBlocksCosmetic(),
             new DesertWalkingBlocksCosmetic(),
-            new WoolWalkingBlocksCosmetic()
+            new WoolWalkingBlocksCosmetic(),
         ];
-        foreach($cosmetics as $cosmetic) {
+        foreach($cosmetics as $cosmetic){
             $this->registerCosmetic($cosmetic);
         }
     }

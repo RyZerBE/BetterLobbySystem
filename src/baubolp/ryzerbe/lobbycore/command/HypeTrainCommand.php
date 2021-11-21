@@ -13,7 +13,6 @@ use ryzerbe\core\language\LanguageProvider;
 use ryzerbe\core\util\ItemUtils;
 
 class HypeTrainCommand extends Command {
-
     /**
      * HypeTrainCommand constructor.
      */
@@ -31,16 +30,13 @@ class HypeTrainCommand extends Command {
     public function execute(CommandSender $sender, string $commandLabel, array $args): void{
         if(!$sender instanceof Player) return;
         if(!$this->testPermission($sender)) return;
-
         $player = LobbyPlayerCache::getLobbyPlayer($sender);
         if($player === null) return;
-
-        if($player->getHypeTrains() <= 0) {
-            $sender->sendMessage(Loader::PREFIX.LanguageProvider::getMessageContainer("lobby-no-hype-trains", $sender->getName()));
+        if($player->getHypeTrains() <= 0){
+            $sender->sendMessage(Loader::PREFIX . LanguageProvider::getMessageContainer("lobby-no-hype-trains", $sender->getName()));
             return;
         }
-
-        $item = Item::get(Item::MINECART)->setCustomName(TextFormat::GOLD."Hype Train");
+        $item = Item::get(Item::MINECART)->setCustomName(TextFormat::GOLD . "Hype Train");
         ItemUtils::addItemTag($item, "tag_hypetrain", "lobby_item");
         $sender->getInventory()->addItem($item);
         $sender->playSound("random.orb", 5.0, 1.0, [$sender]);

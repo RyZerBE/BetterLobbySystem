@@ -5,16 +5,16 @@ namespace baubolp\ryzerbe\lobbycore\util\cache;
 use pocketmine\math\Vector3;
 
 class HypeTrainCacheEntry {
-
-    /** @var float  */
+    /** @var float */
     private $yaw;
-    /** @var float  */
+    /** @var float */
     private $pitch;
-    /** @var Vector3  */
+    /** @var Vector3 */
     private $vector3;
 
     /**
      * HypeTrainCacheEntry constructor.
+     *
      * @param float $yaw
      * @param float $pitch
      * @param Vector3 $vector3
@@ -51,7 +51,7 @@ class HypeTrainCacheEntry {
      * @param float $pitch
      * @param Vector3 $vector3
      */
-    public function setComponents(float $yaw, float $pitch, Vector3 $vector3): void {
+    public function setComponents(float $yaw, float $pitch, Vector3 $vector3): void{
         $this->yaw = $yaw;
         $this->pitch = $pitch;
         $this->vector3 = $vector3;

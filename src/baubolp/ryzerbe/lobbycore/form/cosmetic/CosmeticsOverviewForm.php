@@ -13,78 +13,90 @@ use ryzerbe\core\language\LanguageProvider;
 use ryzerbe\core\provider\CoinProvider;
 
 class CosmeticsOverviewForm {
-
     /**
      * @param Player $player
      * @param CosmeticCategory $category
      */
-    public static function open(Player $player, CosmeticCategory $category): void {
+    public static function open(Player $player, CosmeticCategory $category): void{
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
-        $form = new SimpleForm(function(Player $player, $data) use ($lobbyPlayer): void {
+        $form = new SimpleForm(function(Player $player, $data) use ($lobbyPlayer): void{
             if($data === null) return;
-            switch($data) {
-                case "back": {
+            switch($data){
+                case "back":
+                {
                     CosmeticsCategoriesForm::open($player);
                     break;
                 }
-                default: {
+                default:
+                {
                     $cosmetic = CosmeticManager::getInstance()->getCosmetic($data);
                     if($cosmetic === null) return;
                     //Mhhhhh - Not that good
-                    if($lobbyPlayer->isCosmeticActivated($cosmetic)) {
+                    if($lobbyPlayer->isCosmeticActivated($cosmetic)){
                         $lobbyPlayer->deactivateCosmetic($cosmetic);
-                        if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS)
+                        if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS){
                             $lobbyPlayer->reloadInventory();
-                    } elseif($lobbyPlayer->isCosmeticUnlocked($cosmetic)) {
+                        }
+                    }
+                    elseif($lobbyPlayer->isCosmeticUnlocked($cosmetic)){
                         $lobbyPlayer->activateCosmetic($cosmetic);
-                        if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS)
+                        if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS){
                             $lobbyPlayer->reloadInventory();
-                    } else {
+                        }
+                    }
+                    else{
                         $rbePlayer = $lobbyPlayer->asRyZerPlayer();
-                        if($rbePlayer->getCoins() < $cosmetic->getPrice()) {
-                            $form = new SimpleForm(function (Player $player, $data):void{});
-                            $form->setTitle(TextFormat::RED."Oh man..");
+                        if($rbePlayer->getCoins() < $cosmetic->getPrice()){
+                            $form = new SimpleForm(function(Player $player, $data): void{
+                            });
+                            $form->setTitle(TextFormat::RED . "Oh man..");
                             $form->setContent(LanguageProvider::getMessageContainer("not-enough-coins", $player->getName()));
-                            $form->addButton(TextFormat::RED.TextFormat::BOLD."✘ CANNOT BUY");
+                            $form->addButton(TextFormat::RED . TextFormat::BOLD . "✘ CANNOT BUY");
                             $form->sendToPlayer($player);
                             CosmeticsCategoriesForm::open($player);
                             return;
                         }
-
-                        $form = new SimpleForm(function (Player $player, $data) use ($cosmetic, $lobbyPlayer):void {
+                        $form = new SimpleForm(function(Player $player, $data) use ($cosmetic, $lobbyPlayer): void{
                             if($data === null) return;
-
-                            switch ($data) {
+                            switch($data){
                                 case "buy":
-                                    if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS)
+                                    if($cosmetic->getCategory() === CosmeticManager::CATEGORY_SPECIALS){
                                         $lobbyPlayer->reloadInventory();
-
+                                    }
                                     CoinProvider::removeCoins($player->getName(), $cosmetic->getPrice());
                                     $lobbyPlayer->unlockCosmetic($cosmetic);
                                     $lobbyPlayer->activateCosmetic($cosmetic);
-                                    $player->sendMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-successful-bought', $player->getName(), ['#addon' => $cosmetic->getName(), '#cost' => $cosmetic->getPrice()]));
+                                    $player->sendMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-successful-bought', $player->getName(), [
+                                            '#addon' => $cosmetic->getName(),
+                                            '#cost' => $cosmetic->getPrice(),
+                                        ]));
                                     $player->playSound("random.levelup", 5.0, 1.0, [$player]);
                                     CosmeticsCategoriesForm::open($player);
                                     break;
                             }
                         });
-                        $form->setTitle(TextFormat::GOLD.TextFormat::BOLD."Sure?");
-                        $form->addButton(TextFormat::GREEN.TextFormat::BOLD."✔ CLICK TO BUY", -1, "", "buy");
-                        $form->setContent(LanguageProvider::getMessageContainer('lobby-really-buy-addon', $player->getName(), ['#addon' => $cosmetic->getName(), '#cost' => $cosmetic->getPrice()]));
+                        $form->setTitle(TextFormat::GOLD . TextFormat::BOLD . "Sure?");
+                        $form->addButton(TextFormat::GREEN . TextFormat::BOLD . "✔ CLICK TO BUY", -1, "", "buy");
+                        $form->setContent(LanguageProvider::getMessageContainer('lobby-really-buy-addon', $player->getName(), [
+                            '#addon' => $cosmetic->getName(),
+                            '#cost' => $cosmetic->getPrice(),
+                        ]));
                         $form->sendToPlayer($player);
                     }
                 }
             }
         });
         $form->setTitle("§lCosmetics");
-        foreach($category->getCosmetics() as $cosmetic) {
+        foreach($category->getCosmetics() as $cosmetic){
             //Mhhhhh - Not that good
-            if($lobbyPlayer->isCosmeticActivated($cosmetic)) {
-                $form->addButton("§a§l" . $cosmetic->getName()."\n§r§8(§2ACTIVATED§8)", $cosmetic->getIconType(), $cosmetic->getIcon(), $cosmetic->getIdentifier());
-            } elseif($lobbyPlayer->isCosmeticUnlocked($cosmetic)) {
-                $form->addButton("§a" . $cosmetic->getName()."\n§8(§bClick to activate§8)", $cosmetic->getIconType(), $cosmetic->getIcon(), $cosmetic->getIdentifier());
-            } else {
-                $form->addButton("§c" . $cosmetic->getName() . "\n§8(§6" . $cosmetic->getPrice()."§6 Coins§8)", $cosmetic->getIconType(), $cosmetic->getIcon(), $cosmetic->getIdentifier());
+            if($lobbyPlayer->isCosmeticActivated($cosmetic)){
+                $form->addButton("§a§l" . $cosmetic->getName() . "\n§r§8(§2ACTIVATED§8)", $cosmetic->getIconType(), $cosmetic->getIcon(), $cosmetic->getIdentifier());
+            }
+            elseif($lobbyPlayer->isCosmeticUnlocked($cosmetic)){
+                $form->addButton("§a" . $cosmetic->getName() . "\n§8(§bClick to activate§8)", $cosmetic->getIconType(), $cosmetic->getIcon(), $cosmetic->getIdentifier());
+            }
+            else{
+                $form->addButton("§c" . $cosmetic->getName() . "\n§8(§6" . $cosmetic->getPrice() . "§6 Coins§8)", $cosmetic->getIconType(), $cosmetic->getIcon(), $cosmetic->getIdentifier());
             }
         }
         $form->addButton("§aBack", 0, "textures/ui/undoArrow", "back");

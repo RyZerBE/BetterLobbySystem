@@ -9,9 +9,6 @@ use pocketmine\math\Vector3;
 use pocketmine\Player;
 
 abstract class ParticleCosmetic extends Cosmetic {
-
-    abstract public function getParticle(Vector3 $vector3): Particle;
-
     /**
      * @return int
      */
@@ -25,8 +22,8 @@ abstract class ParticleCosmetic extends Cosmetic {
      */
     public function onUpdate(Player $player, int $currentTick): void{
         if($currentTick % 2 !== 0) return;
-        $player->getLevel()->addParticle($this->getParticle(
-            $player->asVector3()->add($this->randomFloat(), $this->randomFloat(0), $this->randomFloat())
-        ));
+        $player->getLevel()->addParticle($this->getParticle($player->asVector3()->add($this->randomFloat(), $this->randomFloat(0), $this->randomFloat())));
     }
+
+    abstract public function getParticle(Vector3 $vector3): Particle;
 }

@@ -1,20 +1,17 @@
 <?php
 
-
 namespace baubolp\ryzerbe\lobbycore\util;
 
-
-class ClanWarMatch
-{
-    /** @var string  */
+class ClanWarMatch {
+    /** @var string */
     private $clan1;
-    /** @var string  */
+    /** @var string */
     private $clan2;
-    /** @var string  */
+    /** @var string */
     private $map;
-    /** @var string  */
+    /** @var string */
     private $server;
-    /** @var bool  */
+    /** @var bool */
     private $elo;
 
     /**
@@ -26,8 +23,7 @@ class ClanWarMatch
      * @param string $server
      * @param bool $elo
      */
-    public function __construct(string $clan1, string $clan2, string $map, string $server, bool $elo)
-    {
+    public function __construct(string $clan1, string $clan2, string $map, string $server, bool $elo){
         $this->elo = $elo;
         $this->map = $map;
         $this->server = $server;
@@ -38,40 +34,35 @@ class ClanWarMatch
     /**
      * @return string
      */
-    public function getServer(): string
-    {
+    public function getServer(): string{
         return $this->server;
     }
 
     /**
      * @return string
      */
-    public function getClan1(): string
-    {
+    public function getClan1(): string{
         return $this->clan1;
     }
 
     /**
      * @return string
      */
-    public function getClan2(): string
-    {
+    public function getClan2(): string{
         return $this->clan2;
     }
 
     /**
      * @return string
      */
-    public function getMap(): string
-    {
+    public function getMap(): string{
         return $this->map;
     }
 
     /**
      * @return bool
      */
-    public function eloEnabled(): bool
-    {
+    public function eloEnabled(): bool{
         return $this->elo;
     }
 }

@@ -22,17 +22,14 @@ use function mt_rand;
 use function spl_object_id;
 
 class NPCEntity extends Human implements ChunkLoader {
-
-    /** @var array  */
+    /** @var array */
     private $emotes = [];
-    /** @var int  */
+    /** @var int */
     private $emoteCooldown = 0;
-    /** @var string  */
+    /** @var string */
     private $lastEmote = "";
-
-    /** @var bool  */
+    /** @var bool */
     private $lookAtPlayer = false;
-
     /** @var Closure|null */
     private $interactClosure = null;
     /** @var Closure|null */
@@ -40,6 +37,7 @@ class NPCEntity extends Human implements ChunkLoader {
 
     /**
      * NPCEntity constructor.
+     *
      * @param Location $location
      * @param Skin $skin
      */
@@ -53,14 +51,12 @@ class NPCEntity extends Human implements ChunkLoader {
      * @param string $title
      * @param string $subtitle
      */
-    public function updateTitle(string $title, string $subtitle): void
-    {
-        $this->setNameTag($title."\n".$subtitle);
+    public function updateTitle(string $title, string $subtitle): void{
+        $this->setNameTag($title . "\n" . $subtitle);
     }
 
     public function initEntity(): void{
         parent::initEntity();
-
         $this->setNameTagVisible();
         $this->setNameTagAlwaysVisible();
         $this->sendSkin();
@@ -69,7 +65,7 @@ class NPCEntity extends Human implements ChunkLoader {
     /**
      * @param array $emotes
      */
-    public function setEmotes(array $emotes): void {
+    public function setEmotes(array $emotes): void{
         $this->emotes = $emotes;
     }
 
@@ -77,44 +73,29 @@ class NPCEntity extends Human implements ChunkLoader {
      * @param string $emote
      * @return $this
      */
-    public function addEmote(string $emote): self {
+    public function addEmote(string $emote): self{
         $this->emotes[] = $emote;
         return $this;
     }
 
     /**
-     * @return array
-     */
-    public function getEmotes(): array {
-        return $this->emotes;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getRandomEmote(): ?string {
-        if($this->emotes === []) return null;
-        return $this->emotes[array_rand($this->emotes)];
-    }
-
-    /**
      * @param Closure|null $closure
      */
-    public function setInteractClosure(?Closure $closure): void {
+    public function setInteractClosure(?Closure $closure): void{
         $this->interactClosure = $closure;
     }
 
     /**
      * @param Closure|null $closure
      */
-    public function setAttackClosure(?Closure $closure): void {
+    public function setAttackClosure(?Closure $closure): void{
         $this->attackClosure = $closure;
     }
 
     /**
      * @param bool $lookAtPlayer
      */
-    public function setLookAtPlayer(bool $lookAtPlayer): void {
+    public function setLookAtPlayer(bool $lookAtPlayer): void{
         $this->lookAtPlayer = $lookAtPlayer;
     }
 
@@ -132,24 +113,37 @@ class NPCEntity extends Human implements ChunkLoader {
      * @return bool
      */
     public function onUpdate(int $currentTick): bool{
-        if($this->lookAtPlayer) {
+        if($this->lookAtPlayer){
             $target = $this->getLevel()->getNearestEntity($this, 40, Player::class);
-            if($target !== null) {
+            if($target !== null){
                 $this->lookAt($target->add(0, 1));
                 $this->setForceMovementUpdate();
             }
         }
-
-        if($this->getEmotes() !== [] && --$this->emoteCooldown <= 0) {
+        if($this->getEmotes() !== [] && --$this->emoteCooldown <= 0){
             $this->emoteCooldown = mt_rand(100, 300);
             $emote = $this->getRandomEmote();
             while($this->lastEmote === $emote) $emote = $this->getRandomEmote();
             $packet = EmotePacket::create($this->getId(), $emote, EmotePacket::FLAG_SERVER);
             $this->getLevel()->broadcastPacketToViewers($this, $packet);
-
             if(count($this->getEmotes()) > 1) $this->lastEmote = $emote;
         }
         return parent::onUpdate($currentTick);
+    }
+
+    /**
+     * @return array
+     */
+    public function getEmotes(): array{
+        return $this->emotes;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRandomEmote(): ?string{
+        if($this->emotes === []) return null;
+        return $this->emotes[array_rand($this->emotes)];
     }
 
     /**
@@ -200,16 +194,13 @@ class NPCEntity extends Human implements ChunkLoader {
     /**
      * @return bool
      */
-    public function isDespawned(): bool
-    {
+    public function isDespawned(): bool{
         return Loader::getInstance()->getServer()->getDefaultLevel()->getEntity($this->getId()) === null;
     }
 
-    public function spawnToAll(): void
-    {
+    public function spawnToAll(): void{
         parent::spawnToAll();
         if(isset(Loader::$entityCheckQueue[$this->getId()])) return;
-
         Loader::$entityCheckQueue[$this->getId()]["scale"] = $this->getScale();
         Loader::$entityCheckQueue[$this->getId()]["location"] = $this->getLocation();
         Loader::$entityCheckQueue[$this->getId()]["skin"] = $this->getSkin();
@@ -222,9 +213,18 @@ class NPCEntity extends Human implements ChunkLoader {
         Loader::$entityCheckQueue[$this->getId()]["nameTag"] = $this->getNameTag();
     }
 
-    public function onChunkChanged(Chunk $chunk){}
-    public function onChunkLoaded(Chunk $chunk){}
-    public function onChunkUnloaded(Chunk $chunk){}
-    public function onChunkPopulated(Chunk $chunk){}
-    public function onBlockChanged(Vector3 $block){}
+    public function onChunkChanged(Chunk $chunk){
+    }
+
+    public function onChunkLoaded(Chunk $chunk){
+    }
+
+    public function onChunkUnloaded(Chunk $chunk){
+    }
+
+    public function onChunkPopulated(Chunk $chunk){
+    }
+
+    public function onBlockChanged(Vector3 $block){
+    }
 }

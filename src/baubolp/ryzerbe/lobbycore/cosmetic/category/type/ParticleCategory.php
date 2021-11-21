@@ -10,16 +10,14 @@ use baubolp\ryzerbe\lobbycore\cosmetic\type\particle\HeartParticleCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\particle\SmokeParticleCosmetic;
 
 class ParticleCategory extends CosmeticCategory {
-
-
     public function loadCosmetics(): void{
         $cosmetics = [
             new HeartParticleCosmetic(),
             new AngryVillagerParticleCosmetic(),
             new SmokeParticleCosmetic(),
-            new HappyVillagerParticleCosmetic()
+            new HappyVillagerParticleCosmetic(),
         ];
-        foreach($cosmetics as $cosmetic) {
+        foreach($cosmetics as $cosmetic){
             $this->registerCosmetic($cosmetic);
         }
     }

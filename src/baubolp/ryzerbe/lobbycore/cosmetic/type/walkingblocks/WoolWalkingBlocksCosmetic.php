@@ -6,7 +6,6 @@ use pocketmine\block\Block;
 use function mt_rand;
 
 class WoolWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
-
     /**
      * @return string
      */

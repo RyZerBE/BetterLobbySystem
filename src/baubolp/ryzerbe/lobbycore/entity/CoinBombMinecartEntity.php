@@ -12,10 +12,9 @@ use function lcg_value;
 
 class CoinBombMinecartEntity extends Vehicle {
     public const NETWORK_ID = self::CHEST_MINECART;
-
-    /** @var float  */
+    /** @var float */
     public $height = 0.7;
-    /** @var float  */
+    /** @var float */
     public $width = 0.98;
     /** @var string */
     public $dropperName = "";
@@ -26,11 +25,10 @@ class CoinBombMinecartEntity extends Vehicle {
      */
     public function onUpdate(int $currentTick): bool{
         if($this->isClosed() || $this->isFlaggedForDespawn()) return false;
-        if($this->isOnGround() || $this->ticksLived > (20 * 10)) {
+        if($this->isOnGround() || $this->ticksLived > (20 * 10)){
             $this->flagForDespawn();
             $this->getLevel()->addSound(new FizzSound($this));
             $this->getLevel()->addParticle(new ExplodeParticle($this));
-
             $this->getLevel()->dropItem($this, ItemUtils::addItemTag(Item::get(Item::GOLD_NUGGET), $this->dropperName, "coinbomb_item"), new Vector3(lcg_value() * 0.2 - 0.1, 0.4, lcg_value() * 0.2 - 0.1));
         }
         $this->motion->y -= 0.025;

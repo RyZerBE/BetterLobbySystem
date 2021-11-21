@@ -18,8 +18,7 @@ class CosmeticManager {
     public const CATEGORY_ITEM_RAIN = 1;
     public const CATEGORY_WALKING_BLOCKS = 2;
     public const CATEGORY_SPECIALS = 3;
-
-    /** @var array  */
+    /** @var array */
     private $categories = [];
 
     /**
@@ -30,9 +29,9 @@ class CosmeticManager {
             new ParticleCategory(),
             new ItemRainCategory(),
             new SpecialsCategory(),
-            new WalkingBlocksCategory()
+            new WalkingBlocksCategory(),
         ];
-        foreach($categories as $category) {
+        foreach($categories as $category){
             $this->registerCategory($category);
         }
     }
@@ -40,7 +39,7 @@ class CosmeticManager {
     /**
      * @param CosmeticCategory $category
      */
-    public function registerCategory(CosmeticCategory $category): void {
+    public function registerCategory(CosmeticCategory $category): void{
         $this->categories[$category->getId()] = $category;
         $category->loadCosmetics();
     }
@@ -49,8 +48,20 @@ class CosmeticManager {
      * @param int $id
      * @return CosmeticCategory|null
      */
-    public function getCategory(int $id): ?CosmeticCategory {
+    public function getCategory(int $id): ?CosmeticCategory{
         return $this->categories[$id] ?? null;
+    }
+
+    /**
+     * @param string $identifier
+     * @return Cosmetic|null
+     */
+    public function getCosmetic(string $identifier): ?Cosmetic{
+        foreach($this->getCategories() as $category){
+            $cosmetic = $category->getCosmetic($identifier);
+            if(!is_null($cosmetic)) return $cosmetic;
+        }
+        return null;
     }
 
     /**
@@ -58,17 +69,5 @@ class CosmeticManager {
      */
     public function getCategories(): array{
         return $this->categories;
-    }
-
-    /**
-     * @param string $identifier
-     * @return Cosmetic|null
-     */
-    public function getCosmetic(string $identifier): ?Cosmetic {
-        foreach($this->getCategories() as $category) {
-            $cosmetic = $category->getCosmetic($identifier);
-            if(!is_null($cosmetic)) return $cosmetic;
-        }
-        return null;
     }
 }

@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\type\walkingblocks;
 use pocketmine\block\Block;
 
 class TheEndWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
-
     /**
      * @return string
      */
@@ -35,7 +34,7 @@ class TheEndWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
             Block::get(Block::END_STONE),
             Block::get(Block::OBSIDIAN),
             Block::get(Block::DRAGON_EGG),
-            Block::get(Block::PURPUR_BLOCK)
+            Block::get(Block::PURPUR_BLOCK),
         ];
     }
 

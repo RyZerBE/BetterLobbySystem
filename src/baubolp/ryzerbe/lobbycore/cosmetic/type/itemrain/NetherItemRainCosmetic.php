@@ -6,7 +6,6 @@ use pocketmine\block\Block;
 use pocketmine\item\Item;
 
 class NetherItemRainCosmetic extends ItemRainCosmetic {
-
     /**
      * @return string
      */

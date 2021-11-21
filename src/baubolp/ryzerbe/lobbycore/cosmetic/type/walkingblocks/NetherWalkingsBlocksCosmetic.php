@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\type\walkingblocks;
 use pocketmine\block\Block;
 
 class NetherWalkingsBlocksCosmetic extends WalkingBlocksCosmetic {
-
     /**
      * @return string
      */
@@ -43,7 +42,7 @@ class NetherWalkingsBlocksCosmetic extends WalkingBlocksCosmetic {
      */
     public function getSlabBlocks(): array{
         return [
-            Block::get(Block::STONE_SLAB, 7)
+            Block::get(Block::STONE_SLAB, 7),
         ];
     }
 }

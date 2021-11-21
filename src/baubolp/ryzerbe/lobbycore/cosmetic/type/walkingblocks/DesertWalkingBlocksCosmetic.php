@@ -5,7 +5,6 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\type\walkingblocks;
 use pocketmine\block\Block;
 
 class DesertWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
-
     /**
      * @return string
      */

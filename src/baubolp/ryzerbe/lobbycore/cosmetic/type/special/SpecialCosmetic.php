@@ -6,7 +6,6 @@ use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 
 abstract class SpecialCosmetic extends Cosmetic {
-
     /**
      * @return int
      */

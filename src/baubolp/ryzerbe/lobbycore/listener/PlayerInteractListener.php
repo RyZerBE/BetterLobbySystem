@@ -1,8 +1,6 @@
 <?php
 
-
 namespace baubolp\ryzerbe\lobbycore\listener;
-
 
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\ItemProvider;
@@ -15,14 +13,14 @@ class PlayerInteractListener implements Listener {
     private const NOT_INTERACTABLE_BLOCKS = [
         BlockIds::DRAGON_EGG,
         BlockIds::CHEST,
-        BlockIds::FURNACE
+        BlockIds::FURNACE,
     ];
 
     public function onPlayerInteract(PlayerInteractEvent $event): void{
         $player = $event->getPlayer();
         $block = $event->getBlock();
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
-        if (ItemProvider::execItem($player) || in_array($block->getId(), self::NOT_INTERACTABLE_BLOCKS)) {
+        if(ItemProvider::execItem($player) || in_array($block->getId(), self::NOT_INTERACTABLE_BLOCKS)){
             $event->setCancelled();
         }
         if($lobbyPlayer->enabledBuildMode()){

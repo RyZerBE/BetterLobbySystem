@@ -1,19 +1,13 @@
 <?php
 
-
 namespace baubolp\ryzerbe\lobbycore\animation\type;
-
 
 use baubolp\ryzerbe\lobbycore\animation\Animation;
 use baubolp\ryzerbe\lobbycore\Loader;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class PlayerJoinAnimation extends Animation
-{
-    /** @var string */
-    private $playerName;
-
+class PlayerJoinAnimation extends Animation {
     /**
      * @var array
      */
@@ -35,29 +29,30 @@ class PlayerJoinAnimation extends Animation
         TextFormat::BLACK . '*      ' . TextFormat::WHITE . "RyZerBE" . TextFormat::DARK_RED . ' *' . "     " . TextFormat::BLACK . "*",
         TextFormat::BLACK . '*      ' . TextFormat::WHITE . "RyZerBE" . TextFormat::DARK_RED . '  *' . "    " . TextFormat::BLACK . "*",
         TextFormat::BLACK . '*      ' . TextFormat::WHITE . "RyZerBE" . TextFormat::DARK_RED . '   *' . "   " . TextFormat::BLACK . "*",
-        TextFormat::BLACK . '*      ' . TextFormat::WHITE . "RyZer" . TextFormat::RED . "BE" . TextFormat::RED . "      " . TextFormat::BLACK . "*"
+        TextFormat::BLACK . '*      ' . TextFormat::WHITE . "RyZer" . TextFormat::RED . "BE" . TextFormat::RED . "      " . TextFormat::BLACK . "*",
     ];
+    /** @var string */
+    private $playerName;
 
-    public function __construct(Player $player)
-    {
+    public function __construct(Player $player){
         $this->playerName = $player->getName();
         parent::__construct();
     }
 
-    public function tick(): void
-    {
-        if (($player = Loader::getInstance()->getServer()->getPlayerExact($this->playerName)) != null) {
+    public function tick(): void{
+        if(($player = Loader::getInstance()->getServer()->getPlayerExact($this->playerName)) != null){
             $title = $this->joinAnimation[$this->getCurrentTick()] ?? null;
-            if ($title === null) {
+            if($title === null){
                 $this->stop();
                 $player->playSound("mob.wither.death", 5.0, 1.0, [$player]);
                 return;
             }
-
             $player->sendTitle($title, TextFormat::YELLOW . "Welcome", 0, 20, 0);
             $player->playSound("note.bass", 5.0, 2.0, [$player]);
-        }else
+        }
+        else{
             $this->stop();
+        }
         parent::tick();
     }
 }

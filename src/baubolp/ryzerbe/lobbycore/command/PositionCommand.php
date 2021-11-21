@@ -11,7 +11,6 @@ use function str_repeat;
 use function var_dump;
 
 class PositionCommand extends Command {
-
     /**
      * PositionCommand constructor.
      */
@@ -28,7 +27,6 @@ class PositionCommand extends Command {
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args): void{
         if(!$sender instanceof Player || !$this->testPermission($sender)) return;
-
         $sender->sendMessage(str_repeat("-", 20));
         $sender->sendMessage("X:" . round($sender->x, 1));
         $sender->sendMessage("Y:" . round($sender->y, 1));
@@ -36,9 +34,12 @@ class PositionCommand extends Command {
         $sender->sendMessage("Yaw:" . round($sender->yaw, 1));
         $sender->sendMessage("Pitch:" . round($sender->pitch, 1));
         $sender->sendMessage(str_repeat("-", 20));
-
         var_dump(implode(", ", [
-            round($sender->x, 1), round($sender->y, 1), round($sender->z, 1), round($sender->yaw, 1), round($sender->pitch, 1)
+            round($sender->x, 1),
+            round($sender->y, 1),
+            round($sender->z, 1),
+            round($sender->yaw, 1),
+            round($sender->pitch, 1),
         ]));
     }
 }

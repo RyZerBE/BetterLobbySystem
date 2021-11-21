@@ -7,8 +7,7 @@ use pocketmine\math\Vector3;
 use pocketmine\Server;
 
 class BlockQueue {
-
-    /** @var array  */
+    /** @var array */
     private static $blocks = [];
 
     /**
@@ -19,30 +18,30 @@ class BlockQueue {
     }
 
     /**
-     * @param Vector3 $vector3
-     * @return bool
-     */
-    public static function isUsed(Vector3 $vector3): bool {
-        return isset(self::$blocks[$vector3->floor()->__toString()]);
-    }
-
-    /**
      * @param Block $block
      * @param int $delay
      */
-    public static function addBlock(Block $block, int $delay): void {
+    public static function addBlock(Block $block, int $delay): void{
         if(self::isUsed($block->floor())) return;
         self::$blocks[$block->floor()->__toString()] = [
             "Block" => $block,
-            "Tick" => Server::getInstance()->getTick() + $delay
+            "Tick" => Server::getInstance()->getTick() + $delay,
         ];
+    }
+
+    /**
+     * @param Vector3 $vector3
+     * @return bool
+     */
+    public static function isUsed(Vector3 $vector3): bool{
+        return isset(self::$blocks[$vector3->floor()->__toString()]);
     }
 
     /**
      * @param int $currentTick
      */
-    public static function onUpdate(int $currentTick): void {
-        foreach(self::$blocks as $vector => $data) {
+    public static function onUpdate(int $currentTick): void{
+        foreach(self::$blocks as $vector => $data){
             $tick = $data["Tick"];
             if($tick >= $currentTick) continue;
             unset(self::$blocks[$vector]);

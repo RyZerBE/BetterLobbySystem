@@ -1,8 +1,6 @@
 <?php
 
-
 namespace baubolp\ryzerbe\lobbycore\listener;
-
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerExhaustEvent;

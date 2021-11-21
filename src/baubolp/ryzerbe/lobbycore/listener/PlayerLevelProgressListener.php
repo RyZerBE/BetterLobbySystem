@@ -7,7 +7,7 @@ use pocketmine\event\Listener;
 use ryzerbe\core\event\player\networklevel\PlayerLevelProgressEvent;
 
 class PlayerLevelProgressListener implements Listener {
-    public function onLevelProgress(PlayerLevelProgressEvent $event): void {
+    public function onLevelProgress(PlayerLevelProgressEvent $event): void{
         LobbyPlayerCache::getLobbyPlayer($event->getPlayer())?->updateScoreboard();
     }
 }

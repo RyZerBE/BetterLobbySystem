@@ -5,18 +5,19 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\category;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\Cosmetic;
 
 abstract class CosmeticCategory {
-
-    /** @var array  */
+    /** @var array */
     protected $cosmetics = [];
 
     abstract public function loadCosmetics(): void;
+
     abstract public function getId(): int;
+
     abstract public function getName(): string;
 
     /**
      * @param Cosmetic $cosmetic
      */
-    public function registerCosmetic(Cosmetic $cosmetic): void {
+    public function registerCosmetic(Cosmetic $cosmetic): void{
         $this->cosmetics[$cosmetic->getIdentifier()] = $cosmetic;
     }
 
@@ -24,7 +25,7 @@ abstract class CosmeticCategory {
      * @param string $identifier
      * @return Cosmetic|null
      */
-    public function getCosmetic(string $identifier): ?Cosmetic {
+    public function getCosmetic(string $identifier): ?Cosmetic{
         return $this->cosmetics[$identifier] ?? null;
     }
 
@@ -38,14 +39,14 @@ abstract class CosmeticCategory {
     /**
      * @return string
      */
-    public function getIcon(): string {
+    public function getIcon(): string{
         return "";
     }
 
     /**
      * @return int
      */
-    public function getIconType(): int {
+    public function getIconType(): int{
         return -1;
     }
 }

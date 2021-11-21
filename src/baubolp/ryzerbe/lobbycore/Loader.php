@@ -1,10 +1,9 @@
 <?php
 
-
 namespace baubolp\ryzerbe\lobbycore;
 
-
 use BauboLP\Cloud\Bungee\BungeeAPI;
+use BauboLP\Cloud\CloudBridge;
 use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\NavigatorTeleportAnimation;
 use baubolp\ryzerbe\lobbycore\command\BuildCommand;
@@ -60,21 +59,16 @@ use ryzerbe\core\util\loader\ListenerDirectoryLoader;
 use function explode;
 use function uniqid;
 
-class Loader extends PluginBase
-{
+class Loader extends PluginBase {
+    const PREFIX = TextFormat::YELLOW . TextFormat::BOLD . "Lobby " . TextFormat::RESET;
+    /** @var array */
+    public static $entityCheckQueue = [];
+    /** @var bool */
+    public static $jumpAndRunEnabled = false;
     /** @var self */
     private static $instance = null;
 
-    /** @var array  */
-    public static $entityCheckQueue = [];
-
-    /** @var bool  */
-    public static $jumpAndRunEnabled = false;
-
-    const PREFIX = TextFormat::YELLOW.TextFormat::BOLD."Lobby ".TextFormat::RESET;
-
-    public function onEnable()
-    {
+    public function onEnable(){
         self::$instance = $this;
         $this->registerCommands();
         ListenerDirectoryLoader::load($this, $this->getFile(), __DIR__ . "/listener/");
@@ -84,35 +78,23 @@ class Loader extends PluginBase
         $this->loadConfig();
         $this->registerPermissions();
         $this->loadNPCs();
-
         self::$jumpAndRunEnabled = (Server::getInstance()->getPluginManager()->getPlugin("GommeJumpAndRun") !== null);
-
-
         CosmeticManager::getInstance();
         WarpProvider::loadWarps();
         SurveyProvider::loadSurvey();
         ShopManager::registerCategories();
         RunningClanWarProvider::updateRunningClanWars();
         new EventProvider();
-
-        if (!InvMenuHandler::isRegistered())
+        if(!InvMenuHandler::isRegistered()){
             InvMenuHandler::register($this);
-
+        }
         date_default_timezone_set("Europe/Berlin");
     }
 
-    /**
-     * @return Loader
-     */
-    public static function getInstance(): ?Loader{
-        return self::$instance;
-    }
-
-    public function registerCommands(): void
-    {
+    public function registerCommands(): void{
         Loader::getInstance()->getServer()->getCommandMap()->registerAll("lobbycore", [
             new BuildCommand(),
-          #  new PrivateServerCommand(),
+            #  new PrivateServerCommand(),
             new FlyCommand(),
             new LottoCommand(),
             new DailyRewardCommand(),
@@ -127,252 +109,18 @@ class Loader extends PluginBase
             new SurveyCommand(),
             new RunningClanWarsCommand(),
             new ShopCommand(),
-            new RotateNPCCommand()
+            new RotateNPCCommand(),
         ]);
     }
 
-    private function loadNPCs(): void {
-        /*
-         * Available Positions
-         *
-         * 230.5, 72, 272.5, 0, 0 //Used
-         * 224.5, 72, 272.5, 0, 0 //Used
-         *
-         * 234.5, 71, 274.5, 0, 0 //Used
-         * 238.5, 71, 273.5, 0, 0 //Used
-         * 219.5, 71, 274.5, 0, 0 //Used
-         * 216.5, 71, 271.5, 0, 0 //Used
-         */
-
-        // GAME NPC`s \\
-        $EmoteIds = [
-            EmoteIds::WAVE, EmoteIds::THE_WOODPUNCH, EmoteIds::UNDERWATER_DANCING, EmoteIds::HAND_STAND, EmoteIds::SHY_GIGGLING, EmoteIds::MEDITATING_LIKE_LUKE, EmoteIds::OFFERING,
-            EmoteIds::BORED, EmoteIds::AHH_CHOO, EmoteIds::GIDDY, EmoteIds::OVER_HERE, EmoteIds::GROOVIN, EmoteIds::WAVING_LIKE_C_3PO, EmoteIds::THINKING, EmoteIds::SURRENDERING
-        ];
-
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/backup_skin.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-
-        $closure = (function(Player $player, NPCEntity $entity): void {
-            $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
-            if($lobbyPlayer === null) return;
-            $warp = WarpProvider::getWarp($entity->namedtag->getString("warpName", "N/A"));
-            if ($warp === null){
-                $directConnect = $entity->namedtag->getString("directConnect", "N/A");
-                if($directConnect != "N/A") BungeeAPI::transferPlayer($player->getName(), $directConnect);
-                return;
-            };
-
-            $game = TextFormat::clean(explode("\n", $entity->getNameTag())[0]);
-            if ($lobbyPlayer->isNavigatorAnimationEnabled()){
-                $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
-                AnimationProvider::addActiveAnimation(new NavigatorTeleportAnimation($player, $warp, $game));
-            }else{
-                $player->teleport($warp->getLocation());
-            }
-        });
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/cwbwtraining.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-        $npc = new NPCEntity(new Location(230.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::YELLOW."CWBW-Training", TextFormat::BLACK."♠ ".TextFormat::AQUA."Practice CWBW Scenarios".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("warpName", "cwtraining");
-        $npc->spawnToAll();
-
-        $npc = new NPCEntity(new Location(300.5, 69, 320.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->setLookAtPlayer(true);
-        $npc->updateTitle(TextFormat::YELLOW."Sort your inventories", "");
-        $npc->namedtag->setString("directConnect", "onlysortcwt");
-        $npc->spawnToAll();
-
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/flagwars.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-
-        $npc = new NPCEntity(new Location(224.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::DARK_AQUA."Flag".TextFormat::AQUA."Wars", TextFormat::BLACK."♠ ".TextFormat::GREEN."NEW GAME".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("warpName", "flagwars");
-        $npc->spawnToAll();
-
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/questionmark.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-
-        $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::WHITE.TextFormat::BOLD."???", "");
-        $npc->spawnToAll();
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/ffa.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-        $npc = new NPCEntity(new Location(238.5, 71, 273.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::GOLD."FFA", TextFormat::BLACK."♠ ".TextFormat::GREEN."FFA & BuildFFA".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("warpName", "ffa");
-        $npc->spawnToAll();
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/training.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-        $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::WHITE."Training", TextFormat::BLACK."♠ ".TextFormat::YELLOW."Practice and prove your skills".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("directConnect", "challenge");
-        $npc->spawnToAll();
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/bedwars.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-        $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::DARK_AQUA."Bedwars", TextFormat::BLACK."♠ ".TextFormat::RED."Cool Maps & Cosmetics".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("warpName", "bedwars");
-        $npc->spawnToAll();
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/jumpandrun.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-        $npc = new NPCEntity(new Location(242.5, 70, 286.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::GOLD."Jump and Run", TextFormat::BLACK."♠ ".TextFormat::WHITE."WITH STATS".TextFormat::BLACK." ♠");
-        $npc->namedtag->setString("warpName", "JaR");
-        $npc->spawnToAll();
-
-        // GEOMETRIES \\
-        $npc = new NPCEntity(new Location(213.5, 70, 291.5, 200, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/RankShop.png"),
-            "",
-            "geometry.Mobs.Zombie",
-            file_get_contents("/root/RyzerCloud/data/NPC/rankshop_geometry.json")
-        ));
-        $closure = function (Player $player): void{
-            $player->getServer()->dispatchCommand($player, "shop");
-        };
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setScale(1.5);
-        $npc->updateTitle(TextFormat::GOLD."Coinshop", "");
-        $npc->spawnToAll();
-
-        $npc = new NPCEntity(new Location(235.5, 73, 306.5, 150, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/PServer.png"),
-            "",
-            "geometry.normal1",
-            file_get_contents("/root/RyzerCloud/data/NPC/pserver_geometry.json")
-        ));
-        $closure = function (Player $player): void{
-            $player->getServer()->dispatchCommand($player, "ps");
-        };
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setScale(1.5);
-        $npc->updateTitle(TextFormat::DARK_PURPLE."Private Server", TextFormat::BLACK."♠ ".TextFormat::AQUA."PRIME RANK ".TextFormat::BLACK."♠");
-        //$npc->spawnToAll(); come soon
-
-        $npc = new NPCEntity(new Location(221.5, 73, 306.5, 200, 0,  Server::getInstance()->getDefaultLevel()),  new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/Lotto.png"),
-            "",
-            "geometry.normal1",
-            file_get_contents("/root/RyzerCloud/data/NPC/lotto_geometry.json")
-        ));
-        $closure = function (Player $player): void{
-            $player->getServer()->dispatchCommand($player, "lotto");
-        };
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setScale(1.5);
-        $npc->updateTitle(TextFormat::YELLOW."Lotto", TextFormat::BLACK."♠ ".TextFormat::GOLD."PLAY WITH YOUR COINS".TextFormat::BLACK."♠");
-        $npc->spawnToAll();
-
-        // OTHER NPC`s \\
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/dailyrewards.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-        $npc = new NPCEntity(new Location(231.5, 73, 300.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
-        $closure = function (Player $player): void{
-            $player->getServer()->dispatchCommand($player, "dailyreward");
-        };
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::AQUA."Daily Rewards", TextFormat::BLACK."♠ ".TextFormat::RED."FOR YOU".TextFormat::BLACK." ♠");
-        $npc->spawnToAll();
-        $skin = new Skin(
-            uniqid(),
-            SkinUtils::readImage("/root/RyzerCloud/data/NPC/baubo.png"),
-            "",
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"),
-            (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo")
-        );
-        $npc = new NPCEntity(new Location(225.5, 73, 300.5, 0, 0,  Server::getInstance()->getDefaultLevel()), $skin);
-        $closure = function (Player $player): void{
-            $player->getServer()->dispatchCommand($player, "survey");
-        };
-
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::YELLOW."Survey", TextFormat::BLACK."♠ ".TextFormat::RED."GET COINS FOR VOTING".TextFormat::BLACK." ♠");
-        $npc->spawnToAll();
+    /**
+     * @return Loader
+     */
+    public static function getInstance(): ?Loader{
+        return self::$instance;
     }
 
-    public function registerEntities(): void {
+    public function registerEntities(): void{
         $entities = [
             CoinBombMinecartEntity::class,
             ItemRainItemEntity::class,
@@ -380,22 +128,20 @@ class Loader extends PluginBase
             HypeTrainWagonEntity::class,
             HeadProjectileEntity::class,
             NPCEntity::class,
-            EventPortalEntity::class
+            EventPortalEntity::class,
         ];
-        foreach($entities as $entity) {
+        foreach($entities as $entity){
             Entity::registerEntity($entity, true);
         }
     }
 
-    public function startTasks(): void
-    {
+    public function startTasks(): void{
         $this->getScheduler()->scheduleRepeatingTask(new AnimationTask(), 1);
         $this->getScheduler()->scheduleRepeatingTask(new LobbyTask(), 5);
     }
 
-    public static function createMySQLTables(): void
-    {
-        AsyncExecutor::submitMySQLAsyncTask("Lobby", function (mysqli $mysqli) {
+    public static function createMySQLTables(): void{
+        AsyncExecutor::submitMySQLAsyncTask("Lobby", function(mysqli $mysqli){
             $mysqli->query("CREATE TABLE IF NOT EXISTS LottoTickets(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(16) NOT NULL, tickets integer NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS Position(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(16) NOT NULL, position varchar(32) NOT NULL)");
             $mysqli->query("CREATE TABLE IF NOT EXISTS LoginStreak(id INTEGER NOT NULL KEY AUTO_INCREMENT, playername varchar(32) NOT NULL, loginstreak integer NOT NULL, nextstreakday integer NOT NULL, laststreakday integer NOT NULL)");
@@ -410,12 +156,14 @@ class Loader extends PluginBase
         });
     }
 
-    public function loadConfig(): void
-    {
-        if (!is_file("/root/RyzerCloud/data/Lobby/config.json")) {
+    public function loadConfig(): void{
+        if(!is_file("/root/RyzerCloud/data/Lobby/config.json")){
             $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
             $config->set("warps", []);
-            $config->set("games", ["BedWars" => ["warpName" => "bedwars", "groups" => ["BW2x1", "BW2x2"], "icon" => ""], "FlagWars" => ["warpName" => "flagwars", "icon" => "", "groups" => ["FlagWars4x2"]]]);
+            $config->set("games", [
+                "BedWars" => ["warpName" => "bedwars", "groups" => ["BW2x1", "BW2x2"], "icon" => ""],
+                "FlagWars" => ["warpName" => "flagwars", "icon" => "", "groups" => ["FlagWars4x2"]],
+            ]);
             $config->set("bossbarMessages", []);
             $config->set("news", []);
             $config->set("event", null);
@@ -423,24 +171,35 @@ class Loader extends PluginBase
             $config->save();
         }
         $config = new Config("/root/RyzerCloud/data/Lobby/config.json");
-
-        foreach (array_keys($config->get("games")) as $key){
+        foreach(array_keys($config->get("games")) as $key){
             $data = $config->get("games")[$key];
-            if(isset($data["warpName"]))
-                NavigatorForm::$games[$key] = ["icon" => $data["icon"], "warpName" => $data["warpName"], "groups" => $data["groups"], "players" => 0];
-            else if(isset($data["directConnect"]))
-                NavigatorForm::$games[$key] = ["icon" => $data["icon"], "directConnect" => $data["directConnect"], "groups" => $data["groups"], "players" => 0];
+            if(isset($data["warpName"])){
+                NavigatorForm::$games[$key] = [
+                    "icon" => $data["icon"],
+                    "warpName" => $data["warpName"],
+                    "groups" => $data["groups"],
+                    "players" => 0,
+                ];
+            }
+            else{
+                if(isset($data["directConnect"])){
+                    NavigatorForm::$games[$key] = [
+                        "icon" => $data["icon"],
+                        "directConnect" => $data["directConnect"],
+                        "groups" => $data["groups"],
+                        "players" => 0,
+                    ];
+                }
+            }
         }
-
         $news = (array)$config->get("news");
-        if(count($news) > 0)
-        NewsBookForm::$news = str_replace("&", TextFormat::ESCAPE, implode("\n", $news));
-
+        if(count($news) > 0){
+            NewsBookForm::$news = str_replace("&", TextFormat::ESCAPE, implode("\n", $news));
+        }
         EventProvider::reload();
     }
 
-    public function registerPermissions(): void
-    {
+    public function registerPermissions(): void{
         $permissions = [
             "lobby.build",
             "lobby.coinbomb",
@@ -450,10 +209,177 @@ class Loader extends PluginBase
             "lobby.status",
             "lobby.warp",
             "lobby.event",
-            "lobby.position"
+            "lobby.position",
         ];
+        foreach($permissions as $permission) PermissionManager::getInstance()->addPermission(new Permission($permission, "lobby permission"));
+    }
 
-        foreach ($permissions as $permission)
-            PermissionManager::getInstance()->addPermission(new Permission($permission, "lobby permission"));
+    private function loadNPCs(): void{
+        /*
+         * Available Positions
+         *
+         * 230.5, 72, 272.5, 0, 0 //Used
+         * 224.5, 72, 272.5, 0, 0 //Used
+         *
+         * 234.5, 71, 274.5, 0, 0 //Used
+         * 238.5, 71, 273.5, 0, 0 //Used
+         * 219.5, 71, 274.5, 0, 0 //Used
+         * 216.5, 71, 271.5, 0, 0 //Used
+         */
+        // GAME NPC`s \\
+        $EmoteIds = [
+            EmoteIds::WAVE,
+            EmoteIds::THE_WOODPUNCH,
+            EmoteIds::UNDERWATER_DANCING,
+            EmoteIds::HAND_STAND,
+            EmoteIds::SHY_GIGGLING,
+            EmoteIds::MEDITATING_LIKE_LUKE,
+            EmoteIds::OFFERING,
+            EmoteIds::BORED,
+            EmoteIds::AHH_CHOO,
+            EmoteIds::GIDDY,
+            EmoteIds::OVER_HERE,
+            EmoteIds::GROOVIN,
+            EmoteIds::WAVING_LIKE_C_3PO,
+            EmoteIds::THINKING,
+            EmoteIds::SURRENDERING,
+        ];
+        $closure = (function(Player $player, NPCEntity $entity): void{
+            $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
+            if($lobbyPlayer === null) return;
+            $warp = WarpProvider::getWarp($entity->namedtag->getString("warpName", "N/A"));
+            if($warp === null){
+                $directConnect = $entity->namedtag->getString("directConnect", "N/A");
+                if($directConnect != "N/A"){
+                    if($directConnect === "TrainingLobby"){
+                        $server = CloudBridge::getCloudProvider()->getRunningServersByGroup("TrainingLobby")[0] ?? null;
+                        if($server === null) return;
+                        $directConnect = $server;
+                    }
+                    BungeeAPI::transferPlayer($player->getName(), $directConnect);
+                }
+                return;
+            }
+            $game = TextFormat::clean(explode("\n", $entity->getNameTag())[0]);
+            if($lobbyPlayer->isNavigatorAnimationEnabled()){
+                $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn()->add(0, 1));
+                AnimationProvider::addActiveAnimation(new NavigatorTeleportAnimation($player, $warp, $game));
+            }
+            else{
+                $player->teleport($warp->getLocation());
+            }
+        });
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/cwbwtraining.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(230.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::YELLOW . "CWBW-Training", TextFormat::BLACK . "♠ " . TextFormat::AQUA . "Practice CWBW Scenarios" . TextFormat::BLACK . " ♠");
+        $npc->namedtag->setString("warpName", "cwtraining");
+        $npc->spawnToAll();
+        $npc = new NPCEntity(new Location(300.5, 69, 320.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->setLookAtPlayer(true);
+        $npc->updateTitle(TextFormat::YELLOW . "Sort your inventories", "");
+        $npc->namedtag->setString("directConnect", "onlysortcwt");
+        $npc->spawnToAll();
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/flagwars.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(224.5, 72, 272.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::DARK_AQUA . "Flag" . TextFormat::AQUA . "Wars", TextFormat::BLACK . "♠ " . TextFormat::GREEN . "NEW GAME" . TextFormat::BLACK . " ♠");
+        $npc->namedtag->setString("warpName", "flagwars");
+        $npc->spawnToAll();
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/questionmark.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::WHITE . TextFormat::BOLD . "???", "");
+        $npc->spawnToAll();
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/ffa.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(238.5, 71, 273.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::GOLD . "FFA", TextFormat::BLACK . "♠ " . TextFormat::GREEN . "FFA & BuildFFA" . TextFormat::BLACK . " ♠");
+        $npc->namedtag->setString("warpName", "ffa");
+        $npc->spawnToAll();
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/training.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::WHITE . "Training", TextFormat::BLACK . "♠ " . TextFormat::YELLOW . "Practice and prove your skills" . TextFormat::BLACK . " ♠");
+        $npc->namedtag->setString("directConnect", "TrainingLobby");
+        $npc->spawnToAll();
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/bedwars.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::DARK_AQUA . "Bedwars", TextFormat::BLACK . "♠ " . TextFormat::RED . "Cool Maps & Cosmetics" . TextFormat::BLACK . " ♠");
+        $npc->namedtag->setString("warpName", "bedwars");
+        $npc->spawnToAll();
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/jumpandrun.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(242.5, 70, 286.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::GOLD . "Jump and Run", TextFormat::BLACK . "♠ " . TextFormat::WHITE . "WITH STATS" . TextFormat::BLACK . " ♠");
+        $npc->namedtag->setString("warpName", "JaR");
+        $npc->spawnToAll();
+        // GEOMETRIES \\
+        $npc = new NPCEntity(new Location(213.5, 70, 291.5, 200, 0, Server::getInstance()->getDefaultLevel()), new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/RankShop.png"), "", "geometry.Mobs.Zombie", file_get_contents("/root/RyzerCloud/data/NPC/rankshop_geometry.json")));
+        $closure = function(Player $player): void{
+            $player->getServer()->dispatchCommand($player, "shop");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setScale(1.5);
+        $npc->updateTitle(TextFormat::GOLD . "Coinshop", "");
+        $npc->spawnToAll();
+        $npc = new NPCEntity(new Location(235.5, 73, 306.5, 150, 0, Server::getInstance()->getDefaultLevel()), new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/PServer.png"), "", "geometry.normal1", file_get_contents("/root/RyzerCloud/data/NPC/pserver_geometry.json")));
+        $closure = function(Player $player): void{
+            $player->getServer()->dispatchCommand($player, "ps");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setScale(1.5);
+        $npc->updateTitle(TextFormat::DARK_PURPLE . "Private Server", TextFormat::BLACK . "♠ " . TextFormat::AQUA . "PRIME RANK " . TextFormat::BLACK . "♠");
+        //$npc->spawnToAll(); come soon
+        $npc = new NPCEntity(new Location(221.5, 73, 306.5, 200, 0, Server::getInstance()->getDefaultLevel()), new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/Lotto.png"), "", "geometry.normal1", file_get_contents("/root/RyzerCloud/data/NPC/lotto_geometry.json")));
+        $closure = function(Player $player): void{
+            $player->getServer()->dispatchCommand($player, "lotto");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setScale(1.5);
+        $npc->updateTitle(TextFormat::YELLOW . "Lotto", TextFormat::BLACK . "♠ " . TextFormat::GOLD . "PLAY WITH YOUR COINS" . TextFormat::BLACK . "♠");
+        $npc->spawnToAll();
+        // OTHER NPC`s \\
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/dailyrewards.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(231.5, 73, 300.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $closure = function(Player $player): void{
+            $player->getServer()->dispatchCommand($player, "dailyreward");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::AQUA . "Daily Rewards", TextFormat::BLACK . "♠ " . TextFormat::RED . "FOR YOU" . TextFormat::BLACK . " ♠");
+        $npc->spawnToAll();
+        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/baubo.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $npc = new NPCEntity(new Location(225.5, 73, 300.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        $closure = function(Player $player): void{
+            $player->getServer()->dispatchCommand($player, "survey");
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
+        $npc->setEmotes($EmoteIds);
+        $npc->updateTitle(TextFormat::YELLOW . "Survey", TextFormat::BLACK . "♠ " . TextFormat::RED . "GET COINS FOR VOTING" . TextFormat::BLACK . " ♠");
+        $npc->spawnToAll();
     }
 }

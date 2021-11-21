@@ -6,7 +6,6 @@ use pocketmine\item\Item;
 use function mt_rand;
 
 class AquaticItemRainCosmetic extends ItemRainCosmetic {
-
     /**
      * @return string
      */

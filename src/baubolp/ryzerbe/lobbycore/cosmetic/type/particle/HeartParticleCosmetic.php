@@ -7,7 +7,6 @@ use pocketmine\level\particle\Particle;
 use pocketmine\math\Vector3;
 
 class HeartParticleCosmetic extends ParticleCosmetic {
-
     /**
      * @return string
      */

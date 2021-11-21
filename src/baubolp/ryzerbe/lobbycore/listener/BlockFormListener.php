@@ -1,8 +1,6 @@
 <?php
 
-
 namespace baubolp\ryzerbe\lobbycore\listener;
-
 
 use pocketmine\event\block\BlockFormEvent;
 use pocketmine\event\Listener;

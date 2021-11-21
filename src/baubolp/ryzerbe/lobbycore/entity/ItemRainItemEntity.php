@@ -10,15 +10,14 @@ use function floor;
 use function mt_rand;
 
 class ItemRainItemEntity extends ItemEntity {
-
-    /** @var int  */
+    /** @var int */
     private int $groundTicks = 0;
-
-    /** @var int  */
+    /** @var int */
     private int $lifetime;
 
     /**
      * ItemRainItemEntity constructor.
+     *
      * @param Level $level
      * @param CompoundTag $nbt
      */
@@ -33,7 +32,7 @@ class ItemRainItemEntity extends ItemEntity {
      */
     public function onUpdate(int $currentTick): bool{
         if($this->isClosed() || $this->isFlaggedForDespawn()) return false;
-        if($this->isOnGround() || $this->isInsideOfWater()) {
+        if($this->isOnGround() || $this->isInsideOfWater()){
             $this->groundTicks++;
         }
         if($this->groundTicks > $this->lifetime || $this->y <= 0) $this->flagForDespawn();
@@ -48,31 +47,6 @@ class ItemRainItemEntity extends ItemEntity {
         return true;
     }
 
-    public function applyGravity(): void{
-        $this->motion->y -= $this->gravity;
-    }
-
-    protected function tryChangeMovement() : void{
-        $friction = 1 - $this->drag;
-
-        if($this->applyDragBeforeGravity()){
-            $this->motion->y *= $friction;
-        }
-
-        $this->applyGravity();
-
-        if(!$this->applyDragBeforeGravity()){
-            $this->motion->y *= $friction;
-        }
-
-        if($this->onGround){
-            $friction *= $this->level->getBlockAt((int) floor($this->x), (int) floor($this->y - 1), (int) floor($this->z))->getFrictionFactor();
-        }
-
-        $this->motion->x *= $friction;
-        $this->motion->z *= $friction;
-    }
-
     /**
      * @return bool
      */
@@ -83,5 +57,26 @@ class ItemRainItemEntity extends ItemEntity {
     /**
      * @param Player $player
      */
-    public function onCollideWithPlayer(Player $player): void{}
+    public function onCollideWithPlayer(Player $player): void{
+    }
+
+    protected function tryChangeMovement(): void{
+        $friction = 1 - $this->drag;
+        if($this->applyDragBeforeGravity()){
+            $this->motion->y *= $friction;
+        }
+        $this->applyGravity();
+        if(!$this->applyDragBeforeGravity()){
+            $this->motion->y *= $friction;
+        }
+        if($this->onGround){
+            $friction *= $this->level->getBlockAt((int)floor($this->x), (int)floor($this->y - 1), (int)floor($this->z))->getFrictionFactor();
+        }
+        $this->motion->x *= $friction;
+        $this->motion->z *= $friction;
+    }
+
+    public function applyGravity(): void{
+        $this->motion->y -= $this->gravity;
+    }
 }

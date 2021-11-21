@@ -13,9 +13,9 @@ class CloudPacketReceiveListener implements Listener {
         $packet = $event->getCloudPacket();
         if($packet instanceof NetworkInfoPacket){
             $groupPlayerCount = json_decode($packet->getValue("group_player_count"), true);
-            foreach(NavigatorForm::$games as $gameName => $gameData) {
+            foreach(NavigatorForm::$games as $gameName => $gameData){
                 NavigatorForm::$games[$gameName]["players"] = 0;
-                foreach($gameData["groups"] as $groupName) {
+                foreach($gameData["groups"] as $groupName){
                     NavigatorForm::$games[$gameName]["players"] += $groupPlayerCount[$groupName] ?? 0;
                 }
             }

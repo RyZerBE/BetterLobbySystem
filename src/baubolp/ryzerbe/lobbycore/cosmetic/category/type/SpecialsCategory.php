@@ -8,13 +8,12 @@ use baubolp\ryzerbe\lobbycore\cosmetic\type\special\HeadCanonSpecialCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\special\SpidermanGunSpecialCosmetic;
 
 class SpecialsCategory extends CosmeticCategory {
-
     public function loadCosmetics(): void{
         $cosmetics = [
             new SpidermanGunSpecialCosmetic(),
-            new HeadCanonSpecialCosmetic()
+            new HeadCanonSpecialCosmetic(),
         ];
-        foreach($cosmetics as $cosmetic) {
+        foreach($cosmetics as $cosmetic){
             $this->registerCosmetic($cosmetic);
         }
     }
