@@ -57,6 +57,7 @@ use ryzerbe\core\util\async\AsyncExecutor;
 use ryzerbe\core\util\emote\EmoteIds;
 use ryzerbe\core\util\loader\ListenerDirectoryLoader;
 use function explode;
+use function file_get_contents;
 use function uniqid;
 
 class Loader extends PluginBase {
@@ -369,7 +370,14 @@ class Loader extends PluginBase {
 
 
         // Daily Reward
-        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/dailyrewards.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/dailyrewards.png"),
+            "",
+            "geometry.dailyrewards",
+            file_get_contents("/root/RyzerCloud/data/NPC/geo_dailyrewards.json")
+        );
         $npc = new NPCEntity(new Location(231.5, 73, 300.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $closure = function(Player $player): void{
             $player->getServer()->dispatchCommand($player, "dailyreward");
@@ -377,7 +385,7 @@ class Loader extends PluginBase {
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($EmoteIds);
-        $npc->updateTitle(TextFormat::AQUA . "Daily Rewards", TextFormat::BLACK . "♠ " . TextFormat::RED . "FOR YOU" . TextFormat::BLACK . " ♠");
+        $npc->updateTitle(TextFormat::DARK_GREEN . "Daily Rewards", TextFormat::BLACK . "♠ " . TextFormat::RED . "FOR YOU" . TextFormat::BLACK . " ♠");
         $npc->spawnToAll();
 
         // Survey
