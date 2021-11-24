@@ -17,6 +17,7 @@ class LobbySettingsForm extends CustomForm {
             new Toggle("navigatoranimation", TextFormat::GREEN . "▷ " . TextFormat::RED . "Navigator-Animation", $lobbyPlayer->isNavigatorAnimationEnabled()),
             new Toggle("doublejump", TextFormat::GREEN . "▷ " . TextFormat::RED . "Doublejump", $lobbyPlayer->isDoubleJumpEnabled()),
             new Toggle("spawn", TextFormat::GREEN . "▷ " . TextFormat::RED . "Spawn on your last position in the lobby", $lobbyPlayer->isLastPositionSpawnEnabled()),
+            new Toggle("overview", TextFormat::GREEN . "▷ " . TextFormat::RED . "Interact a player to get a quick overview", $lobbyPlayer->isQuickPlayerOverview()),
         ];
         parent::__construct(TextFormat::YELLOW . TextFormat::BOLD . "Lobby " . TextFormat::RED . "Settings", $elements, function(Player $player, CustomFormResponse $response) use ($lobbyPlayer): void{
             $e1 = $this->getElement(0);
@@ -24,17 +25,20 @@ class LobbySettingsForm extends CustomForm {
             $e3 = $this->getElement(2);
             $e4 = $this->getElement(3);
             $e5 = $this->getElement(4);
+            $e6 = $this->getElement(5);
             $joinAnimation = $response->getBool($e1->getName());
             $afkAnimation = $response->getBool($e2->getName());
             $navigatorAnimation = $response->getBool($e3->getName());
             $doubleJump = $response->getBool($e4->getName());
             $lastPositionSpawn = $response->getBool($e5->getName());
+            $quickInteract = $response->getBool($e6->getName());
             $lobbyPlayer->updateLobbySettings([
                 $joinAnimation,
                 $afkAnimation,
                 $navigatorAnimation,
                 $doubleJump,
                 $lastPositionSpawn,
+                $quickInteract
             ]);
         });
     }

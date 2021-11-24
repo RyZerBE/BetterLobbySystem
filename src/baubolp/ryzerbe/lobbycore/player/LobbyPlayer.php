@@ -66,7 +66,7 @@ class LobbyPlayer {
     /** @var array */
     private $alreadyVotedSurveys = [];
     /** @var bool */ //Settings
-    private $joinAnimation = true, $afkAnimation = true, $navigatorAnimation = true, $doubleJump = true, $lastSpawnPosition = true;
+    private $joinAnimation = true, $afkAnimation = true, $navigatorAnimation = true, $doubleJump = true, $lastSpawnPosition = true, $quickPlayerOverview = true;
 
     public function __construct(Player $player){
         $this->player = $player;
@@ -172,7 +172,7 @@ class LobbyPlayer {
             }
             else{
                 $mysqli->query("INSERT INTO `Settings`(`playername`, `settings`) VALUES ('$playerName', '1:1:1:1:1')");
-                $playerData["settings"] = [1, 1, 1, 1, 1];
+                $playerData["settings"] = [1, 1, 1, 1, 1, 1];
             }
             $playerData["alreadyVotedSurveys"] = [];
             $res = $mysqli->query("SELECT * FROM Surveys WHERE playername='$playerName'");
@@ -200,6 +200,7 @@ class LobbyPlayer {
                 $lobbyPlayer->setNavigatorAnimation((bool)$loadedData["settings"][2]);
                 $lobbyPlayer->setDoubleJump((bool)$loadedData["settings"][3]);
                 $lobbyPlayer->setLastSpawnPosition((bool)$loadedData["settings"][4]);
+                $lobbyPlayer->setQuickPlayerOverview($loadedData["settings"][5] ?? true);
                 $lobbyPlayer->setAlreadyVotedSurveys($loadedData["alreadyVotedSurveys"]);
                 $cosmetics = [];
                 $activeCosmetics = [];
@@ -735,6 +736,7 @@ class LobbyPlayer {
         $this->setNavigatorAnimation($settings[2]);
         $this->setDoubleJump($settings[3]);
         $this->setLastSpawnPosition($settings[4]);
+        $this->setQuickPlayerOverview($settings[5]);
         $playerName = $this->getPlayer()->getName();
         $toString = implode(":", array_map(function(bool $setting): int{
             return intval($setting);
@@ -814,6 +816,20 @@ class LobbyPlayer {
             }
         }*/
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isQuickPlayerOverview(): bool{
+        return $this->quickPlayerOverview;
+    }
+
+    /**
+     * @param bool $quickPlayerOverview
+     */
+    public function setQuickPlayerOverview(bool $quickPlayerOverview): void{
+        $this->quickPlayerOverview = $quickPlayerOverview;
     }
 
     /**
