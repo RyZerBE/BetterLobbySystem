@@ -2,7 +2,9 @@
 
 namespace baubolp\ryzerbe\lobbycore\shop;
 
+use baubolp\ryzerbe\lobbycore\shop\article\JoinMeTokenArticle;
 use baubolp\ryzerbe\lobbycore\shop\article\StatsResetTokenArticle;
+use baubolp\ryzerbe\lobbycore\shop\category\RankCategory;
 use baubolp\ryzerbe\lobbycore\shop\category\StatsCategory;
 
 class ShopManager {
@@ -24,11 +26,12 @@ class ShopManager {
     }
 
     public static function registerCategories(): void{
-        /* $rankCategory = new RankCategory();
-         $rankCategory->addArticle(new VIPRank());
-         $rankCategory->register();*/
+        $rankCategory = new RankCategory();
+        $rankCategory->register();
+
         $statsCategory = new StatsCategory();
         $statsCategory->addArticle(new StatsResetTokenArticle());
+        $statsCategory->addArticle(new JoinMeTokenArticle());
         $statsCategory->register();
     }
 

@@ -9,6 +9,6 @@ class StatsCategory extends ShopCategory {
      * @return string
      */
     public function getName(): string{
-        return "Stats";
+        return "Tokens";
     }
 }
