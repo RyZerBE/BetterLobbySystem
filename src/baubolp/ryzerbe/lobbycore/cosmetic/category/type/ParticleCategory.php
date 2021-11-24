@@ -5,8 +5,10 @@ namespace baubolp\ryzerbe\lobbycore\cosmetic\category\type;
 use baubolp\ryzerbe\lobbycore\cosmetic\category\CosmeticCategory;
 use baubolp\ryzerbe\lobbycore\cosmetic\CosmeticManager;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\particle\AngryVillagerParticleCosmetic;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\particle\ColoredFlameParticleCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\particle\HappyVillagerParticleCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\particle\HeartParticleCosmetic;
+use baubolp\ryzerbe\lobbycore\cosmetic\type\particle\NoteParticleCosmetic;
 use baubolp\ryzerbe\lobbycore\cosmetic\type\particle\SmokeParticleCosmetic;
 
 class ParticleCategory extends CosmeticCategory {
@@ -16,6 +18,8 @@ class ParticleCategory extends CosmeticCategory {
             new AngryVillagerParticleCosmetic(),
             new SmokeParticleCosmetic(),
             new HappyVillagerParticleCosmetic(),
+            new ColoredFlameParticleCosmetic(),
+            new NoteParticleCosmetic()
         ];
         foreach($cosmetics as $cosmetic){
             $this->registerCosmetic($cosmetic);
