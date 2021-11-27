@@ -44,6 +44,7 @@ class NPCEntity extends Human implements ChunkLoader {
     public function __construct(Location $location, Skin $skin){
         $location->getLevelNonNull()->loadChunk($location->x >> 4, $location->z >> 4);
         $this->skin = $skin;
+        $location->getLevelNonNull()->registerChunkLoader($this, $location->x >> 4, $location->z >> 4, true);
         parent::__construct($location->getLevelNonNull(), Entity::createBaseNBT($location, null, $location->yaw, $location->pitch));
     }
 

@@ -21,6 +21,6 @@ class ColoredFlameParticleCosmetic extends ParticleCosmetic {
     }
 
     public function getParticle(Vector3 $vector3): Particle{
-        return new GenericParticle($vector3, Particle::TYPE_COLORED_FLAME);
+        return new GenericParticle($vector3, Particle::TYPE_COLORED_FLAME); //ParticleIds::COLORED_FLAME = 56; BedrockProtocol
     }
 }

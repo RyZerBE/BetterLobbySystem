@@ -45,6 +45,7 @@ use muqsit\invmenu\InvMenuHandler;
 use mysqli;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Skin;
+use pocketmine\level\Level;
 use pocketmine\level\Location;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
@@ -53,6 +54,8 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\RyZerBE;
 use ryzerbe\core\util\async\AsyncExecutor;
 use ryzerbe\core\util\emote\EmoteIds;
 use ryzerbe\core\util\loader\ListenerDirectoryLoader;
@@ -88,6 +91,9 @@ class Loader extends PluginBase {
             InvMenuHandler::register($this);
         }
         date_default_timezone_set("Europe/Berlin");
+        $level = $this->getServer()->getDefaultLevel();
+        $level->setTime(Level::TIME_MIDNIGHT);
+        $level->stopTime();
     }
 
     public function registerCommands(): void{
@@ -316,7 +322,13 @@ class Loader extends PluginBase {
         $npc->spawnToAll();
 
         // BedWars
-        $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/bedwars.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/bedwars.png"),
+            "",
+            "geometry.bedwars",
+            file_get_contents("/root/RyzerCloud/data/NPC/geo_bedwars.json")
+        );
         $npc = new NPCEntity(new Location(234.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
@@ -398,6 +410,26 @@ class Loader extends PluginBase {
         $npc->setInteractClosure($closure);
         $npc->setEmotes($EmoteIds);
         $npc->updateTitle(TextFormat::YELLOW . "Survey", TextFormat::BLACK . "♠ " . TextFormat::RED . "GET COINS FOR VOTING" . TextFormat::BLACK . " ♠");
+        $npc->spawnToAll();
+
+
+        // SANTA CLAUS \\
+
+        $skin = new Skin(
+            uniqid(),
+            SkinUtils::readImage("/root/RyzerCloud/data/NPC/santa_claus.png"),
+            "",
+            "geometry.weihnachtsmann",
+            file_get_contents("/root/RyzerCloud/data/NPC/geo_santa_claus.json")
+        );
+        $npc = new NPCEntity(new Location(204.5, 95, 271.5, 0.0, 0.0, Server::getInstance()->getDefaultLevel()), $skin);
+        $npc->updateTitle(TextFormat::RED.TextFormat::BOLD."Santa Claus", TextFormat::WHITE."Merry Christmas!");
+        $npc->setScale(1.3);
+        $closure = function(Player $player): void{
+            $player->sendMessage(RyZerBE::PREFIX.LanguageProvider::getMessageContainer("santa-claus-info", $player));
+        };
+        $npc->setAttackClosure($closure);
+        $npc->setInteractClosure($closure);
         $npc->spawnToAll();
     }
 }
