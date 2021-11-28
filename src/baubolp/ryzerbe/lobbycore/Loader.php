@@ -313,7 +313,8 @@ class Loader extends PluginBase {
 
         // Training
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/training.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
-        $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
+        //$npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin); //Normal Lobby
+        $npc = new NPCEntity(new Location(220.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin); //Christmas Lobby
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($EmoteIds);
