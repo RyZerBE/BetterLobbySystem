@@ -16,7 +16,7 @@ class EndItemRainCosmetic extends ItemRainCosmetic {
      * @return int
      */
     public function getPrice(): int{
-        return 1000;
+        return 25000;
     }
 
     /**

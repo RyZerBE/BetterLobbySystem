@@ -12,7 +12,7 @@ class SmokeParticleCosmetic extends ParticleCosmetic {
     }
 
     public function getPrice(): int{
-        return 1000;
+        return 15000;
     }
 
     public function getIdentifier(): string{

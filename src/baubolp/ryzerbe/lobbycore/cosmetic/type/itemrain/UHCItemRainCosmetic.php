@@ -16,7 +16,7 @@ class UHCItemRainCosmetic extends ItemRainCosmetic {
      * @return int
      */
     public function getPrice(): int{
-        return 2000;
+        return 30000;
     }
 
     /**

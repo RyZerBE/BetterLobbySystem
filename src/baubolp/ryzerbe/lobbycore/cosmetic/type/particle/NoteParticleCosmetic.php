@@ -13,7 +13,7 @@ class NoteParticleCosmetic extends ParticleCosmetic {
     }
 
     public function getPrice(): int{
-        return 1000;
+        return 8000;
     }
 
     public function getIdentifier(): string{

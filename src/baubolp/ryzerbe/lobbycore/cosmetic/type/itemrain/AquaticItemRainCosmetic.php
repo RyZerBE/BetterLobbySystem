@@ -17,7 +17,7 @@ class AquaticItemRainCosmetic extends ItemRainCosmetic {
      * @return int
      */
     public function getPrice(): int{
-        return 1000;//todo
+        return 35000;//todo
     }
 
     /**

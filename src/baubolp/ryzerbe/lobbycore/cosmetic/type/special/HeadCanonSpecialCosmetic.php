@@ -8,7 +8,7 @@ class HeadCanonSpecialCosmetic extends SpecialCosmetic {
     }
 
     public function getPrice(): int{
-        return 10000;
+        return 75000;
     }
 
     public function getIdentifier(): string{

@@ -36,7 +36,7 @@ class StatsResetTokenArticle extends ShopArticle {
      * @return int
      */
     public function getPrice(): int{
-        return 3000;
+        return 7500;
     }
 
     /**

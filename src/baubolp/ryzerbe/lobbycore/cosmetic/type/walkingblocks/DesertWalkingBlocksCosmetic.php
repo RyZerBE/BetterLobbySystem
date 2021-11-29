@@ -16,7 +16,7 @@ class DesertWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
      * @return int
      */
     public function getPrice(): int{
-        return 1000;//todo
+        return 10000;//todo
     }
 
     /**

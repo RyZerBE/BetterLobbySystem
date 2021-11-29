@@ -16,7 +16,7 @@ class NetherWalkingsBlocksCosmetic extends WalkingBlocksCosmetic {
      * @return int
      */
     public function getPrice(): int{
-        return 1000;//todo
+        return 20000;
     }
 
     /**

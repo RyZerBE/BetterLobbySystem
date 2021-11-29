@@ -10,7 +10,7 @@ class BedWarsItemRainCosmetic extends ItemRainCosmetic {
     }
 
     public function getPrice(): int{
-        return 1000;
+        return 25000;
     }
 
     public function getIdentifier(): string{

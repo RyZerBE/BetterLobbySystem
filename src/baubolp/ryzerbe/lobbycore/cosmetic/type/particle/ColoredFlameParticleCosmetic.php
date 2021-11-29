@@ -14,7 +14,7 @@ class ColoredFlameParticleCosmetic extends ParticleCosmetic {
     }
 
     public function getPrice(): int{
-        return 1000;
+        return 20000;
     }
 
     public function getIdentifier(): string{

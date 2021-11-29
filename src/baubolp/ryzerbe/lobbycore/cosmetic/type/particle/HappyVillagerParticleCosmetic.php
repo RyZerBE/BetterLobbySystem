@@ -12,7 +12,7 @@ class HappyVillagerParticleCosmetic extends ParticleCosmetic {
     }
 
     public function getPrice(): int{
-        return 1000;
+        return 10000;
     }
 
     public function getIdentifier(): string{

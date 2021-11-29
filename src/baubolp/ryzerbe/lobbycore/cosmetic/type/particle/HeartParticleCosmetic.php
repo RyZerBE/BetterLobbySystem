@@ -18,7 +18,7 @@ class HeartParticleCosmetic extends ParticleCosmetic {
      * @return int
      */
     public function getPrice(): int{
-        return 100;//todo
+        return 12000;
     }
 
     /**

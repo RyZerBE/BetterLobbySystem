@@ -16,7 +16,7 @@ class RichRichWalkingBlocksCosmetic extends WalkingBlocksCosmetic {
      * @return int
      */
     public function getPrice(): int{
-        return 1000;//todo
+        return 15000;//todo
     }
 
     /**
