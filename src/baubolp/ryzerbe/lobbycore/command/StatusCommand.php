@@ -3,6 +3,7 @@
 namespace baubolp\ryzerbe\lobbycore\command;
 
 use baubolp\ryzerbe\lobbycore\Loader;
+use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use mysqli;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -41,8 +42,8 @@ class StatusCommand extends Command {
             return;
         }
         $status = implode(" ", $args);
-        if(strlen($status) > 24){
-            $sender->sendMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-status-too-big', $sender->getName(), ['#max' => 24]));
+        if(strlen($status) > 30){
+            $sender->sendMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-status-too-big', $sender->getName(), ['#max' => 30]));
             return;
         }
         AsyncExecutor::submitMySQLAsyncTask("Lobby", function(mysqli $mysqli) use ($playerName, $status){
@@ -51,6 +52,7 @@ class StatusCommand extends Command {
             if(($sender = $server->getPlayerExact($playerName)) != null){
                 $sender->sendMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-status-set', $sender->getName(), ['#status' => $status]));
             }
+            LobbyPlayerCache::getLobbyPlayer($playerName)?->setStatus(($status === "reset") ? "" : $status);
             RyzerPlayerProvider::getRyzerPlayer($sender)?->updateStatus($status);
         });
     }

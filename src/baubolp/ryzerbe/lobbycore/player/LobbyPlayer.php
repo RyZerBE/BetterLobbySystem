@@ -61,6 +61,7 @@ class LobbyPlayer {
     private $dailyHypeTrainTime;
     private $dailyXPTime;
     private $cosmetics;
+    private ?string $status = null;
     /** @var bool */
     private $shield = false;
     /** @var array */
@@ -95,7 +96,7 @@ class LobbyPlayer {
                 $playerData["bombs"] = 0;
             }
             else{
-                while($data = $res->fetch_assoc()){
+                while($data = $res->fetch_assoc()) {
                     $playerData["bombs"] = $data["bombs"];
                 }
             }
@@ -179,6 +180,14 @@ class LobbyPlayer {
             if($res->num_rows > 0){
                 while($data = $res->fetch_assoc()) $playerData["alreadyVotedSurveys"][] = $data["surveyid"];
             }
+
+            $res = $mysqli->query("SELECT * FROM Status WHERE playername='$playerName'");
+            if($res->num_rows > 0) {
+                if($res->fetch_assoc()){
+                    $status = $res->fetch_assoc()["status"];
+                    $playerData["status"] = ($status == "false") ? "" : $status;
+                }
+            }
             return $playerData;
         }, function(Server $server, array $loadedData) use ($playerName){
             // LOAD DATA \\
@@ -202,6 +211,7 @@ class LobbyPlayer {
                 $lobbyPlayer->setLastSpawnPosition((bool)$loadedData["settings"][4]);
                 $lobbyPlayer->setQuickPlayerOverview($loadedData["settings"][5] ?? true);
                 $lobbyPlayer->setAlreadyVotedSurveys($loadedData["alreadyVotedSurveys"]);
+                $lobbyPlayer->setStatus($loadedData["status"] ?? "");
                 $cosmetics = [];
                 $activeCosmetics = [];
                 foreach($loadedData["cosmetics"] as $cosmeticData){
@@ -842,5 +852,19 @@ class LobbyPlayer {
     public function reloadInventory(): void{
         ItemProvider::clearAllInventories($this->getPlayer());
         ItemProvider::giveLobbyItems($this->getPlayer());
+    }
+
+    /**
+     * @param string|null $status
+     */
+    public function setStatus(?string $status): void{
+        $this->status = $status;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStatus(): ?string{
+        return $this->status;
     }
 }
