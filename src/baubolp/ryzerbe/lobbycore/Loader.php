@@ -41,6 +41,7 @@ use baubolp\ryzerbe\lobbycore\shop\ShopManager;
 use baubolp\ryzerbe\lobbycore\task\AnimationTask;
 use baubolp\ryzerbe\lobbycore\task\LobbyTask;
 use baubolp\ryzerbe\lobbycore\util\SkinUtils;
+use jojoe77777\FormAPI\SimpleForm;
 use muqsit\invmenu\InvMenuHandler;
 use mysqli;
 use pocketmine\entity\Entity;
@@ -293,10 +294,15 @@ class Loader extends PluginBase {
         $npc->spawnToAll();
 
         // "Coming Soon"
+        $soonClosure = function(Player $player) {
+            $form = new SimpleForm(function(Player $player, $data): void{});
+            $form->setContent(LanguageProvider::getMessageContainer("lobby-unknown-npc-info", $player));
+            $form->sendToPlayer($player);
+        };
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/questionmark.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
         $npc = new NPCEntity(new Location(216.5, 71, 271.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin);
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
+        $npc->setAttackClosure($soonClosure);
+        $npc->setInteractClosure($soonClosure);
         $npc->setEmotes($EmoteIds);
         $npc->updateTitle(TextFormat::WHITE . TextFormat::BOLD . "???", "");
         $npc->spawnToAll();
@@ -358,17 +364,6 @@ class Loader extends PluginBase {
         $npc->setScale(1.5);
         $npc->updateTitle(TextFormat::GOLD . "Coinshop", "");
         $npc->spawnToAll();
-
-        // Private Server
-        $npc = new NPCEntity(new Location(235.5, 73, 306.5, 150, 0, Server::getInstance()->getDefaultLevel()), new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/PServer.png"), "", "geometry.normal1", file_get_contents("/root/RyzerCloud/data/NPC/pserver_geometry.json")));
-        $closure = function(Player $player): void{
-            $player->getServer()->dispatchCommand($player, "ps");
-        };
-        $npc->setAttackClosure($closure);
-        $npc->setInteractClosure($closure);
-        $npc->setScale(1.5);
-        $npc->updateTitle(TextFormat::DARK_PURPLE . "Private Server", TextFormat::BLACK . "♠ " . TextFormat::AQUA . "PRIME RANK " . TextFormat::BLACK . "♠");
-        //$npc->spawnToAll(); come soon
 
         // Lotto
         $npc = new NPCEntity(new Location(221.5, 73, 306.5, 200, 0, Server::getInstance()->getDefaultLevel()), new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/Lotto.png"), "", "geometry.normal1", file_get_contents("/root/RyzerCloud/data/NPC/lotto_geometry.json")));
