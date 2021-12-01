@@ -22,7 +22,7 @@ class LobbySettingsForm extends CustomForm {
             new Toggle("overview", TextFormat::GREEN . "▷ " . TextFormat::RED . "Interact a player to get a quick overview", $lobbyPlayer->isQuickPlayerOverview())
         ];
 
-        if($lobbyPlayer->getPlayer()->hasPermission("lobby.status")) $elements[] = new Input("status", TextFormat::RED."Your status (under nametag)", "", ""); //todo: default -> current status
+        if($lobbyPlayer->getPlayer()->hasPermission("lobby.status")) $elements[] = new Input("status", TextFormat::RED."Your status (under nametag)", "", $lobbyPlayer->getStatus());
         parent::__construct(TextFormat::YELLOW . TextFormat::BOLD . "Lobby " . TextFormat::RED . "Settings", $elements, function(Player $player, CustomFormResponse $response) use ($lobbyPlayer): void{
             $e1 = $this->getElement(0);
             $e2 = $this->getElement(1);
@@ -50,7 +50,7 @@ class LobbySettingsForm extends CustomForm {
                 $status = $response->getString($e7->getName());
                 if(strlen($status) <= 0) $status = "reset";
 
-                $player->getServer()->dispatchCommand($player, "status ".$status);
+                $player->getServer()->dispatchCommand($player, "setstatus ".$status);
             }
         });
     }
