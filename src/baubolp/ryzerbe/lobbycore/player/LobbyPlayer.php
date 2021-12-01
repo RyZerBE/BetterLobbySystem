@@ -183,8 +183,8 @@ class LobbyPlayer {
 
             $res = $mysqli->query("SELECT * FROM Status WHERE playername='$playerName'");
             if($res->num_rows > 0) {
-                if($res->fetch_assoc()){
-                    $status = $res->fetch_assoc()["status"];
+                if($data = $res->fetch_assoc()){
+                    $status = $data["status"];
                     $playerData["status"] = ($status == "false") ? "" : $status;
                 }
             }
