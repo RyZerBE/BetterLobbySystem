@@ -15,91 +15,57 @@ use pocketmine\Server;
 use function is_null;
 
 abstract class BaseHypeTrain extends Vehicle {
-    /** @var Entity|null */
-    protected $rider = null;
-    /** @var bool */
-    protected $wasRiderFixTeleport = false;
+    protected ?Entity $rider = null;
 
-    /**
-     * @param int $currentTick
-     * @return bool
-     */
     public function onUpdate(int $currentTick): bool{
         if(is_null($this->getRider())) return parent::onUpdate($currentTick);
-        $this->updateRidingState();
-        if($currentTick % 15 === 0){
-            $this->sendEntityLink($this->getRider());
-        }
         $this->getRider()->resetFallDistance();
         return parent::onUpdate($currentTick);
     }
 
-    /**
-     * @return Entity|null
-     */
     public function getRider(): ?Entity{
         return $this->rider;
     }
 
-    public function updateRidingState(): void{
-        $rider = $this->getRider();
-        if(is_null($rider) || $rider->isClosed()) return;
-        $rider->getDataPropertyManager()->setVector3(Entity::DATA_RIDER_SEAT_POSITION, $this->getRiderSeatPosition(), true);
-        $rider->setPosition($this->add($this->getRiderSeatPosition()));
-    }
-
-    /**
-     * @param int $seatNumber
-     * @return Vector3
-     */
     public function getRiderSeatPosition(int $seatNumber = 0): Vector3{
-        return new Vector3(0, 1, 0);
+        return new Vector3(0, 0, 0);
     }
 
-    /**
-     * @param Entity $rider
-     */
     public function sendEntityLink(Entity $rider): void{
         $rider->getDataPropertyManager()->setVector3(Entity::DATA_RIDER_SEAT_POSITION, $this->getRiderSeatPosition(), true);
         $rider->getDataPropertyManager()->setByte(Entity::DATA_CONTROLLING_RIDER_SEAT_NUMBER, 0);
+
         $pk = new SetActorLinkPacket();
         $pk->link = new EntityLink($this->getId(), $rider->getId(), EntityLink::TYPE_RIDER, true, true);
         Server::getInstance()->broadcastPacket(Server::getInstance()->getOnlinePlayers(), $pk);
     }
 
-    /**
-     * @param EntityDamageEvent $source
-     */
     public function attack(EntityDamageEvent $source): void{
         if(!$source instanceof EntityDamageByEntityEvent) return;
         $attacker = $source->getDamager();
-        if(!$attacker instanceof Player || !is_null($this->getRider()) || $attacker->isRiding()) return;
+        if(!$attacker instanceof Player || !is_null($this->getRider()) || $attacker->isRiding() || $this instanceof HypeTrainEntity) return;
         $this->setRider($attacker);
-        $this->sendEntityLink($attacker);
     }
 
-    /**
-     * @param Entity|null $rider
-     */
     public function setRider(?Entity $rider): void{
         $this->rider = $rider;
         $this->setRiddenByEntity($rider);
-        if(!is_null($rider)){
+        if($rider !== null){
             $rider->setRiding(true);
             $rider->setRidingEntity($this);
+
+            $this->removeLink($rider);
+            $this->sendEntityLink($rider);
         }
     }
 
-    /**
-     * @param Entity $entity
-     */
     public function onRiderLeave(Entity $entity): void{
         $rider = $this->getRider();
-        if(is_null($rider) || $rider->getId() !== $entity->getId() || $this->wasRiderFixTeleport) return;
+        if(is_null($rider) || $rider->getId() !== $entity->getId()) return;
         $this->setRider(null);
         $this->removeLink($entity);
-        $this->setRiddenByEntity(null);
-        $rider->setRidingEntity(null);
+        $this->setRiddenByEntity();
+        $rider->setRidingEntity();
         $rider->setRiding(false);
         $entity->teleport($entity);
         if($entity instanceof Player){
@@ -107,9 +73,6 @@ abstract class BaseHypeTrain extends Vehicle {
         }
     }
 
-    /**
-     * @param Entity $entity
-     */
     public function removeLink(Entity $entity): void{
         $pk = new SetActorLinkPacket();
         $pk->link = new EntityLink($this->getId(), $entity->getId(), EntityLink::TYPE_REMOVE, true, true);

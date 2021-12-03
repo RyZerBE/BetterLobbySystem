@@ -7,12 +7,14 @@ use function is_null;
 
 class HypeTrainWagonEntity extends BaseHypeTrain {
     public const NETWORK_ID = self::MINECART;
+
     /** @var float */
     public $height = 0.7;
     /** @var float */
     public $width = 0.98;
+
     /** @var int */
-    public $wagonNumber = -1;
+    public int $wagonNumber = -1;
 
     /**
      * @param int $currentTick
@@ -20,7 +22,7 @@ class HypeTrainWagonEntity extends BaseHypeTrain {
      */
     public function onUpdate(int $currentTick): bool{
         $hypeTrain = $this->getOwningEntity();
-        if(is_null($hypeTrain) || !$hypeTrain instanceof HypeTrainEntity || $hypeTrain->isClosed()){
+        if(!$hypeTrain instanceof HypeTrainEntity || $hypeTrain->isClosed()){
             $this->flagForDespawn();
             if(!is_null($this->getRider())){
                 $this->onRiderLeave($this->getRider());
@@ -45,8 +47,4 @@ class HypeTrainWagonEntity extends BaseHypeTrain {
         $this->updateMovement();
         return parent::onUpdate($currentTick);
     }
-    /*
-    public function getRiderSeatPosition(int $seatNumber = 0): Vector3 {
-        return new Vector3(0, 0, 0);
-    }*/
 }

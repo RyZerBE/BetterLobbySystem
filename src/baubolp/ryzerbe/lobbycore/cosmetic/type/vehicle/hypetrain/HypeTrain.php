@@ -11,16 +11,13 @@ use ryzerbe\core\util\ItemUtils;
 use function mt_rand;
 
 class HypeTrain {
-    /**
-     * @param Player $player
-     */
     public static function spawn(Player $player): void{
         $nbt = Entity::createBaseNBT($player);
         $train = new HypeTrainEntity($player->getLevel(), $nbt);
         $train->setOwningEntity($player);
-        $train->setRider($player);
-        $train->sendEntityLink($train);
         $train->spawnToAll();
+        $train->setRider($player);
+
         $player->getInventory()->setContents([
             4 => ItemUtils::addItemTag(Item::get(Item::SKULL, 3)->setCustomName("§r§aHead Canon"), "head_canon", "hypetrain_item"),
         ]);
