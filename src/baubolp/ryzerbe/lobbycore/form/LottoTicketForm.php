@@ -18,9 +18,8 @@ use ryzerbe\core\provider\CoinProvider;
 class LottoTicketForm extends MenuForm {
     public function __construct(LobbyPlayer $player){
         $options = [];
-        $button = new MenuOption(TextFormat::GOLD . "1x LottoTicket\n" . TextFormat::YELLOW . "Click to play");
+        if($player->getTickets() > 0) $options[] =  new MenuOption(TextFormat::GOLD . $player->getTickets()."x LottoTicket\n" . TextFormat::YELLOW . "Click to play");
         $options[] = new MenuOption(TextFormat::RED . "Buy a LottoTicket\n" . TextFormat::YELLOW . "1000 Coins per ticket");
-        for($i = 0; $i < $player->getTickets(); $i++) $options[] = $button;
         parent::__construct(Loader::PREFIX . TextFormat::AQUA . "Lotto", LanguageProvider::getMessageContainer('lobby-lotto-dangerous', $player->getPlayer()->getName()), $options, function(Player $player, int $selectedOption): void{
             if($selectedOption == 0){
                 if(($obj = RyzerPlayerProvider::getRyzerPlayer($player->getName())) != null){
