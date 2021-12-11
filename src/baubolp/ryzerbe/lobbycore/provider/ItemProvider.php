@@ -14,6 +14,7 @@ use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use pocketmine\entity\Entity;
 use pocketmine\entity\projectile\Projectile;
 use pocketmine\item\Item;
+use pocketmine\item\ItemIds;
 use pocketmine\level\sound\BlazeShootSound;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
@@ -29,11 +30,11 @@ class ItemProvider {
         $lobbyPlayer = LobbyPlayerCache::getLobbyPlayer($player);
         if($lobbyPlayer === null) return;
         self::clearAllInventories($player);
-        $navigator = ItemUtils::addItemTag(Item::get(Item::FIREWORKS)->setCustomName(TextFormat::GREEN . "Navigator" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "navigator", "lobby_item");
-        $lobbySwitcher = ItemUtils::addItemTag(Item::get(-219)->setCustomName(TextFormat::GREEN . "Lobbyswitcher" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "lobbyswitcher", "lobby_item");
-        $profile = ItemUtils::addItemTag(Item::get(Item::MOB_HEAD, 3)->setCustomName(TextFormat::GREEN . "Profile" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "profile", "lobby_item");
-        $gadgets = ItemUtils::addItemTag(Item::get(Item::FLINT_AND_STEEL)->setCustomName(TextFormat::GREEN . "Gadgets" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "gadgets", "lobby_item");
-        $shield = ItemUtils::addItemTag(Item::get(Item::SHIELD)->setCustomName(TextFormat::GREEN . "Shield" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "shield", "lobby_item");
+        $navigator = ItemUtils::addItemTag(Item::get(ItemIds::RECORD_CAT)->setCustomName(TextFormat::GREEN . "Navigator" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "navigator", "lobby_item");
+        $lobbySwitcher = ItemUtils::addItemTag(Item::get(ItemIds::RECORD_13)->setCustomName(TextFormat::GREEN . "Lobbyswitcher" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "lobbyswitcher", "lobby_item");
+        $profile = ItemUtils::addItemTag(Item::get(ItemIds::RECORD_CHIRP)->setCustomName(TextFormat::GREEN . "Profile" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "profile", "lobby_item");
+        $gadgets = ItemUtils::addItemTag(Item::get(ItemIds::RECORD_BLOCKS)->setCustomName(TextFormat::GREEN . "Gadgets" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "gadgets", "lobby_item");
+        $shield = ItemUtils::addItemTag(Item::get(ItemIds::SHIELD)->setCustomName(TextFormat::GREEN . "Shield" . "\n" . TextFormat::GRAY . "[" . TextFormat::AQUA . "Click" . TextFormat::GRAY . "]"), "shield", "lobby_item");
         $inventory = $player->getInventory();
         if($player->hasPermission("lobby.shield")){
             $inventory->setItem(5, $shield);
