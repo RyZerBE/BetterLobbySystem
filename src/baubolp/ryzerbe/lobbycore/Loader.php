@@ -32,6 +32,7 @@ use baubolp\ryzerbe\lobbycore\entity\ItemRainItemEntity;
 use baubolp\ryzerbe\lobbycore\entity\NPCEntity;
 use baubolp\ryzerbe\lobbycore\form\NavigatorForm;
 use baubolp\ryzerbe\lobbycore\form\NewsBookForm;
+use baubolp\ryzerbe\lobbycore\holo\GameTimeLeaderboard;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
 use baubolp\ryzerbe\lobbycore\provider\RunningClanWarProvider;
@@ -48,6 +49,7 @@ use pocketmine\entity\Entity;
 use pocketmine\entity\Skin;
 use pocketmine\level\Level;
 use pocketmine\level\Location;
+use pocketmine\level\Position;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
 use pocketmine\Player;
@@ -68,6 +70,8 @@ class Loader extends PluginBase {
     public const PREFIX = TextFormat::YELLOW . TextFormat::BOLD . "Lobby " . TextFormat::RESET;
 
     public static array $entityCheckQueue = [];
+    public static array $leaderboards = [];
+
     public static bool $jumpAndRunEnabled = false;
     private static ?Loader $instance = null;
 
@@ -95,6 +99,8 @@ class Loader extends PluginBase {
         $level = $this->getServer()->getDefaultLevel();
         $level->setTime(Level::TIME_MIDNIGHT);
         $level->stopTime();
+        $leaderboard = new GameTimeLeaderboard(new Position(228.5, 72, 289, $level), false);
+        $leaderboard->load();
     }
 
     public function registerCommands(): void{
@@ -132,6 +138,7 @@ class Loader extends PluginBase {
             HeadProjectileEntity::class,
             NPCEntity::class,
             EventPortalEntity::class,
+            GameTimeLeaderboard::class
         ];
         foreach($entities as $entity){
             Entity::registerEntity($entity, true);

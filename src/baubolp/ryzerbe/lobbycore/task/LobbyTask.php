@@ -6,6 +6,7 @@ use baubolp\ryzerbe\lobbycore\animation\AnimationProvider;
 use baubolp\ryzerbe\lobbycore\animation\type\PlayerAFKAnimation;
 use baubolp\ryzerbe\lobbycore\entity\EventPortalEntity;
 use baubolp\ryzerbe\lobbycore\entity\NPCEntity;
+use baubolp\ryzerbe\lobbycore\holo\GameTimeLeaderboard;
 use baubolp\ryzerbe\lobbycore\Loader;
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayerCache;
 use baubolp\ryzerbe\lobbycore\provider\EventProvider;
@@ -13,7 +14,10 @@ use matze\gommejar\session\SessionManager;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
+use pocketmine\utils\TextFormat;
+use ryzerbe\core\language\LanguageProvider;
 use ryzerbe\core\player\RyZerPlayerProvider;
+use ryzerbe\core\util\TextUtils;
 
 class LobbyTask extends Task {
     private const AFK_TIME = (20 * 60 * 5);// 5 Minutes
@@ -22,8 +26,16 @@ class LobbyTask extends Task {
      * @inheritDoc
      */
     public function onRun(int $currentTick){
+        if(($currentTick % self::AFK_TIME) === 0) {
+            foreach(Loader::$leaderboards as $vector3STring => $leaderboard) {
+                if($leaderboard instanceof GameTimeLeaderboard) {
+                    $leaderboard->load(false);
+                }
+            }
+        }
         foreach(LobbyPlayerCache::getPlayers() as $lobbyPlayer){
             $player = $lobbyPlayer->getPlayer();
+            $player->sendActionBarMessage(TextUtils::formatEol(TextFormat::DARK_GRAY."[".TextFormat::AQUA."BETA".TextFormat::DARK_GRAY."] ".LanguageProvider::getMessageContainer("beta-info", $player)."\n".TextFormat::DARK_AQUA."discord.ryzer.be"));
             if(Loader::$jumpAndRunEnabled && SessionManager::getInstance()->getSession($player) !== null){
                 if($player->getAllowFlight() && !$player->isCreative(true)){
                     $player->setAllowFlight(false);
