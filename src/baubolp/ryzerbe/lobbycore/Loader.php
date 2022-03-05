@@ -58,7 +58,6 @@ use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use ryzerbe\core\language\LanguageProvider;
-use ryzerbe\core\RyZerBE;
 use ryzerbe\core\util\async\AsyncExecutor;
 use ryzerbe\core\util\emote\EmoteIds;
 use ryzerbe\core\util\loader\ListenerDirectoryLoader;
@@ -418,6 +417,7 @@ class Loader extends PluginBase {
 
         // SANTA CLAUS \\
 
+        /*
         $skin = new Skin(
             uniqid(),
             SkinUtils::readImage("/root/RyzerCloud/data/NPC/santa_claus.png"),
@@ -434,5 +434,6 @@ class Loader extends PluginBase {
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->spawnToAll();
+        */
     }
 }
