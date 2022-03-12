@@ -12,9 +12,6 @@ use baubolp\ryzerbe\lobbycore\util\BlockQueue;
 use matze\gommejar\session\SessionManager;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
-use ryzerbe\core\util\TaskUtils;
-use function array_keys;
-use function array_rand;
 use function is_null;
 
 class AnimationTask extends Task {
@@ -32,6 +29,8 @@ class AnimationTask extends Task {
             $pk = new NetworkInfoPacket();
             CloudBridge::getInstance()->getClient()->getPacketHandler()->writePacket($pk);
         }
+
+        /*
         if($currentTick % (20 * 45) === 0) {
             $sound = array_keys($this->christmas_sounds)[array_rand(array_keys($this->christmas_sounds))];
             foreach(LobbyPlayerCache::getPlayers() as $lobbyPlayer) {
@@ -39,6 +38,8 @@ class AnimationTask extends Task {
                 #$lobbyPlayer->getPlayer()->sendMessage($sound);
             }
         }
+        */
+
         foreach(array_values(AnimationProvider::$activeAnimation) as $animation){
             if($animation instanceof Animation){
                 $animation->tick();
