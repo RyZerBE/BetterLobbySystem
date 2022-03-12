@@ -50,7 +50,7 @@ class LobbyTask extends Task {
             else{
                 if($player->isFlying() && !$lobbyPlayer->enabledFlyMode() && !$player->isCreative()){
                     $player->playSound('mob.enderdragon.growl', 5, 1.0, [$player]);
-                    $player->knockBack($player, 0, $player->getDirectionVector()->getX(), $player->getDirectionVector()->getZ(), 1.8);
+                    $player->boost(1.8);
                     $player->setFlying(false);
                     $player->setAllowFlight(false);
                 }

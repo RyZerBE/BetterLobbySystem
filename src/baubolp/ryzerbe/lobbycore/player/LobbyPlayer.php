@@ -16,6 +16,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\player\PMMPPlayer;
 use ryzerbe\core\player\RyZerPlayer;
 use ryzerbe\core\player\RyZerPlayerProvider;
 use ryzerbe\core\provider\CoinProvider;
@@ -246,6 +247,9 @@ class LobbyPlayer {
         });
     }
 
+    /**
+     * @return PMMPPlayer
+     */
     public function getPlayer(): Player{
         return $this->player;
     }
