@@ -37,7 +37,7 @@ class RunningClanWarProvider {
                     $matches = [];
                     foreach(array_keys($matchesData) as $server){
                         $data = $matchesData[$server];
-                        $matches[$server] = new ClanWarMatch($data[2], $data[4], $data[1], $server, (bool)$data[0]);
+                        $matches[$server] = new ClanWarMatch($data[2], $data[4], $data[1], $server, true);
                     }
                     RunningClanWarProvider::setRunningClanWars($matches);
                 });

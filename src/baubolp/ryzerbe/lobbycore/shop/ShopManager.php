@@ -3,6 +3,7 @@
 namespace baubolp\ryzerbe\lobbycore\shop;
 
 use baubolp\ryzerbe\lobbycore\shop\article\JoinMeTokenArticle;
+use baubolp\ryzerbe\lobbycore\shop\article\PrimeRank;
 use baubolp\ryzerbe\lobbycore\shop\article\StatsResetTokenArticle;
 use baubolp\ryzerbe\lobbycore\shop\category\RankCategory;
 use baubolp\ryzerbe\lobbycore\shop\category\StatsCategory;
@@ -33,6 +34,9 @@ class ShopManager {
         $statsCategory->addArticle(new StatsResetTokenArticle());
         $statsCategory->addArticle(new JoinMeTokenArticle());
         $statsCategory->register();
+
+        $rankCategory->addArticle(new PrimeRank());
+        $rankCategory->register();
     }
 
     /**

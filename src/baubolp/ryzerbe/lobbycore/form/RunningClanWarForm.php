@@ -9,7 +9,7 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class RunningClanWarForm {
-    const BUTTON_TEXT = TextFormat::YELLOW . "%clan1% " . TextFormat::BOLD . TextFormat::RED . "VS " . TextFormat::RESET . TextFormat::YELLOW . "%clan2%\n" . TextFormat::YELLOW . "Map: " . TextFormat::RED . "%map%   " . TextFormat::YELLOW . "Elo: %elo%";
+    const BUTTON_TEXT = TextFormat::AQUA . "%clan1% " . TextFormat::BOLD . TextFormat::RED . "VS " . TextFormat::RESET . TextFormat::RED . "%clan2%\n" . TextFormat::YELLOW . "Map: " . TextFormat::RED . "%map%   " . TextFormat::YELLOW . "Elo: %elo%";
 
     public static function open(Player $player){
         $form = new SimpleForm(function(Player $player, $data){
