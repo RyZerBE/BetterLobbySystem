@@ -10,7 +10,7 @@ use pocketmine\Player;
 class PlayerJoinListener implements Listener {
     public function onPlayerJoin(PlayerJoinEvent $event): void{
         $event->setJoinMessage("");
-        $this->sendSnow($event->getPlayer());
+        #$this->sendSnow($event->getPlayer());
     }
 
     public function sendSnow(Player $player): void{

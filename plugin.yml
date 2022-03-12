@@ -7,3 +7,7 @@ authors:
   - Matze997
   - BauboLP
 load: POSTWORLD
+
+permissions:
+  lobby.cosmetics.free:
+    default: op

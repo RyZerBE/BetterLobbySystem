@@ -58,6 +58,7 @@ use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use ryzerbe\core\language\LanguageProvider;
+use ryzerbe\core\RyZerBE;
 use ryzerbe\core\util\async\AsyncExecutor;
 use ryzerbe\core\util\emote\EmoteIds;
 use ryzerbe\core\util\loader\ListenerDirectoryLoader;
@@ -287,7 +288,7 @@ class Loader extends PluginBase {
         $npc->setLookAtPlayer(true);
         $npc->updateTitle(TextFormat::YELLOW . "Sort your inventories", "");
         $npc->namedtag->setString("directConnect", "onlysortcwt");
-        $npc->spawnToAll();
+        #$npc->spawnToAll();
 
         // FlagWars
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/flagwars.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
@@ -325,8 +326,8 @@ class Loader extends PluginBase {
 
         // Training
         $skin = new Skin(uniqid(), SkinUtils::readImage("/root/RyzerCloud/data/NPC/training.png"), "", (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("name"), (new Config("/root/RyzerCloud/data/NPC/default_geometry.json"))->get("geo"));
-        //$npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin); //Normal Lobby
-        $npc = new NPCEntity(new Location(220.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin); //Christmas Lobby
+        $npc = new NPCEntity(new Location(219.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin); //Normal Lobby
+        //$npc = new NPCEntity(new Location(220.5, 71, 274.5, 0, 0, Server::getInstance()->getDefaultLevel()), $skin); //Christmas Lobby
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
         $npc->setEmotes($EmoteIds);
@@ -417,8 +418,7 @@ class Loader extends PluginBase {
 
         // SANTA CLAUS \\
 
-        /*
-        $skin = new Skin(
+        /*$skin = new Skin(
             uniqid(),
             SkinUtils::readImage("/root/RyzerCloud/data/NPC/santa_claus.png"),
             "",
@@ -433,7 +433,6 @@ class Loader extends PluginBase {
         };
         $npc->setAttackClosure($closure);
         $npc->setInteractClosure($closure);
-        $npc->spawnToAll();
-        */
+        $npc->spawnToAll();*/
     }
 }
