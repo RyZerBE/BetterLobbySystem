@@ -3,6 +3,7 @@
 namespace baubolp\ryzerbe\lobbycore\form\profile;
 
 use baubolp\ryzerbe\lobbycore\player\LobbyPlayer;
+use javamapconverter\entity\SkullEntity;
 use pocketmine\form\CustomForm;
 use pocketmine\form\CustomFormResponse;
 use pocketmine\form\element\Input;
@@ -19,7 +20,8 @@ class LobbySettingsForm extends CustomForm {
             new Toggle("navigatoranimation", TextFormat::GREEN . "▷ " . TextFormat::RED . "Navigator-Animation", $lobbyPlayer->isNavigatorAnimationEnabled()),
             new Toggle("doublejump", TextFormat::GREEN . "▷ " . TextFormat::RED . "Doublejump", $lobbyPlayer->isDoubleJumpEnabled()),
             new Toggle("spawn", TextFormat::GREEN . "▷ " . TextFormat::RED . "Spawn on your last position in the lobby", $lobbyPlayer->isLastPositionSpawnEnabled()),
-            new Toggle("overview", TextFormat::GREEN . "▷ " . TextFormat::RED . "Interact a player to get a quick overview", $lobbyPlayer->isQuickPlayerOverview())
+            new Toggle("overview", TextFormat::GREEN . "▷ " . TextFormat::RED . "Interact a player to get a quick overview", $lobbyPlayer->isQuickPlayerOverview()),
+            new Toggle("heads", TextFormat::GREEN . "▷ " . TextFormat::RED . "Enable decorative heads", $lobbyPlayer->isHeads()),
         ];
 
         if($lobbyPlayer->getPlayer()->hasPermission("lobby.status")) $elements[] = new Input("status", TextFormat::RED."Your status (under nametag)", "", $lobbyPlayer->getStatus());
@@ -30,21 +32,33 @@ class LobbySettingsForm extends CustomForm {
             $e4 = $this->getElement(3);
             $e5 = $this->getElement(4);
             $e6 = $this->getElement(5);
-            $e7 = $this->getElement(6);
+            $e7 = $this->getElement(7);
+            $e8 = $this->getElement(6);
             $joinAnimation = $response->getBool($e1->getName());
             $afkAnimation = $response->getBool($e2->getName());
             $navigatorAnimation = $response->getBool($e3->getName());
             $doubleJump = $response->getBool($e4->getName());
             $lastPositionSpawn = $response->getBool($e5->getName());
             $quickInteract = $response->getBool($e6->getName());
+            $heads = $response->getBool($e8->getName());
             $lobbyPlayer->updateLobbySettings([
                 $joinAnimation,
                 $afkAnimation,
                 $navigatorAnimation,
                 $doubleJump,
                 $lastPositionSpawn,
-                $quickInteract
+                $quickInteract,
+                $heads
             ]);
+
+            foreach($player->getLevel()->getEntities() as $entity) {
+                if(!$entity instanceof SkullEntity) continue;
+                if($heads) {
+                    $entity->spawnTo($player);
+                } else {
+                    $entity->despawnFrom($player);
+                }
+            }
 
             if($player->hasPermission("lobby.status")) {
                 $status = $response->getString($e7->getName());

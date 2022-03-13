@@ -68,7 +68,7 @@ class LobbyPlayer {
     /** @var array */
     private $alreadyVotedSurveys = [];
     /** @var bool */ //Settings
-    private $joinAnimation = true, $afkAnimation = true, $navigatorAnimation = true, $doubleJump = true, $lastSpawnPosition = true, $quickPlayerOverview = true;
+    private $joinAnimation = true, $afkAnimation = true, $navigatorAnimation = true, $doubleJump = true, $lastSpawnPosition = true, $quickPlayerOverview = true, $heads = true;
 
     public function __construct(Player $player){
         $this->player = $player;
@@ -173,8 +173,8 @@ class LobbyPlayer {
                 while($data = $res->fetch_assoc()) $playerData["settings"] = explode(":", $data["settings"]);
             }
             else{
-                $mysqli->query("INSERT INTO `Settings`(`playername`, `settings`) VALUES ('$playerName', '1:1:1:1:1')");
-                $playerData["settings"] = [1, 1, 1, 1, 1, 1];
+                $mysqli->query("INSERT INTO `Settings`(`playername`, `settings`) VALUES ('$playerName', '1:1:1:1:1:1')");
+                $playerData["settings"] = [1, 1, 1, 1, 1, 1, 1];
             }
             $playerData["alreadyVotedSurveys"] = [];
             $res = $mysqli->query("SELECT * FROM Surveys WHERE playername='$playerName'");
@@ -211,6 +211,7 @@ class LobbyPlayer {
                 $lobbyPlayer->setDoubleJump((bool)$loadedData["settings"][3]);
                 $lobbyPlayer->setLastSpawnPosition((bool)$loadedData["settings"][4]);
                 $lobbyPlayer->setQuickPlayerOverview($loadedData["settings"][5] ?? true);
+                $lobbyPlayer->setHeads($loadedData["settings"][6] ?? true);
                 $lobbyPlayer->setAlreadyVotedSurveys($loadedData["alreadyVotedSurveys"]);
                 $lobbyPlayer->setStatus($loadedData["status"] ?? "");
                 $cosmetics = [];
@@ -354,6 +355,10 @@ class LobbyPlayer {
         $this->activeCosmetics = $activeCosmetics;
     }
 
+    public function setHeads(bool $heads): void{
+        $this->heads = $heads;
+    }
+
     public function setCosmetics(array $cosmetics): void{
         $this->cosmetics = $cosmetics;
     }
@@ -471,6 +476,10 @@ class LobbyPlayer {
      */
     public function isJoinAnimationEnabled(): bool{
         return $this->joinAnimation;
+    }
+
+    public function isHeads(): bool{
+        return $this->heads;
     }
 
     public function enableBuildMode(){
@@ -751,6 +760,7 @@ class LobbyPlayer {
         $this->setDoubleJump($settings[3]);
         $this->setLastSpawnPosition($settings[4]);
         $this->setQuickPlayerOverview($settings[5]);
+        $this->setHeads($settings[6]);
         $playerName = $this->getPlayer()->getName();
         $toString = implode(":", array_map(function(bool $setting): int{
             return intval($setting);
