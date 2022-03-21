@@ -11,6 +11,7 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use ryzerbe\core\language\LanguageProvider;
 use ryzerbe\core\util\ItemUtils;
+use function array_filter;
 
 class CoinbombCommand extends Command {
     public function __construct(){
@@ -27,7 +28,11 @@ class CoinbombCommand extends Command {
         if(!$this->testPermission($sender)) return;
         $player = LobbyPlayerCache::getLobbyPlayer($sender);
         if($player === null) return;
-        if($player->getCoinBombs() <= 0){
+        $count = 0;
+        foreach(array_filter($sender->getInventory()->getContents(), function(Item $item): bool {
+            return !$item->isNull() && ItemUtils::hasItemTag($item, "lobby_item") && ItemUtils::getItemTag($item, "lobby_item") === "tag_coinbomb";
+        }) as $item) $count += $item->getCount();
+        if($player->getCoinBombs() <= 0 || $count >= $player->getCoinBombs()){
             $sender->sendMessage(Loader::PREFIX . LanguageProvider::getMessageContainer('lobby-no-coin-bombs', $sender->getName()));
             return;
         }
