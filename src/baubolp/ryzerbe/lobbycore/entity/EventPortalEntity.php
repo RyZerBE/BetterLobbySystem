@@ -29,6 +29,7 @@ class EventPortalEntity extends Human implements ChunkLoader {
     public function __construct(Level $level, CompoundTag $nbt){
         $this->skin = new Skin("EndPortalEntity", SkinUtils::readImage("/root/RyzerCloud/data/NPC/portal.png"), "", "geometry.portal", file_get_contents("/root/RyzerCloud/data/NPC/portal.json"));
         parent::__construct($level, $nbt);
+        $this->getLevel()->registerChunkLoader($this, $this->x >> 4, $this->z >> 4, true);
     }
 
     public function updateTitle(): void{
