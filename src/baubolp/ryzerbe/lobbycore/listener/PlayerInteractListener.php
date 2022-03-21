@@ -23,7 +23,7 @@ class PlayerInteractListener implements Listener {
         if(ItemProvider::execItem($player) || in_array($block->getId(), self::NOT_INTERACTABLE_BLOCKS)){
             $event->setCancelled();
         }
-        if($lobbyPlayer->enabledBuildMode()){
+        if($lobbyPlayer !== null && $lobbyPlayer->enabledBuildMode()){
             $event->setCancelled(false);
         }
     }
