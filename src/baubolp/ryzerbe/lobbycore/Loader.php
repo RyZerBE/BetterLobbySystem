@@ -97,7 +97,7 @@ class Loader extends PluginBase {
         }
         date_default_timezone_set("Europe/Berlin");
         $level = $this->getServer()->getDefaultLevel();
-        $level->setTime(Level::TIME_MIDNIGHT);
+        $level->setTime(1000);
         $level->stopTime();
         $leaderboard = new GameTimeLeaderboard(new Position(228.5, 72, 289, $level), false);
         $leaderboard->load();
